@@ -1,0 +1,2 @@
+rootProject.name = "recc-client"
+include ':app'
