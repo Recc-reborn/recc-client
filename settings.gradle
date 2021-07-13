@@ -1,2 +1,2 @@
-rootProject.name = "recc-client2"
+rootProject.name = "recc-client"
 include ':app'

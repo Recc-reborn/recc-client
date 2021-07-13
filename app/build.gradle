@@ -12,7 +12,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.recc.recc_client2"
+        applicationId "com.recc.recc_client"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
