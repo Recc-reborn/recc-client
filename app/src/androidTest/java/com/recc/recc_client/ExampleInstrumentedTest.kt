@@ -1,4 +1,4 @@
-package com.recc.recc_client2
+package com.recc.recc_client
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

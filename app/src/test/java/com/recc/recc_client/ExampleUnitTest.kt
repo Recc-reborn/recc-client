@@ -1,4 +1,4 @@
-package com.recc.recc_client2
+package com.recc.recc_client
 
 import org.junit.Test
 
