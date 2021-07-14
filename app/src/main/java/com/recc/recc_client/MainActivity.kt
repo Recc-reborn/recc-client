@@ -6,17 +6,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.*
 
-private val client = HttpClient(Android) {
+val RECC_SERVER = "http://10.0.2.2:8000"
+val CLIENT = HttpClient(Android) {
     install(JsonFeature) {
         serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
             prettyPrint = true
@@ -39,6 +37,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Every time "create account" button is pressed a sub-activity called "Register" is called
+        // which it has its own form and it will be used to send a post petition to recc-server to create
+        // a new account
         btnCreateAccount.setOnClickListener { view ->
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     // client
     override fun onDestroy() {
         super.onDestroy()
-        client.close()
+        CLIENT.close()
     }
 }
 
@@ -58,12 +59,11 @@ private suspend fun getTracks(view: View) {
     // recc-server (everything is executed inside a coroutine using IO thread so that data
     // transfering gets easier)
     val track: List<Track> = withContext<List<Track>>(Dispatchers.IO) {
-        client.get("http://10.0.2.2:8000/api/tracks")
+        CLIENT.get("$RECC_SERVER/api/tracks")
     }
     // Coroutine which prints on console the data fetched from recc-server executed in the main
     // thread
     withContext<Unit>(Dispatchers.Main) {
-        Toast.makeText(view.context, "id: $track.id\n$track", Toast.LENGTH_LONG)
-        println("[Tracks]: " + track)
+        Toast.makeText(view.context, "id: $track.id\n$track", Toast.LENGTH_LONG).show()
     }
 }
