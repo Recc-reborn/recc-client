@@ -1,5 +1,6 @@
 package com.recc.recc_client
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -36,6 +37,11 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 getTracks(view)
             }
+        }
+
+        btnCreateAccount.setOnClickListener { view ->
+            val intent = Intent(this, Register::class.java)
+            startActivity(intent)
         }
     }
 
