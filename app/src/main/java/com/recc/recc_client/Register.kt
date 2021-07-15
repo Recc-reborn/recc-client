@@ -2,9 +2,6 @@ package com.recc.recc_client
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -30,6 +27,8 @@ class Register : AppCompatActivity() {
             if (notEmptyTextBoxes() && password == conPassword) {
                 val user = User(name, REGISTER_ROLE, email, password)
                 CoroutineScope(Dispatchers.Main).launch { registerUser(user) }
+                Toast.makeText(this, "User successfully created!!", Toast.LENGTH_LONG).show()
+                finish()
             }
             else if (password != conPassword)
                 Toast.makeText(this, "Passwords don't match", Toast.LENGTH_LONG).show()

@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // Every time "create account" button is pressed a sub-activity called "Register" is called
         // which it has its own form and it will be used to send a post petition to recc-server to create
         // a new account
-        btnCreateAccount.setOnClickListener { view ->
+        btnCreateAccount.setOnClickListener {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
         }
