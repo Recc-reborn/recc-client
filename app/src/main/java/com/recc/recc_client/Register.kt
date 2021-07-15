@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.view.*
 import kotlinx.coroutines.*
 
-val MISSING_KEYS_CODE: Int = 422
-val REGISTER_ROLE: String = "user"
-val REGISTER_URL: String = "$RECC_SERVER/api/users"
+private val MISSING_KEYS_CODE: Int = 422
+private val REGISTER_ROLE: String = "user"
+private val url: String = "$RECC_SERVER/api/users"
 
 class Register : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +25,7 @@ class Register : AppCompatActivity() {
             val password: String = etRegisterPassword.text.toString()
             val conPassword: String = etRegisterConfirmPassword.text.toString()
             if (notEmptyTextBoxes() && password == conPassword) {
-                val user = User(name, REGISTER_ROLE, email, password)
+                val user = User(name, email, password, REGISTER_ROLE)
                 CoroutineScope(Dispatchers.Main).launch { registerUser(user) }
                 Toast.makeText(this, "User successfully created!!", Toast.LENGTH_LONG).show()
                 finish()
@@ -47,13 +47,9 @@ class Register : AppCompatActivity() {
 private suspend fun registerUser(user: User) {
 
     withContext(Dispatchers.IO) {
-        CLIENT.post<Unit>(REGISTER_URL) {
+        CLIENT.post<Unit>(url) {
             contentType(ContentType.Application.Json)
             body = user
         }
-        /*if (res.status.value == MISSING_KEYS_CODE)
-            Toast.makeText(view.context, "Missing data, please fill out the empty text boxes",
-                Toast.LENGTH_LONG).show()
-         */
     }
 }

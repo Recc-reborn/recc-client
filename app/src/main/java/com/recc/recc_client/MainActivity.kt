@@ -1,15 +1,19 @@
 package com.recc.recc_client
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
+import io.ktor.client.features.auth.*
+import io.ktor.client.features.auth.providers.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
@@ -22,6 +26,8 @@ val CLIENT = HttpClient(Android) {
         })
     }
 }
+private val loginUrl: String = "$RECC_SERVER/api/auth/token/"
+private val infoUrl: String = "$RECC_SERVER/api/users/me"
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +38,10 @@ class MainActivity : AppCompatActivity() {
         btnLogin.setOnClickListener { view ->
             // Coroutine scope, it is used to call a suspend function i.e. those that can call
             // multiple coroutines inside it
+            val email: String = etEmail.text.toString()
+            val password: String = etPassword.text.toString()
             CoroutineScope(Dispatchers.IO).launch {
-                getTracks(view)
+                login(view, email, password)
             }
         }
 
@@ -54,16 +62,37 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private suspend fun getTracks(view: View) {
-    // Variable that stores a list of serializable Tracks which are gotten using a get request to
-    // recc-server (everything is executed inside a coroutine using IO thread so that data
-    // transfering gets easier)
-    val track: List<Track> = withContext<List<Track>>(Dispatchers.IO) {
-        CLIENT.get("$RECC_SERVER/api/tracks")
+private suspend fun login(view: View, email: String, password: String) {
+    val token  = withContext<String>(Dispatchers.IO) {
+        CLIENT.post<String>(loginUrl) {
+            contentType(ContentType.Application.Json)
+            body = UserLogin(email, password, Build.DEVICE)
+        }
     }
-    // Coroutine which prints on console the data fetched from recc-server executed in the main
-    // thread
+
+    val info = withContext<UserInfo>(Dispatchers.IO) {
+        val loginClient = HttpClient(Android) {
+            install(JsonFeature) {
+                serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                    prettyPrint = true
+                    ignoreUnknownKeys = true
+                })
+            }
+            install(Auth) {
+                bearer {
+                    loadTokens {  BearerTokens(accessToken = token, refreshToken = token) }
+                }
+            }
+        }
+
+        loginClient.get<UserInfo>(infoUrl) {
+            headers {
+                append(HttpHeaders.Authorization, token)
+            }
+        }
+    }
+
     withContext<Unit>(Dispatchers.Main) {
-        Toast.makeText(view.context, "id: $track.id\n$track", Toast.LENGTH_LONG).show()
+        Toast.makeText(view.context, "Welcome back ${info.name}!!", Toast.LENGTH_LONG).show()
     }
 }
