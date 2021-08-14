@@ -1,4 +1,4 @@
-package com.recc.recc_client
+package com.recc.recc_client.api.schema
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,8 +7,6 @@ import kotlinx.serialization.Serializable
 data class User(
     @SerialName("name")
     val name: String,
-    @SerialName("role")
-    val role: String,
     @SerialName("email")
     val email: String,
     @SerialName("password")

@@ -1,4 +1,4 @@
-package com.recc.recc_client
+package com.recc.recc_client.api.schema
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,9 +8,9 @@ data class Track(
     @SerialName("id")
     var id: Int,
     @SerialName("created_at")
-    var created_at: String,
+    var createdAt: String,
     @SerialName("updated_at")
-    var updated_at: String,
+    var updatedAt: String,
     @SerialName("title")
     var title: String,
     @SerialName("artist")
