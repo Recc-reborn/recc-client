@@ -7,20 +7,22 @@ import com.recc.recc_client.R
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.*
 import com.recc.recc_client.api.clients.AuthApiClient
+import com.recc.recc_client.contextFinder
 
-class Register : AppCompatActivity() {
-    private val authClient = AuthApiClient()
+class RegisterActivity : AppCompatActivity() {
+    //private val authClient = AuthApiClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        contextFinder.context = applicationContext
 
         btnRegister.setOnClickListener {
             val name: String = etRegisterName.text.toString()
             val email: String = etRegisterEmail.text.toString()
             val password: String = etRegisterPassword.text.toString()
             val conPassword: String = etRegisterConfirmPassword.text.toString()
-
+            /*
             if (notEmptyTextBoxes() && password == conPassword) {
                 CoroutineScope(Dispatchers.Main).launch { authClient.register(name, email, password) }
                 Toast.makeText(this, "User successfully created!", Toast.LENGTH_LONG).show()
@@ -34,6 +36,7 @@ class Register : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+             */
         }
     }
 

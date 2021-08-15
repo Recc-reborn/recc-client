@@ -46,6 +46,7 @@ open class BaseApiClient {
             method = requestMethod
             headers {
                 if (sendToken) append("Authorization", "Bearer $userToken")
+                append(HttpHeaders.Accept, "application/json")
             }
             if (data != null) {
                 body = data

@@ -12,11 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Reccclient"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".Register"
-            android:parentActivityName=".MainActivity">
 
+        <activity
+            android:name=".screens.RegisterActivity"
+            android:parentActivityName=".MainActivity">
         </activity>
+
+        <activity
+            android:name=".screens.LoginActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
