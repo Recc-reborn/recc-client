@@ -8,9 +8,11 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.coroutines.*
 import com.recc.recc_client.api.clients.AuthApiClient
 import com.recc.recc_client.contextFinder
+import com.recc.recc_client.controllers.gui.TextBoxType
+import com.recc.recc_client.controllers.gui.Textbox
 
 class RegisterActivity : AppCompatActivity() {
-    //private val authClient = AuthApiClient()
+    private val authClient = AuthApiClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,32 +20,24 @@ class RegisterActivity : AppCompatActivity() {
         contextFinder.context = applicationContext
 
         btnRegister.setOnClickListener {
-            val name: String = etRegisterName.text.toString()
-            val email: String = etRegisterEmail.text.toString()
-            val password: String = etRegisterPassword.text.toString()
-            val conPassword: String = etRegisterConfirmPassword.text.toString()
-            /*
-            if (notEmptyTextBoxes() && password == conPassword) {
-                CoroutineScope(Dispatchers.Main).launch { authClient.register(name, email, password) }
-                Toast.makeText(this, "User successfully created!", Toast.LENGTH_LONG).show()
-                finish()
+            val name = Textbox(etRegisterName.text.toString(), TextBoxType.USERNAME)
+            val email = Textbox(etRegisterEmail.text.toString(), TextBoxType.EMAIL)
+            val password = Textbox(etRegisterPassword.text.toString(), TextBoxType.PASSWORD)
+            val conPassword = Textbox(etRegisterConfirmPassword.text.toString(), TextBoxType.PASSWORD)
+            println(password.value + " | " + conPassword.value)
+            if (name.isValid() && email.isValid() && password.isValid() && conPassword.isValid() &&
+                password.value == conPassword.value) {
+                    //CoroutineScope(Dispatchers.Main).launch { authClient.register(name.value, email.value, password.value) }
+                    Toast.makeText(contextFinder.context, "User successfully created!", Toast.LENGTH_LONG).show()
+                    finish()
             } else if (password != conPassword) {
-                Toast.makeText(this, "Passwords don't match", Toast.LENGTH_LONG).show()
+                Toast.makeText(contextFinder.context, "Passwords don't match", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(
-                    this,
+                    contextFinder.context,
                     "Missing data, please fill out the empty text boxes",
-                    Toast.LENGTH_LONG
-                ).show()
+                    Toast.LENGTH_LONG).show()
             }
-             */
         }
     }
-
-    private fun notEmptyTextBoxes() = (
-        etRegisterConfirmPassword.text.isNotEmpty()
-            && etRegisterName.text.isNotEmpty()
-            && etRegisterEmail.text.isNotEmpty()
-            && etRegisterPassword.text.isNotEmpty()
-        )
 }

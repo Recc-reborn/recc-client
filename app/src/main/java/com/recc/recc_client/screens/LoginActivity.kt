@@ -1,11 +1,9 @@
 package com.recc.recc_client.screens
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.contextFinder
 import com.recc.recc_client.controllers.gui.TextBoxType
@@ -18,12 +16,11 @@ open class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_main)
         contextFinder.context = applicationContext
-        println(contextFinder.context)
 
         btnLogin.setOnClickListener() {
             val emailTB = Textbox(etEmail.text.toString(), TextBoxType.EMAIL)
             val passTB = Textbox(etPassword.text.toString(), TextBoxType.PASSWORD)
-            if (emailTB.is_valid() && passTB.is_valid())
+            if (emailTB.isValid() && passTB.isValid())
                 Toast.makeText(contextFinder.context, "Success!!!", Toast.LENGTH_LONG).show()
         }
 

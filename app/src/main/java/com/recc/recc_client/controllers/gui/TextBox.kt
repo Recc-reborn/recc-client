@@ -8,6 +8,7 @@ import android.widget.EditText
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.contextFinder
+import java.util.regex.PatternSyntaxException
 
 enum class TextBoxType {
     TEXT,
@@ -16,23 +17,18 @@ enum class TextBoxType {
     EMAIL
 }
 
-open class Textbox(protected val value: String, protected val type: TextBoxType) {
+open class Textbox(val value: String, protected val type: TextBoxType) {
     protected val context: Context = contextFinder.context
     protected var regex: Regex? = null
     init {
-        println("Type: " + type + " | value: " + value)
         when (type) {
             TextBoxType.TEXT -> null
             TextBoxType.USERNAME -> this.regex = context.getString(R.string. textbox_username).toRegex()
-            TextBoxType.PASSWORD -> this.regex = context.getString(R.string. textbox_pass).toRegex()
+            TextBoxType.PASSWORD -> this.regex = context.getString(R.string.textbox_pass).toRegex()
             TextBoxType.EMAIL -> this.regex = context.getString(R.string. textbox_email).toRegex()
         }
     }
 
     // If the given textbox differs from a text type then we use regex to validate it
-    open fun is_valid(): Boolean = regex?.let {
-        if (value.matches(it))
-            return true
-        return false
-    } ?: true
+    open fun isValid(): Boolean = regex?.let { value.matches(it) } ?: true
 }
