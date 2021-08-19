@@ -9,20 +9,29 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.features.auth.*
 import io.ktor.client.features.auth.providers.*
 import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import kotlinx.serialization.json.Json
 
 open class AuthApiClient(context: Context) : BaseApiClient(context) {
+    companion object {
+        private var instance: AuthApiClient? = null
+        fun getInstance(context: Context): AuthApiClient = instance.also { println("VIEJO") }
+            ?: synchronized(this) {
+                instance ?: AuthApiClient(context).also {
+                    println("NUEVO")
+                    instance = it
+                }
+            }
+
+    }
     private val client = HttpClient(Android) {
         expectSuccess = false
         engine {
             connectTimeout = 10_000
         }
         install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                prettyPrint = true
-                ignoreUnknownKeys = true
-            })
+            serializer = GsonSerializer() {
+                setPrettyPrinting()
+                disableHtmlEscaping()
+            }
         }
         install(Auth) {
             bearer {
@@ -30,7 +39,7 @@ open class AuthApiClient(context: Context) : BaseApiClient(context) {
             }
         }
     }
-    public suspend fun getToken(email: String, password: String) {
+    suspend fun getToken(email: String, password: String) {
         val deviceName = Build.MODEL
         val authData = UserLogin(email, password, deviceName)
         // fetch token
@@ -39,25 +48,25 @@ open class AuthApiClient(context: Context) : BaseApiClient(context) {
         // store(response.data.token)
     }
 
-    public suspend fun login(email: String, password: String) {
+    suspend fun login(email: String, password: String) {
         getToken(email, password)
         fetchUser()
     }
 
-    public suspend fun register(name: String, email: String, password: String) {
+    suspend fun register(name: String, email: String, password: String) {
         // POST users
         val registerData = User(name, email, password)
         request("POST", "users", false, registerData)
     }
 
-    public suspend fun fetchUser() {
+    suspend fun fetchUser() {
         // GET users/me
         val response = request("GET", "users/me", true)
         // TODO: store user data
         // store(response.data.user)
     }
 
-    public suspend fun logout() {
+    suspend fun logout() {
         // DELETE auth/token
         request("DELETE", "auth", true)
     }
