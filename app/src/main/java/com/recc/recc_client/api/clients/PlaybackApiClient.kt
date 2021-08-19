@@ -1,6 +1,8 @@
 package com.recc.recc_client.api.clients
 
-class PlaybackApiClient : BaseApiClient() {
+import android.content.Context
+
+class PlaybackApiClient(context: Context) : BaseApiClient(context) {
     public fun sendPlayback() {
         // POST playbacks
     }

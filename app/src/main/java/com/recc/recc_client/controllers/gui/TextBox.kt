@@ -3,12 +3,7 @@ package com.recc.recc_client.controllers.gui
 // Generic textbox that can be used for emails, passwords, etc.
 
 import android.content.Context
-import android.content.res.Resources
-import android.widget.EditText
-import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
-import com.recc.recc_client.contextFinder
-import java.util.regex.PatternSyntaxException
 
 enum class TextBoxType {
     TEXT,
@@ -17,8 +12,7 @@ enum class TextBoxType {
     EMAIL
 }
 
-open class Textbox(val value: String, protected val type: TextBoxType) {
-    protected val context: Context = contextFinder.context
+open class Textbox(val context: Context, val value: String, protected val type: TextBoxType) {
     protected var regex: Regex? = null
     init {
         when (type) {
