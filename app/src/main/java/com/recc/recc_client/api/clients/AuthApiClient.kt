@@ -2,63 +2,78 @@ package com.recc.recc_client.api.clients;
 
 import android.content.Context
 import android.os.Build
+import android.widget.Toast
+import com.google.gson.Gson
+import com.recc.recc_client.R
 import com.recc.recc_client.api.schema.UserLogin
 import com.recc.recc_client.api.schema.User
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.features.auth.*
-import io.ktor.client.features.auth.providers.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import kotlinx.serialization.json.Json
+import com.recc.recc_client.api.schema.UserInfo
+import io.ktor.client.call.*
+import kotlinx.coroutines.*
+import java.io.File
 
-open class AuthApiClient(context: Context) : BaseApiClient(context) {
-    private val client = HttpClient(Android) {
-        expectSuccess = false
-        engine {
-            connectTimeout = 10_000
-        }
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                prettyPrint = true
-                ignoreUnknownKeys = true
-            })
-        }
-        install(Auth) {
-            bearer {
-                //loadTokens {  BearerTokens(accessToken = token, refreshToken = token) }
+open class AuthApiClient(context: Context) {
+    private val instance = BaseApiClient.getInstance(context)
+
+    fun token(): String? = instance.token
+
+    fun userInfo(): UserInfo? = instance.userInfo
+
+    suspend fun login(context: Context, email: String, password: String) {
+        when (getToken(context, email, password)) {
+            context.getString(R.string.server_ok_code) -> fetchUser(context)
+            context.getString(R.string.login_data_required_code) -> CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(context, "Wrong email/password", Toast.LENGTH_LONG).show()
             }
         }
+        val gson = Gson()
+        instance.userInfo?.also {
+            val jsonString = gson.toJson(it)
+            val file = File(context.filesDir, context.getString(R.string.user_info_path))
+            file.writeText(jsonString)
+        }
     }
-    public suspend fun getToken(email: String, password: String) {
+
+    suspend fun register(name: String, email: String, password: String): Int? {
+        // POST users
+        val registerData = User(name, email, password)
+        return instance.request("POST", "users", null, registerData)?.status?.value
+    }
+
+    private suspend fun fetchUser(context: Context) {
+        // GET users/me
+        println("TOKEN: " + instance.token)
+        instance.request("GET", "users/me", instance.token)?.also {
+            instance.userInfo = it.receive<UserInfo>()
+        }
+    }
+
+    suspend fun logout(context: Context) {
+        // DELETE auth/token
+        instance.request("DELETE", "auth", instance.token)
+        instance.token = null
+        instance.userInfo = null
+        val tokenFile = File(context.filesDir, context.getString(R.string.token_path))
+        if (tokenFile.exists())
+            tokenFile.delete()
+        val infoFile = File(context.filesDir, context.getString(R.string.user_info_path))
+        if (infoFile.exists())
+            infoFile.delete()
+    }
+
+    private suspend fun getToken (context: Context, email: String, password: String): String {
         val deviceName = Build.MODEL
         val authData = UserLogin(email, password, deviceName)
         // fetch token
-        val response = request("POST", "auth/token", false, authData)
-        // TODO: store token
-        // store(response.data.token)
-    }
-
-    public suspend fun login(email: String, password: String) {
-        getToken(email, password)
-        fetchUser()
-    }
-
-    public suspend fun register(name: String, email: String, password: String) {
-        // POST users
-        val registerData = User(name, email, password)
-        request("POST", "users", false, registerData)
-    }
-
-    public suspend fun fetchUser() {
-        // GET users/me
-        val response = request("GET", "users/me", true)
-        // TODO: store user data
-        // store(response.data.user)
-    }
-
-    public suspend fun logout() {
-        // DELETE auth/token
-        request("DELETE", "auth", true)
+        val res = instance.request("POST", "auth/token", instance.token, authData, context)
+        if (res?.status?.value == context.getString(R.string.server_ok_code).toInt()) {
+            res.also {
+                val token: String = res.receive()
+                val file = File(context.filesDir, context.getString(R.string.token_path))
+                file.writeText(token)
+                instance.token = token
+            }
+        }
+        return res?.status!!.value.toString()
     }
 }
