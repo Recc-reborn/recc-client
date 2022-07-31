@@ -1,9 +1,7 @@
-package com.recc.recc_client.api.clients
+package com.recc.recc_client.http.clients
 
 import android.content.Context
-import com.recc.recc_client.api.schema.MutableTrack
-import com.recc.recc_client.api.schema.Track
-import io.ktor.client.call.*
+import com.recc.recc_client.http.schema.MutableTrack
 import kotlinx.coroutines.runBlocking
 
 class PlaybackApiClient(context: Context) : BaseApiClient(context) {

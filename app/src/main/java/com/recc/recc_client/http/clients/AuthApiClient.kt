@@ -1,13 +1,13 @@
-package com.recc.recc_client.api.clients;
+package com.recc.recc_client.http.clients;
 
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import com.google.gson.Gson
 import com.recc.recc_client.R
-import com.recc.recc_client.api.schema.UserLogin
-import com.recc.recc_client.api.schema.User
-import com.recc.recc_client.api.schema.UserInfo
+import com.recc.recc_client.http.schema.UserLogin
+import com.recc.recc_client.http.schema.User
+import com.recc.recc_client.http.schema.UserInfo
 import io.ktor.client.call.*
 import kotlinx.coroutines.*
 import java.io.File

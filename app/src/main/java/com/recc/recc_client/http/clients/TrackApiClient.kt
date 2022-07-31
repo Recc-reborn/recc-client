@@ -1,8 +1,8 @@
-package com.recc.recc_client.api.clients
+package com.recc.recc_client.http.clients
 
 import android.content.Context
-import com.recc.recc_client.api.schema.MutableTrack
-import com.recc.recc_client.api.schema.Track
+import com.recc.recc_client.http.schema.MutableTrack
+import com.recc.recc_client.http.schema.Track
 import io.ktor.client.call.*
 import kotlinx.coroutines.runBlocking
 

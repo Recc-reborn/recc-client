@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FormItem">
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="FormItem.Title" parent="FormItem">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="FormItem.Subtitle" parent="FormItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="FormItem.Text" parent="FormItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+    </style>
+
+    <style name="FormItem.Button" parent="FormItem">
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>

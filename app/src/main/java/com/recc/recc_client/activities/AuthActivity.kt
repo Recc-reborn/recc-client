@@ -45,7 +45,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun updateAuthMode() {
-        binding.authModeFragmentContainer.removeAllViewsInLayout()
+        // binding.authModeFragmentContainer.removeAllViewsInLayout()
 
         val callToAction : Int
         val togglerDialogText : Int
@@ -66,10 +66,10 @@ class AuthActivity : AppCompatActivity() {
 
         binding.togglerCTA.setText(togglerDialogText)
         binding.authModeToggler.setText(togglerButtonText)
-        binding.authModeHeading.setText(callToAction)
+        // binding.authModeHeading.setText(callToAction)
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            replace(binding.authModeFragmentContainer.id, newFragment)
+            // replace(binding.authModeFragmentContainer.id, newFragment)
         }
     }
 }

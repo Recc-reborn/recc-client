@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.recc.recc_client.R
-import com.recc.recc_client.api.clients.AuthApiClient
+import com.recc.recc_client.http.clients.AuthApiClient
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.runBlocking
 

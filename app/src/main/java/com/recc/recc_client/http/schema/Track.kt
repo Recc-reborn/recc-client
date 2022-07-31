@@ -1,4 +1,4 @@
-package com.recc.recc_client.api.schema
+package com.recc.recc_client.http.schema
 
 data class Track(
     var id: Int,

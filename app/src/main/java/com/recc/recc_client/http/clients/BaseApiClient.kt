@@ -1,10 +1,10 @@
-package com.recc.recc_client.api.clients
+package com.recc.recc_client.http.clients
 
 import android.content.Context
 import android.widget.Toast
 import com.google.gson.Gson
 import com.recc.recc_client.R
-import com.recc.recc_client.api.schema.UserInfo
+import com.recc.recc_client.http.schema.UserInfo
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.json.*
