@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -26,18 +26,10 @@ jobs:
       run: ./gradlew test
     - name: Build project
       run: ./gradlew assemble
-      
-      
-  emulator_tests:
-  
-    runs-on: macos-latest
-    
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          script: ./gradlew connectedCheck
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        profile: Nexus 6
+        emulator-build: 7425822
+        script: ./gradlew connectedCheck --stacktrace
