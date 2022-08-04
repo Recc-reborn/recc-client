@@ -22,18 +22,22 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
-    - name: Run Kotlin Linter
-      run: ./gradlew ktlintStagingDebugCheck
-    - name: Run Unit Tests
-      run: ./gradlew testStagingDebugUnitTest
+    - name: Run tests
+      run: ./gradlew test
+    - name: Build project
+      run: ./gradlew assemble
       
-    # Espresso testing for Android Views
-    - uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 30
-        target: default
-        arch: x86
-        profile: Nexus 6
-        script: ./gradlew connectedCheck --stacktrace
+      
+  emulator_tests:
+  
+    runs-on: macos-latest
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          script: ./gradlew connectedCheck
