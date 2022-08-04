@@ -76,18 +76,4 @@ dependencies {
     // Navigation Fragment
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.1"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.1"
-
-
-    // TODO: BORRAR
-
-    // Ktor
-    implementation "io.ktor:ktor-client-android:$ktor_version"
-    implementation "io.ktor:ktor-client-auth:$ktor_version"
-    // Ktor - Gson
-    implementation "io.ktor:ktor-client-gson:$ktor_version"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
-
-    def fragment_version = "1.3.6"
-    implementation "androidx.fragment:fragment-ktx:$fragment_version"
 }

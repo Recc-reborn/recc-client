@@ -3,6 +3,7 @@ package com.recc.recc_client.di
 import com.recc.recc_client.R
 import com.recc.recc_client.http.ServerRoutesDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
+import com.recc.recc_client.layout.auth.RegisterViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -14,6 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 val screenViewModels = module {
     viewModel {
         LoginViewModel()
+    }
+    viewModel {
+        RegisterViewModel()
     }
 }
 
