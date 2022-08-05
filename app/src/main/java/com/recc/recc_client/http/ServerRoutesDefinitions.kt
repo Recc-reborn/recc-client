@@ -37,5 +37,5 @@ interface ServerRoutesDefinitions {
     @DELETE("/tracks/{track}")
     suspend fun deleteTrack(@Path("track") track: Int): Response<String>
 
-    // TODO: PUT and DELETE petitions (and still missing POST petitions)
+    // TODO: PUT and DELETE queries (and still missing POST petitions)
 }

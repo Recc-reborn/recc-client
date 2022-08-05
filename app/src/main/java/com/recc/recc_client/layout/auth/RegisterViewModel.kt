@@ -1,24 +1,21 @@
 package com.recc.recc_client.layout.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.utils.L
+import com.recc.recc_client.layout.common.EventViewModel
 import kotlinx.coroutines.launch
 
-class RegisterViewModel: ViewModel() {
-    private val _registerBtnLD = MutableLiveData<Boolean>()
-    val registerBtnLD: LiveData<Boolean> = _registerBtnLD
+class RegisterViewModel: EventViewModel<RegisterScreenEvent>() {
 
-    init {
-        L.alert("RegisterViewModel initialized...")
+    fun onBtnRegister() {
+        viewModelScope.launch {
+            // TODO: Creates user
+            postEvent(RegisterScreenEvent.BtnRegisterPressed)
+        }
     }
 
-    fun onRegisterBtn() {
+    fun onTvLoginInstead() {
         viewModelScope.launch {
-            L.alert("Register Button pressed...")
-            _registerBtnLD.postValue(true)
+            postEvent(RegisterScreenEvent.TvLoginInsteadPressed)
         }
     }
 }

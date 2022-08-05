@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="FormItem">
-        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="FormItem.Title" parent="FormItem">
@@ -16,10 +16,15 @@
         <item name="android:textColor">@color/bright_green_text</item>
     </style>
 
-    <style name="FormItem.Text">
+    <style name="FormItem.Text" parent="FormItem">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginStart">16dp</item>
+    </style>
+
+    <style name="FormItem.TextClickable" parent="FormItem.Text">
+        <item name="android:textColor">@color/bright_green_text</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="FormItem.EditText" parent="FormItem.Text">
@@ -30,6 +35,8 @@
     </style>
 
     <style name="FormItem.Button" parent="FormItem">
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/button_background</item>
     </style>
 </resources>

@@ -1,6 +1,6 @@
 // Top-level build file where you can add configurimplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android'ation options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.5.10"
+    ext.kotlin_version = "1.5.20"
     repositories {
         google()
         mavenCentral()
