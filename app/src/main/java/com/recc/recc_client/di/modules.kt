@@ -1,7 +1,8 @@
 package com.recc.recc_client.di
 
+import com.google.gson.GsonBuilder
 import com.recc.recc_client.R
-import com.recc.recc_client.http.ServerRoutesDefinitions
+import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import org.koin.android.ext.koin.androidContext
@@ -23,10 +24,11 @@ val screenViewModels = module {
 
 val httpModule = module {
     single {
+        val gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
-            .baseUrl(androidContext().getString(R.string.api_base_endpoint))
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(androidContext().getString(R.string.api_host))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-        retrofit.create(ServerRoutesDefinitions::class.java)
+        retrofit.create(ServerRouteDefinitions::class.java)
     }
 }

@@ -2,20 +2,16 @@ package com.recc.recc_client.layout.views
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.marginLeft
 import com.recc.recc_client.R
-import com.recc.recc_client.utils.Alert
-import com.recc.recc_client.utils.Regex
-import com.recc.recc_client.utils.toDp
-import com.recc.recc_client.utils.toPx
+import com.recc.recc_client.utils.*
 
 class ValidatedEditTextFragment @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -41,6 +37,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
                 text = getString(R.styleable.ValidatedEditText_text)
                 textError = getString(R.styleable.ValidatedEditText_text_error)
         }
+        setInputType()
     }
 
     private fun lowerView(item: View, newDp: Int) {
@@ -64,8 +61,20 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         view.layoutParams
     }
 
+    private fun setInputType() {
+        etField.inputType = when (type) {
+            EMAIL_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            PASSWORD_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            USERNAME_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+            else -> InputType.TYPE_TEXT_VARIATION_NORMAL
+        }
+        Alert("${etField.inputType}")
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
+
+        // Sets regex type
         val regex = type?.let {
             Regex(context, it)
         }

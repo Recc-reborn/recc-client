@@ -21,6 +21,7 @@
             <include layout="@layout/layout_form_title" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vedf_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="96dp"
@@ -29,6 +30,7 @@
                 app:text_error="@string/email_address_error_label" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vedf_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:type="password"
