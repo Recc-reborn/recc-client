@@ -3,5 +3,5 @@
     <string name="regex_pass">.{5,20}</string>
     <string name="regex_name">[a-zA-ZñÑ]{4,30}</string>
     <string name="regex_username">[\\w|-|_]{4,30}</string>
-    <string name="regex_email">^[^@|\\s]+@\\w+(\\.\\w+){1,3}</string>
+    <string name="regex_email">^\\w[^@|\\s]+@\\w+(\\.\\w+)$</string>
 </resources>

@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * entirety of the application ***/
 val screenViewModels = module {
     viewModel {
-        LoginViewModel()
+        LoginViewModel(get())
     }
     viewModel {
         RegisterViewModel()
