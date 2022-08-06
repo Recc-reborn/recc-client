@@ -2,6 +2,7 @@ package com.recc.recc_client.di
 
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.R
+import com.recc.recc_client.http.AuthHttp
 import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
@@ -18,7 +19,7 @@ val screenViewModels = module {
         LoginViewModel(get())
     }
     viewModel {
-        RegisterViewModel()
+        RegisterViewModel(get())
     }
 }
 
@@ -30,5 +31,8 @@ val httpModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
+    }
+    single {
+        AuthHttp(get())
     }
 }

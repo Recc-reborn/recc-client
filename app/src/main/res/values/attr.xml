@@ -4,5 +4,6 @@
         <attr name="text" format="string" />
         <attr name="text_error" format="string" />
         <attr name="type" format="string" />
+        <attr name="popup_error_msg" format="string" />
     </declare-styleable>
 </resources>

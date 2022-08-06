@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentRegisterBinding
@@ -32,14 +32,23 @@ class RegisterFragment : Fragment() {
         subscribeToViewModel()
     }
 
-    fun subscribeToViewModel() {
+    private fun subscribeToViewModel() {
+        viewModel.emailRegex = getString(R.string.regex_email).toRegex()
+        viewModel.passwordRegex = getString(R.string.regex_pass).toRegex()
+        viewModel.usernameRegex = getString(R.string.regex_username).toRegex()
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is RegisterScreenEvent.BtnRegisterPressed -> {
-                    // TODO: Navigate to home screen
+                    val username = binding.vetfUsername.findViewById<EditText>(R.id.et_field).text.toString()
+                    val email = binding.vetfEmail.findViewById<EditText>(R.id.et_field).text.toString()
+                    val password = binding.vetfPassword.findViewById<EditText>(R.id.et_field).text.toString()
+                    viewModel.register(username, email, password)
                 }
                 is RegisterScreenEvent.TvLoginInsteadPressed -> {
                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                }
+                RegisterScreenEvent.EmailAlreadyInUseCase -> {
+                    binding.vetfEmail.setPopupError()
                 }
             }
         })

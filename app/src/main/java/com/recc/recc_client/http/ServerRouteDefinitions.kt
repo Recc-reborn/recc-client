@@ -1,9 +1,6 @@
 package com.recc.recc_client.http
 
-import com.recc.recc_client.models.responses.Token
-import com.recc.recc_client.models.responses.Playback
-import com.recc.recc_client.models.responses.Track
-import com.recc.recc_client.models.responses.User
+import com.recc.recc_client.models.responses.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -18,7 +15,7 @@ interface ServerRouteDefinitions {
     suspend fun getUserMe(): Response<User>
 
     @POST("api/users/")
-    suspend fun postUser(): Response<User>
+    suspend fun postUser(@Body user: UserPost): Response<User>
 
     @POST("api/auth/token")
     suspend fun postToken(@Body token: Token): Response<String?>

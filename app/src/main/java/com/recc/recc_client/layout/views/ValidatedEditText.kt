@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.views
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.Editable
 import android.text.InputType
@@ -22,13 +23,23 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
     private val tvError: AppCompatTextView
     private val type: String?
     private val text: String?
+    private val popupErrorMsg: String?
     private val textError: String?
+    private var verticalOffset = 0.toFloat()
+    private val horizontalOffset = 10
+    private var hasBeenSet = 1
 
     init {
         linearLayout = inflate(context, R.layout.validated_edit_text, this) as LinearLayoutCompat
         etField = linearLayout.findViewById(R.id.et_field)
         tvTitle = linearLayout.findViewById(R.id.tv_title)
         tvError = linearLayout.findViewById(R.id.tv_error)
+        etField.viewTreeObserver.addOnGlobalLayoutListener {
+            verticalOffset = ((tvTitle.height) / 2).toPx(context)
+            if (hasBeenSet-- > 0) {
+                tvTitleAnimationIn(0)
+            }
+        }
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.ValidatedEditText,
@@ -36,39 +47,9 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
                 type = getString(R.styleable.ValidatedEditText_type)
                 text = getString(R.styleable.ValidatedEditText_text)
                 textError = getString(R.styleable.ValidatedEditText_text_error)
+                popupErrorMsg = getString(R.styleable.ValidatedEditText_popup_error_msg)
         }
         setInputType()
-    }
-
-    private fun lowerView(item: View, newDp: Int) {
-        val px = item.translationY
-        val dp = px.toDp(context) + newDp
-        item.translationY = dp.toPx(context)
-    }
-
-    private fun rightView(item: View, newDp: Int) {
-        val px = item.translationX
-        val dp = px.toDp(context) + newDp
-        item.translationX = dp.toPx(context)
-    }
-
-    private fun resetView(view: View) {
-        view.translationX = 0.toFloat()
-        view.translationY = 0.toFloat()
-        val param = RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        val pad = context.resources.getDimension(R.dimen.form_horizontal_padding).toInt()
-        param.setMargins(pad, 0, pad ,0)
-        view.layoutParams
-    }
-
-    private fun setInputType() {
-        etField.inputType = when (type) {
-            EMAIL_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-            PASSWORD_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            USERNAME_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-            else -> InputType.TYPE_TEXT_VARIATION_NORMAL
-        }
-        Alert("${etField.inputType}")
     }
 
     override fun onFinishInflate() {
@@ -80,11 +61,11 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         }
         tvTitle.text = text
         tvError.text = textError
-        lowerView(tvTitle, 39)
-        rightView(tvTitle, 10)
 
         etField.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                tvError.text = text
+            }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let { charSequence ->
                     regex?.let { ex ->
@@ -103,11 +84,48 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
 
         etField.setOnFocusChangeListener { _, notActive ->
             if (!notActive && etField.text.isNullOrEmpty()) {
-                lowerView(tvTitle, 39)
-                rightView(tvTitle, 10)
+                tvTitleAnimationIn()
             } else {
-                resetView(tvTitle)
+                tvTitleAnimationOut()
             }
+        }
+    }
+
+    fun setPopupError() {
+        etField.background = context.getDrawable(R.drawable.edit_text_error_background)
+        tvError.text = popupErrorMsg
+        tvError.visibility = View.VISIBLE
+    }
+
+    private fun tvTitleAnimationIn(time: Long = 100) {
+        ObjectAnimator.ofFloat(tvTitle, "translationX", horizontalOffset.toPx(context)).apply {
+            duration = time
+            start()
+        }
+        ObjectAnimator.ofFloat(tvTitle, "translationY", verticalOffset).apply {
+            duration = time
+            start()
+        }
+    }
+
+    private fun tvTitleAnimationOut(time: Long = 100) {
+        ObjectAnimator.ofFloat(tvTitle, "translationX", 0.toFloat()).apply {
+            duration = time
+            start()
+        }
+        ObjectAnimator.ofFloat(tvTitle, "translationY", 0.toFloat()).apply {
+            duration = time
+            start()
+        }
+    }
+
+
+    private fun setInputType() {
+        etField.inputType = when (type) {
+            EMAIL_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            PASSWORD_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            USERNAME_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+            else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
         }
     }
 }

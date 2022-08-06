@@ -13,6 +13,7 @@
     <string name="name_error_label">Invalid username</string>
     <string name="register_email_address_label">Enter your email address</string>
     <string name="register_instead_cta">Don\'t have an account? Register instead</string>
+    <string name="register_email_popup_error">Email is already in use</string>
     <string name="login_instead_cta">Already have an account? Log in instead</string>
 
     <!-- TODO: Remove or change this placeholder text -->
