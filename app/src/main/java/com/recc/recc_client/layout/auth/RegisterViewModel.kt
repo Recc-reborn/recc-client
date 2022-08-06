@@ -5,6 +5,7 @@ import com.recc.recc_client.http.AuthHttp
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
+import com.recc.recc_client.models.responses.User
 import com.recc.recc_client.utils.Alert
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,10 +30,18 @@ class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterS
                         }
                         .onSuccess { user ->
                             user?.let {
-                                postEvent(RegisterScreenEvent.RegisterSuccessful(it))
+                                postEvent(RegisterScreenEvent.RegisterSuccessful(it, password))
                             }
                         }
                 }
+            }
+        }
+    }
+
+    fun login(user: User, password: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            httpApi.login(user.email, password).onSuccess { token ->
+                postEvent(RegisterScreenEvent.LoginSuccessful(user, token))
             }
         }
     }

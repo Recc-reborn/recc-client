@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.common
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.findNavController
+import com.recc.recc_client.R
 
 /**
  * @param [V] ViewModel
@@ -45,5 +48,21 @@ abstract class BaseFragment<out V: ViewModel, B: ViewDataBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeToViewModel()
+    }
+
+    protected fun saveState(token: String) {
+        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
+        with (sharedPref?.edit()) {
+            this?.putString(getString(R.string.auth_token_key), token)
+            this?.apply()
+        }
+    }
+
+    protected fun loadState() {
+        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
+        val token = sharedPref?.getString(getString(R.string.auth_token_key), null)
+        if (token?.isEmpty() == false) {
+            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        }
     }
 }

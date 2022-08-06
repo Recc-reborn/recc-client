@@ -32,11 +32,15 @@ class RegisterFragment : BaseFragment<RegisterViewModel, FragmentRegisterBinding
                     binding.vetfEmail.setPopupError()
                 }
                 is RegisterScreenEvent.RegisterSuccessful -> {
-                    Toast.makeText(requireContext(), "Welcome ${screenEvent.user.name}!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+                    viewModel.login(screenEvent.user, screenEvent.password)
                 }
                 is RegisterScreenEvent.RegisterFailed -> {
                     binding.vetfEmail.setPopupError()
+                }
+                is RegisterScreenEvent.LoginSuccessful -> {
+                    saveState(screenEvent.token)
+                    Toast.makeText(requireContext(), "Welcome ${screenEvent.user.name}!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
                 }
             }
         })

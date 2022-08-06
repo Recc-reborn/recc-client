@@ -24,22 +24,6 @@ class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layou
         super.onResume()
     }
 
-    private fun saveState(token: String) {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        with (sharedPref?.edit()) {
-            this?.putString(getString(R.string.auth_token_key), token)
-            this?.apply()
-        }
-    }
-
-    private fun loadState() {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        val token = sharedPref?.getString(getString(R.string.auth_token_key), null)
-        if (token?.isEmpty() == false) {
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-        }
-    }
-
     /**
      * Method which declares listeners for every LiveData in LoginViewModel
      */
