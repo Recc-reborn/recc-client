@@ -8,103 +8,63 @@
             type="com.recc.recc_client.layout.auth.RegisterViewModel" />
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical">
-
-        <include layout="@layout/layout_form_title" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_register_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:text="@string/register_name_label"
-            style="@style/FormItem.Text" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_register_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:autofillHints="email_address"
-            android:inputType="textPersonName|text|textAutoComplete"
-            style="@style/FormItem.EditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_register_user_name" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_register_email_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/register_email_address_label"
-            style="@style/FormItem.Text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_register_user_name" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_register_email_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            style="@style/FormItem.EditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_register_email_address"
-            android:autofillHints="email" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_register_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/register_password_label"
-            style="@style/FormItem.Text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_register_email_address" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_register_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="textPersonName|textPassword|textWebPassword"
-            style="@style/FormItem.EditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_register_password"
-            android:autofillHints="password"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_submit_new_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/register_cta"
-            android:onClick="@{(view) -> viewModel.onBtnRegister()}"
-            android:layout_gravity="center"
-            style="@style/FormItem.Button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_register_password" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_login_instead"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login_instead_cta"
-            android:layout_marginTop="24dp"
-            android:clickable="true"
-            android:onClick="@{(view) -> viewModel.onTvLoginInstead()}"
-            style="@style/FormItem.TextClickable"
-            tools:text="@string/login_instead_cta" />
+            android:orientation="vertical">
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <include layout="@layout/layout_form_title" />
+
+            <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp"
+                app:type="username"
+                app:text="@string/register_name_label"
+                app:text_error="@string/name_error_label"/>
+
+            <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:type="email"
+                app:text="@string/email_address_label"
+                app:text_error="@string/email_address_error_label" />
+
+            <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:type="password"
+                app:text="@string/password_label"
+                app:text_error="@string/password_error_label" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_submit_new_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/register_cta"
+                android:onClick="@{(view) -> viewModel.onBtnRegister()}"
+                android:layout_gravity="center"
+                style="@style/FormItem.Button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_register_password" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_login_instead"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_instead_cta"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:onClick="@{(view) -> viewModel.onTvLoginInstead()}"
+                style="@style/FormItem.TextClickable"
+                tools:text="@string/login_instead_cta" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 </layout>
