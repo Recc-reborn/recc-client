@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">recc</string>
+    <string name="app_name">Recc</string>
+    <string name="slogan">Discover and enjoy</string>
+
+    <string name="login_cta">Log In</string>
+    <string name="register_cta">Register</string>
+    <string name="email_address_label">Email Address</string>
+    <string name="password_label">Password</string>
+    <string name="register_password_label">Enter a strong password</string>
+    <string name="register_name_label">Enter your name</string>
+    <string name="register_email_address_label">Enter your email address</string>
+    <string name="register_instead_cta">Don\'t have an account? Register instead</string>
+    <string name="login_instead_cta">Already have an account? Log in instead</string>
 </resources>
