@@ -2,6 +2,7 @@
     <string name="app_name">Recc</string>
     <string name="slogan">Discover and enjoy</string>
 
+    <!--AUTH-->
     <string name="login_cta">Log In</string>
     <string name="register_cta">Register</string>
     <string name="email_address_label">Email Address</string>
@@ -15,6 +16,12 @@
     <string name="register_instead_cta">Don\'t have an account? Register instead</string>
     <string name="register_email_popup_error">Email is already in use</string>
     <string name="login_instead_cta">Already have an account? Log in instead</string>
+    <string name="preference_auth_key_file">shared_preferences_auth</string>
+    <string name="auth_token_key">auth_token_file</string>
+    <string name="invalid_credentials_label">email address and/or password incorrect</string>
+
+    <!--HOME-->
+    <string name="logout_cta">Log out</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

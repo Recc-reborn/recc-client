@@ -35,7 +35,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         tvTitle = linearLayout.findViewById(R.id.tv_title)
         tvError = linearLayout.findViewById(R.id.tv_error)
         etField.viewTreeObserver.addOnGlobalLayoutListener {
-            verticalOffset = ((tvTitle.height) / 2).toPx(context)
+            verticalOffset = ((tvTitle.height) / 2 + 3).toPx(context)
             if (hasBeenSet-- > 0) {
                 tvTitleAnimationIn(0)
             }

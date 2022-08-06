@@ -28,14 +28,16 @@ class LoginViewModel(private val httpApi: AuthHttp): EventViewModel<LoginScreenE
                 if (email.matches(emailRegex ?: ".".toRegex()) && password.matches(passwordRegex ?: ".".toRegex())) {
                     httpApi.login(email, password)
                         .onSuccess {
-                            Alert("body: $it")
+                            Alert("token: $it")
+                            postEvent(LoginScreenEvent.LoginSuccessful(it))
                         }.onFailure {
-                            Alert("Invalid credentials!!")
+                            postEvent(LoginScreenEvent.LoginFailed)
                         }
                 }
             }
         }
     }
+
 
     fun onBtnLogin() {
         viewModelScope.launch {

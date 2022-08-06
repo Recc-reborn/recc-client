@@ -24,11 +24,13 @@ class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterS
                 val passwordValid = password.matches(passwordRegex ?: ".".toRegex())
                 if (usernameValid && emailValid && passwordValid) {
                     httpApi.register(username, email, password)
-                        .onFailure { user ->
-                            Alert("SI JALA PERO EN EL FALIURE")
+                        .onFailure {
+                            postEvent(RegisterScreenEvent.RegisterFailed)
                         }
-                        .onSuccess {
-                            Alert("SI JALÓOOO $it")
+                        .onSuccess { user ->
+                            user?.let {
+                                postEvent(RegisterScreenEvent.RegisterSuccessful(it))
+                            }
                         }
                 }
             }

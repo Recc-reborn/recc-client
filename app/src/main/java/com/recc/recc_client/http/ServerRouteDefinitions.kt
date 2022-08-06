@@ -21,7 +21,7 @@ interface ServerRouteDefinitions {
     suspend fun postToken(@Body token: Token): Response<String?>
 
     @DELETE("api/auth/token")
-    suspend fun deleteToken(): Response<String>
+    suspend fun deleteToken(): Response<com.recc.recc_client.models.responses.Response?>
 
     @GET("api/tracks")
     suspend fun getTracks(): Response<Track>

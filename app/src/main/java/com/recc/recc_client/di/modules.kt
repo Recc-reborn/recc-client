@@ -6,6 +6,7 @@ import com.recc.recc_client.http.AuthHttp
 import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
+import com.recc.recc_client.layout.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -20,6 +21,9 @@ val screenViewModels = module {
     }
     viewModel {
         RegisterViewModel(get())
+    }
+    viewModel {
+        HomeViewModel(get())
     }
 }
 
