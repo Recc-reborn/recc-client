@@ -1,7 +1,7 @@
-package com.recc.recc_client.models.responses
+package com.recc.recc_client.models.auth
 
 import com.google.gson.annotations.SerializedName
 
-open class ErrorResponse {
+data class SimpleResponse(
     @SerializedName("message") val message: String = ""
-}
+)

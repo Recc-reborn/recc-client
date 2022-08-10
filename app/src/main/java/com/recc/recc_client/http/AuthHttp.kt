@@ -2,11 +2,17 @@ package com.recc.recc_client.http
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
 import com.recc.recc_client.R
 import com.recc.recc_client.layout.common.Result
-import com.recc.recc_client.models.responses.*
+import com.recc.recc_client.models.auth.*
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
+import org.json.JSONObject
+import java.lang.reflect.Type
 
 class AuthHttp(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
 
@@ -19,18 +25,21 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
                 deviceName = "android1"
             )
         )
-        Alert("${query.code()}")
-        Alert("${query.isSuccessful}")
-        if (query.isSuccessful) {
-            if (query.code().isOkCode()) {
-                query.body()?.let {
-                    Alert("$it")
-                    return Result.Success(success = it.token)
-                }
+        if (query.code().isOkCode()) {
+            query.body()?.let {
+                return Result.Success(success = it.token)
             }
         }
-        query.body()?.let {
-            return Result.Failure(failure = it.message)
+        query.errorBody()?.apply {
+            val json = JSONObject(this.string())
+            val errors = json.getJSONObject("errors")
+            val errorList = errors.getJSONArray("email")
+            val msg = if (errorList.length() > 0) {
+                errorList[0].toString()
+            } else {
+                json.getString("message")
+            }
+            return Result.Failure(failure = msg)
         }
         return Result.Failure(failure = context.getString(R.string.failed_query_msg))
     }
@@ -54,8 +63,8 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
 
     suspend fun logout(): Result<String, String> {
         val query = httpApi.deleteToken()
-        query.body()?.let { res ->
-            return Result.Success(success = res.message)
+        query.body()?.let {
+            TODO()
         } ?: run {
             return Result.Failure(null)
         }

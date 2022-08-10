@@ -1,6 +1,6 @@
 package com.recc.recc_client.layout.auth
 
-import com.recc.recc_client.models.responses.User
+import com.recc.recc_client.models.auth.User
 
 sealed class RegisterScreenEvent {
     object BtnRegisterPressed: RegisterScreenEvent()

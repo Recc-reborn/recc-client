@@ -5,8 +5,7 @@ import com.recc.recc_client.http.AuthHttp
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
-import com.recc.recc_client.models.responses.User
-import com.recc.recc_client.utils.Alert
+import com.recc.recc_client.models.auth.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
