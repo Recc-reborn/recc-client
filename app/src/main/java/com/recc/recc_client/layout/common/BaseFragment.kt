@@ -61,7 +61,7 @@ abstract class BaseFragment<out V: ViewModel, B: ViewDataBinding>(
     protected fun loadState() {
         val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
         val token = sharedPref?.getString(getString(R.string.auth_token_key), null)
-        if (token?.isEmpty() == false) {
+        if (!token.isNullOrEmpty()) {
             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
         }
     }

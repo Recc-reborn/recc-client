@@ -2,13 +2,10 @@ package com.recc.recc_client.layout.auth
 
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.AuthHttp
-import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
-import com.recc.recc_client.models.responses.Token
 import com.recc.recc_client.utils.Alert
-import com.recc.recc_client.utils.isOkCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,9 +26,10 @@ class LoginViewModel(private val httpApi: AuthHttp): EventViewModel<LoginScreenE
                     httpApi.login(email, password)
                         .onSuccess {
                             Alert("token: $it")
-                            postEvent(LoginScreenEvent.LoginSuccessful(it))
+                            // postEvent(LoginScreenEvent.LoginSuccessful(it))
                         }.onFailure {
-                            postEvent(LoginScreenEvent.LoginFailed)
+                            Alert("msg: $it")
+                            // postEvent(LoginScreenEvent.LoginFailed)
                         }
                 }
             }

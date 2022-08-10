@@ -14,7 +14,7 @@ data class User (
     @SerializedName("updated_at") val updatedAt: String = "",
 )
 
-data class UserPost(
+data class CreateUser(
     @SerializedName("name") val name: String = "",
     @SerializedName("email") val email: String = "",
     @SerializedName("role") val role: String = "",

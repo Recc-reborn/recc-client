@@ -20,6 +20,8 @@
     <string name="auth_token_key">auth_token_file</string>
     <string name="invalid_credentials_label">email address and/or password incorrect</string>
 
+    <string name="failed_query_msg">Lo sentimos, no fue posible conectarse conectarse con el servidor</string>
+
     <!--HOME-->
     <string name="logout_cta">Log out</string>
 

@@ -1,5 +1,6 @@
 package com.recc.recc_client.http
 
+import com.google.gson.JsonElement
 import com.recc.recc_client.models.responses.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -15,13 +16,14 @@ interface ServerRouteDefinitions {
     suspend fun getUserMe(): Response<User>
 
     @POST("api/users/")
-    suspend fun postUser(@Body user: UserPost): Response<User>
+    suspend fun postUser(@Body user: CreateUser): Response<User>
 
+    @Headers("Accept: application/json")
     @POST("api/auth/token")
-    suspend fun postToken(@Body token: Token): Response<String?>
+    suspend fun postToken(@Body createToken: CreateToken): Response<Token>
 
     @DELETE("api/auth/token")
-    suspend fun deleteToken(): Response<com.recc.recc_client.models.responses.Response?>
+    suspend fun deleteToken(): Response<ErrorResponse>
 
     @GET("api/tracks")
     suspend fun getTracks(): Response<Track>

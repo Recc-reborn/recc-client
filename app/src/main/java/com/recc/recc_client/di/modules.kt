@@ -7,6 +7,7 @@ import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.models.responses.Token
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -29,7 +30,9 @@ val screenViewModels = module {
 
 val httpModule = module {
     single {
-        val gson = GsonBuilder().setLenient().create()
+        val gson = GsonBuilder().setLenient()
+            .registerTypeAdapter(Token::class.java, Token().Deserializer())
+            .create()
         val retrofit = Retrofit.Builder()
             .baseUrl(androidContext().getString(R.string.api_host))
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -37,6 +40,6 @@ val httpModule = module {
         retrofit.create(ServerRouteDefinitions::class.java)
     }
     single {
-        AuthHttp(get())
+        AuthHttp(androidContext(), get())
     }
 }

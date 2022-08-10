@@ -41,7 +41,7 @@ class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterS
     fun login(user: User, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
             httpApi.login(user.email, password).onSuccess { token ->
-                postEvent(RegisterScreenEvent.LoginSuccessful(user, token))
+                // postEvent(RegisterScreenEvent.LoginSuccessful(user, token))
             }
         }
     }
