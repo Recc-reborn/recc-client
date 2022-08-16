@@ -1,7 +1,5 @@
 package com.recc.recc_client.layout.auth
 
-import android.content.Context
-import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -47,8 +45,8 @@ class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layou
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
                 is LoginScreenEvent.LoginFailed -> {
-                    binding.vedfEmail.setPopupError()
-                    binding.vedfPassword.setPopupError()
+                    binding.vedfEmail.setPopupError(screenEvent.errorResponse.message)
+                    binding.vedfPassword.setPopupError(screenEvent.errorResponse.message)
                 }
             }
         })

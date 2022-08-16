@@ -6,10 +6,9 @@ package com.recc.recc_client.utils
 import android.content.Context
 import android.util.TypedValue
 
-fun Int.isOkCode() = this == 200
-fun Int.isNotFoundCode() = this == 404
-fun Int.isUnprocessableContentCode() = this == 422
-fun Int.isServerInternalErrorCode() = this == 500
+fun Int.isOkCode() = this in 200..299
+fun Int.isUnprocessableContentCode() = this in 400..499
+fun Int.isServerInternalErrorCode() = this in 500..599
 
 fun Int.toPx(context: Context) = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,

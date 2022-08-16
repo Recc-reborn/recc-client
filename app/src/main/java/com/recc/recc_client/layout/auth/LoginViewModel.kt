@@ -5,6 +5,7 @@ import com.recc.recc_client.http.AuthHttp
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
+import com.recc.recc_client.models.auth.ErrorResponse
 import com.recc.recc_client.utils.Alert
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,10 +27,10 @@ class LoginViewModel(private val httpApi: AuthHttp): EventViewModel<LoginScreenE
                     httpApi.login(email, password)
                         .onSuccess {
                             Alert("token: $it")
-                            // postEvent(LoginScreenEvent.LoginSuccessful(it))
+                            postEvent(LoginScreenEvent.LoginSuccessful(it))
                         }.onFailure {
                             Alert("msg: $it")
-                            // postEvent(LoginScreenEvent.LoginFailed)
+                             postEvent(LoginScreenEvent.LoginFailed(it ?: ErrorResponse()))
                         }
                 }
             }

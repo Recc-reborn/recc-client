@@ -2,21 +2,34 @@ package com.recc.recc_client.http
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import com.recc.recc_client.R
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.*
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
+import com.recc.recc_client.utils.toStringList
+import okhttp3.ResponseBody
 import org.json.JSONObject
-import java.lang.reflect.Type
 
 class AuthHttp(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
 
-    suspend fun login(email: String, password: String): Result<String, String> {
+    private fun getJsonObject(body: ResponseBody): ErrorResponse {
+        val json = JSONObject(body.string())
+        val message = json.getString(MESSAGE_FIEL)
+        var emaiList = listOf<String>()
+        var passwordList = listOf<String>()
+        if (json.has(ERRORS_FIELD)) {
+            val errors = json.getJSONObject(ERRORS_FIELD)
+            if (errors.has(EMAIL_FIELD)) {
+                emaiList = errors.getJSONArray(EMAIL_FIELD).toStringList()
+            }
+            if (errors.has(PASSWORD_FIELD)) {
+                passwordList = errors.getJSONArray(PASSWORD_FIELD).toStringList()
+            }
+        }
+        return ErrorResponse(message, Errors(emaiList, passwordList))
+    }
+
+    suspend fun login(email: String, password: String): Result<ErrorResponse, String> {
         val query = httpApi.postToken(
             CreateToken(
                 email = email,
@@ -25,26 +38,18 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
                 deviceName = "android1"
             )
         )
-        if (query.code().isOkCode()) {
-            query.body()?.let {
+        query.body()?.let {
+            if (query.code().isOkCode()) {
                 return Result.Success(success = it.token)
             }
         }
         query.errorBody()?.apply {
-            val json = JSONObject(this.string())
-            val errors = json.getJSONObject("errors")
-            val errorList = errors.getJSONArray("email")
-            val msg = if (errorList.length() > 0) {
-                errorList[0].toString()
-            } else {
-                json.getString("message")
-            }
-            return Result.Failure(failure = msg)
+            return Result.Failure(failure = getJsonObject(this))
         }
-        return Result.Failure(failure = context.getString(R.string.failed_query_msg))
+        return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 
-    suspend fun register(username: String, email: String, password: String): Result<Nothing, User?> {
+    suspend fun register(username: String, email: String, password: String): Result<ErrorResponse, User?> {
         val query = httpApi.postUser(
             CreateUser(
                 name = username,
@@ -53,20 +58,27 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
                 role = ROLE_USER
             )
         )
-
-        query.body()?.let { user ->
-            return Result.Success(success = user)
-        } ?: run {
-            return Result.Failure(null)
+        query.body()?.let {
+            if (query.code().isOkCode()) {
+                return Result.Success(success = it)
+            }
         }
+        query.errorBody()?.apply {
+            return Result.Failure(failure = getJsonObject(this))
+        }
+        return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 
-    suspend fun logout(): Result<String, String> {
+    suspend fun logout(): Result<ErrorResponse, SimpleResponse> {
         val query = httpApi.deleteToken()
         query.body()?.let {
-            TODO()
-        } ?: run {
-            return Result.Failure(null)
+            if (query.code().isOkCode()) {
+                return Result.Success(success = it)
+            }
         }
+        query.errorBody()?.let {
+            return Result.Failure(failure = getJsonObject(it))
+        }
+        return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 }

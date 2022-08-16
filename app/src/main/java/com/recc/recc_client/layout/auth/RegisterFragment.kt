@@ -35,7 +35,14 @@ class RegisterFragment : BaseFragment<RegisterViewModel, FragmentRegisterBinding
                     viewModel.login(screenEvent.user, screenEvent.password)
                 }
                 is RegisterScreenEvent.RegisterFailed -> {
-                    binding.vetfEmail.setPopupError()
+                    val emailErrorList = screenEvent.errorResponse.errors.email
+                    val passwordErrorList = screenEvent.errorResponse.errors.password
+                    if (emailErrorList.isNotEmpty()) {
+                        binding.vetfEmail.setPopupError(emailErrorList.first())
+                    }
+                    if (passwordErrorList.isNotEmpty()) {
+                        binding.vetfPassword.setPopupError(passwordErrorList.first())
+                    }
                 }
                 is RegisterScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)

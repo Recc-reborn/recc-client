@@ -91,9 +91,11 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         }
     }
 
-    fun setPopupError() {
+    fun setPopupError(customError: String? = null) {
         etField.background = context.getDrawable(R.drawable.edit_text_error_background)
-        tvError.text = popupErrorMsg
+        customError
+            ?. let { tvError.text = it }
+            ?: run { tvError.text = popupErrorMsg }
         tvError.visibility = View.VISIBLE
     }
 
