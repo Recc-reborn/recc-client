@@ -42,7 +42,8 @@ class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layou
                 is LoginScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)
                     Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                    // TODO: Handle checking if user has already selected favorite songs so that the app gets redirected to HomeFragment
+                    findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
                 }
                 is LoginScreenEvent.LoginFailed -> {
                     binding.vedfEmail.setPopupError(screenEvent.errorResponse.message)

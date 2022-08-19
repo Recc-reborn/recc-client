@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterScreenEvent>() {
+class RegisterViewModel(private val http: AuthHttp): EventViewModel<RegisterScreenEvent>() {
     var usernameRegex: Regex? = null
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null
@@ -24,7 +24,7 @@ class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterS
                 val emailValid = email.matches(emailRegex ?: ".".toRegex())
                 val passwordValid = password.matches(passwordRegex ?: ".".toRegex())
                 if (usernameValid && emailValid && passwordValid) {
-                    httpApi.register(username, email, password)
+                    http.register(username, email, password)
                         .onSuccess { user ->
                             user?.let {
                                 postEvent(RegisterScreenEvent.RegisterSuccessful(it, password))
@@ -40,7 +40,7 @@ class RegisterViewModel(private val httpApi: AuthHttp): EventViewModel<RegisterS
 
     fun login(user: User, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            httpApi.login(user.email, password).onSuccess { token ->
+            http.login(user.email, password).onSuccess { token ->
                 postEvent(RegisterScreenEvent.LoginSuccessful(user, token))
             }
         }

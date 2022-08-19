@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * Login ViewModel that acts as a "two-way controller" in a MVC architecture, here we code the login's
  * logic and communicate with LoginFragment for navigation and other UI related stuff
  */
-class LoginViewModel(private val httpApi: AuthHttp): EventViewModel<LoginScreenEvent>() {
+class LoginViewModel(private val http: AuthHttp): EventViewModel<LoginScreenEvent>() {
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null
 
@@ -24,7 +24,7 @@ class LoginViewModel(private val httpApi: AuthHttp): EventViewModel<LoginScreenE
             val exList = listOf(emailRegex, passwordRegex)
             exList.all { it != null }.also {
                 if (email.matches(emailRegex ?: ".".toRegex()) && password.matches(passwordRegex ?: ".".toRegex())) {
-                    httpApi.login(email, password)
+                    http.login(email, password)
                         .onSuccess {
                             Alert("token: $it")
                             postEvent(LoginScreenEvent.LoginSuccessful(it))
