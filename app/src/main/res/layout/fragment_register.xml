@@ -20,6 +20,7 @@
             <include layout="@layout/layout_form_title" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vetf_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="72dp"
@@ -28,17 +29,20 @@
                 app:text_error="@string/name_error_label"/>
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vetf_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:type="email"
-                app:text="@string/email_address_label"
-                app:text_error="@string/email_address_error_label" />
+                app:text="@string/register_email_address_label"
+                app:text_error="@string/email_address_error_label"
+                app:popup_error_msg="@string/register_email_popup_error" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vetf_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:type="password"
-                app:text="@string/password_label"
+                app:text="@string/register_password_label"
                 app:text_error="@string/password_error_label" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -60,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_instead_cta"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
                 android:clickable="true"
                 android:onClick="@{(view) -> viewModel.onTvLoginInstead()}"
                 style="@style/FormItem.TextClickable"

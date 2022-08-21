@@ -21,16 +21,20 @@
             <include layout="@layout/layout_form_title" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vedf_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="96dp"
+                app:popup_error_msg="@string/invalid_credentials_label"
                 app:type="email"
                 app:text="@string/email_address_label"
                 app:text_error="@string/email_address_error_label" />
 
             <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+                android:id="@+id/vedf_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:popup_error_msg="@string/invalid_credentials_label"
                 app:type="password"
                 app:text="@string/password_label"
                 app:text_error="@string/password_error_label"/>
@@ -51,6 +55,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
                 android:clickable="true"
                 android:onClick="@{(view) -> viewModel.onTvRegisterInstead()}"
                 style="@style/FormItem.TextClickable"

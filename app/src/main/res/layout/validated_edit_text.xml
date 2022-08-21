@@ -9,23 +9,24 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_field"
+            style="@style/FormItem.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_title"
-            style="@style/FormItem.EditText"
             tools:text="@string/hello_blank_fragment" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_title"
+            style="@style/FormItem.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/FormItem.Text"
             tools:text="@string/hello_blank_fragment" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_error"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:layout_below="@id/et_field"
             style="@style/FormItem.TextError"
             tools:text="@string/hello_blank_fragment" />

@@ -14,7 +14,7 @@ object Regex {
             EMAIL_TYPE -> context.getString(R.string.regex_email).toRegex()
             PASSWORD_TYPE -> context.getString(R.string.regex_pass).toRegex()
             USERNAME_TYPE -> context.getString(R.string.regex_username).toRegex()
-            else -> "".toRegex()
+            else -> ".".toRegex()
         }
     }
 }
