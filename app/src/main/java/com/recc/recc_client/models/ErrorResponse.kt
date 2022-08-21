@@ -1,7 +1,7 @@
 package com.recc.recc_client.models.auth
 
 const val ERRORS_FIELD = "errors"
-const val MESSAGE_FIEL = "message"
+const val MESSAGE_FIELD = "message"
 const val EMAIL_FIELD = "email"
 const val PASSWORD_FIELD = "password"
 

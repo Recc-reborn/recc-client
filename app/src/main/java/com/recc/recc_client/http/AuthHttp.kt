@@ -14,7 +14,7 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
 
     private fun getJsonObject(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())
-        val message = json.getString(MESSAGE_FIEL)
+        val message = json.getString(MESSAGE_FIELD)
         var emaiList = listOf<String>()
         var passwordList = listOf<String>()
         if (json.has(ERRORS_FIELD)) {
@@ -54,8 +54,7 @@ class AuthHttp(private val context: Context, private val httpApi: ServerRouteDef
             CreateUser(
                 name = username,
                 password = password,
-                email = email,
-                role = ROLE_USER
+                email = email
             )
         )
         query.body()?.let {

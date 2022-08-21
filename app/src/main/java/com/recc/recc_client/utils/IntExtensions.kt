@@ -7,7 +7,7 @@ import android.content.Context
 import android.util.TypedValue
 
 fun Int.isOkCode() = this in 200..299
-fun Int.isUnprocessableContentCode() = this in 400..499
+fun Int.isBadRequestCode() = this in 400..499
 fun Int.isServerInternalErrorCode() = this in 500..599
 
 fun Int.toPx(context: Context) = TypedValue.applyDimension(
