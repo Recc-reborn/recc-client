@@ -6,10 +6,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val httpApi: AuthHttp): EventViewModel<HomeScreenEvent>() {
+class HomeViewModel(private val http: AuthHttp): EventViewModel<HomeScreenEvent>() {
     fun onBtnLogout() {
         CoroutineScope(Dispatchers.IO).launch {
-            httpApi.logout()
+            http.logout()
             postEvent(HomeScreenEvent.onLoggedOut)
         }
     }

@@ -10,7 +10,7 @@ import com.recc.recc_client.utils.toStringList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 
-class AuthHttp(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
+class   AuthHttp(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
 
     private fun getJsonObject(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())

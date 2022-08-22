@@ -47,7 +47,7 @@ class RegisterFragment : BaseFragment<RegisterViewModel, FragmentRegisterBinding
                 is RegisterScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)
                     Toast.makeText(requireContext(), "Welcome ${screenEvent.user.name}!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+                    findNavController().navigate(R.id.action_registerFragment_to_welcomeFragment)
                 }
             }
         })

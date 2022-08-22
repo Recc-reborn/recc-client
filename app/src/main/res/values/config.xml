@@ -4,8 +4,9 @@
     <string name="api_base_endpoint">http://10.0.2.2:8000/api/</string>
     <string name="token_path">token.tmp</string>
     <string name="user_info_path">user_info.json</string>
-    <string name="server_error_code">505</string>
-    <string name="server_ok_code">200</string>
-    <string name="login_data_required_code">422</string>
-    <string name="create_user_success_code">201</string>
+
+    <!--Last.fm-->
+    <string name="last_fm_base_endpoint">https://ws.audioscrobbler.com/2.0/</string>
+    <string name="last_fm_token">4ee5fa23159bc4e2e42356c2ac641895</string>
+    <string name="last_fm_shared_secret">55554623db88900ea7e0823c82bfc99c</string>
 </resources>
