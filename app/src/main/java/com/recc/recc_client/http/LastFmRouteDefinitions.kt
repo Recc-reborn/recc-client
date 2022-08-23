@@ -1,15 +1,19 @@
 package com.recc.recc_client.http
 
-import com.recc.recc_client.models.last_fm.Token
-import retrofit2.Response
+import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.Headers
-import retrofit2.http.Query
 
-const val LAST_FM_GET_TOKEN_METHOD = "auth.gettoken"
+const val DEFAULT_LIMIT = 50
+const val DEFAULT_PAGE = 1
 
 interface LastFmRouteDefinitions {
     @Headers("Accept: application/json")
-    @GET("/?format=json")
-    suspend fun baseRequest(@Query("method") method: String, @Query("api_key") apiKey: String): Response<Token>
+    @GET("/")
+    fun baseRequest(@Field("method") method: String,
+                    @Field("api_key") apiKey: String,
+                    @Field("format") format: String = "json",
+                    @Field("limit") limit: Int = DEFAULT_LIMIT,
+                    @Field("page") page: Int = DEFAULT_PAGE
+    )
 }

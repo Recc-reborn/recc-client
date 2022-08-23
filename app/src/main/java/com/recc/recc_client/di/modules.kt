@@ -3,7 +3,6 @@ package com.recc.recc_client.di
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.R
 import com.recc.recc_client.http.AuthHttp
-import com.recc.recc_client.http.LastFmHttp
 import com.recc.recc_client.http.LastFmRouteDefinitions
 import com.recc.recc_client.http.ServerRouteDefinitions
 import com.recc.recc_client.layout.auth.LoginViewModel
