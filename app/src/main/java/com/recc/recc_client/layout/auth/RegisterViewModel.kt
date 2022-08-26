@@ -1,8 +1,9 @@
 package com.recc.recc_client.layout.auth
 
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.AuthHttp
-import com.recc.recc_client.layout.common.EventViewModel
+import com.recc.recc_client.http.impl.Auth
+import com.recc.recc_client.layout.common.BLANK_REGEX
+import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.models.auth.ErrorResponse
@@ -11,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val http: AuthHttp): EventViewModel<RegisterScreenEvent>() {
+class RegisterViewModel(private val http: Auth): BaseEventViewModel<RegisterScreenEvent>() {
     var usernameRegex: Regex? = null
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null
@@ -20,9 +21,9 @@ class RegisterViewModel(private val http: AuthHttp): EventViewModel<RegisterScre
         CoroutineScope(Dispatchers.IO).launch {
             val evalRegexList = listOf(usernameRegex, emailRegex, passwordRegex)
             evalRegexList.all { it != null }.let {
-                val usernameValid = username.matches(usernameRegex ?: ".".toRegex())
-                val emailValid = email.matches(emailRegex ?: ".".toRegex())
-                val passwordValid = password.matches(passwordRegex ?: ".".toRegex())
+                val usernameValid = username.matches(usernameRegex ?: BLANK_REGEX)
+                val emailValid = email.matches(emailRegex ?: BLANK_REGEX)
+                val passwordValid = password.matches(passwordRegex ?: BLANK_REGEX)
                 if (usernameValid && emailValid && passwordValid) {
                     http.register(username, email, password)
                         .onSuccess { user ->

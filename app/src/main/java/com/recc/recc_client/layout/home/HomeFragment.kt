@@ -9,8 +9,16 @@ import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
+class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
     override val viewModel: HomeViewModel by viewModel()
+
+    init {
+        viewModel.meData.value?.let {
+            if (!it.hasSetPreferredArtists) {
+                findNavController().navigate(R.id.action_homeFragment_to_welcomeFragment)
+            }
+        }
+    }
 
     private fun removeToken() {
         val keyFile = getString(R.string.preference_auth_key_file)

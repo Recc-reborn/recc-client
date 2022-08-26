@@ -1,7 +1,9 @@
 package com.recc.recc_client.layout.auth
 
+import android.content.Context
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
@@ -13,12 +15,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Login Fragment that acts as an screen, it's job is limited to navigation and UI related stuff
  */
-class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login) {
+class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login) {
 
     override val viewModel: LoginViewModel by viewModel()
+    private var token: String? = null
 
     override fun onResume() {
-        loadState()
+        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
+        token = sharedPref?.getString(getString(R.string.auth_token_key), null)
         super.onResume()
     }
 
@@ -28,6 +32,16 @@ class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layou
     override fun subscribeToViewModel() {
         viewModel.emailRegex = Regex(requireContext(), "email")
         viewModel.passwordRegex = Regex(requireContext(), "password")
+
+        viewModel.meData.observe(viewLifecycleOwner) { user ->
+            user?.let {
+                if (it.hasSetPreferredArtists) {
+                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                } else {
+                    findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
+                }
+            }
+        }
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
@@ -42,12 +56,14 @@ class LoginFragment : BaseFragment<LoginViewModel, FragmentLoginBinding>(R.layou
                 is LoginScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)
                     Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
-                    // TODO: Handle checking if user has already selected favorite songs so that the app gets redirected to HomeFragment
-                    findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
+                    viewModel.getMeData()
                 }
                 is LoginScreenEvent.LoginFailed -> {
                     binding.vedfEmail.setPopupError(screenEvent.errorResponse.message)
                     binding.vedfPassword.setPopupError(screenEvent.errorResponse.message)
+                }
+                is LoginScreenEvent.FetchMeDataFailed -> {
+                    Toast.makeText(requireContext(), getString(R.string.fetch_me_data_error_msg), Toast.LENGTH_SHORT).show()
                 }
             }
         })

@@ -2,9 +2,10 @@ package com.recc.recc_client.di
 
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.R
-import com.recc.recc_client.http.AuthHttp
-import com.recc.recc_client.http.LastFmRouteDefinitions
-import com.recc.recc_client.http.ServerRouteDefinitions
+import com.recc.recc_client.http.impl.Auth
+import com.recc.recc_client.http.def.LastFmRouteDefinitions
+import com.recc.recc_client.http.def.ServerRouteDefinitions
+import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
@@ -56,9 +57,9 @@ val httpModule = module {
         retrofit.create(LastFmRouteDefinitions::class.java)
     }
     single {
-        AuthHttp(androidContext(), get())
+        Auth(androidContext(), get())
     }
     single {
-        LastFmHttp(androidContext(), get())
+        LastFm(androidContext(), get())
     }
 }

@@ -19,6 +19,7 @@
     <string name="preference_auth_key_file">shared_preferences_auth</string>
     <string name="auth_token_key">auth_token_file</string>
     <string name="invalid_credentials_label">email address and/or password incorrect</string>
+    <string name="fetch_me_data_error_msg">Error! User data couldn\'t get fetched</string>
 
     <string name="failed_query_msg">Error connecting to server</string>
 

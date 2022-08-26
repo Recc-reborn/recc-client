@@ -9,7 +9,7 @@ import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RegisterFragment : BaseFragment<RegisterViewModel, FragmentRegisterBinding>(R.layout.fragment_register) {
+class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, FragmentRegisterBinding>(R.layout.fragment_register) {
 
     override val viewModel: RegisterViewModel by viewModel()
 

@@ -1,5 +1,7 @@
 package com.recc.recc_client.layout.welcome
 
-sealed class WelcomeScreenEvent {
+import com.recc.recc_client.layout.common.BaseScreenEvent
+
+sealed class WelcomeScreenEvent: BaseScreenEvent() {
 
 }

@@ -9,15 +9,15 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
-import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
 
 /**
+ * @param [T] Event type
  * @param [V] ViewModel
  * @param [B] Fragment Binding
  */
-abstract class BaseFragment<out V: ViewModel, B: ViewDataBinding>(
+abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>(
     private val layoutId: Int) : Fragment() {
     protected abstract val viewModel: V
     private var bindingNullable: B? = null
@@ -55,14 +55,6 @@ abstract class BaseFragment<out V: ViewModel, B: ViewDataBinding>(
         with (sharedPref?.edit()) {
             this?.putString(getString(R.string.auth_token_key), token)
             this?.apply()
-        }
-    }
-
-    protected fun loadState() {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        val token = sharedPref?.getString(getString(R.string.auth_token_key), null)
-        if (!token.isNullOrEmpty()) {
-            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
         }
     }
 }
