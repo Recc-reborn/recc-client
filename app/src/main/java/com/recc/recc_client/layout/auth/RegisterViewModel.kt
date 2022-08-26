@@ -1,7 +1,7 @@
 package com.recc.recc_client.layout.auth
 
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.AuthHttp
+import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val http: AuthHttp): EventViewModel<RegisterScreenEvent>() {
+class RegisterViewModel(private val http: Auth): EventViewModel<RegisterScreenEvent>() {
     var usernameRegex: Regex? = null
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null

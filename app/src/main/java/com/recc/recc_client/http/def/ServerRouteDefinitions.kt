@@ -1,4 +1,4 @@
-package com.recc.recc_client.http
+package com.recc.recc_client.http.def
 
 import com.recc.recc_client.models.auth.*
 import retrofit2.Response

@@ -11,6 +11,5 @@ class WelcomeFragment : BaseFragment<WelcomeViewModel, FragmentWelcomeBinding>(R
 
     override fun subscribeToViewModel() {
         Alert("calling viewModel")
-         viewModel.getToken()
     }
 }

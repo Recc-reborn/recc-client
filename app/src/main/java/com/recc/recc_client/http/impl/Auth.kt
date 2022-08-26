@@ -1,8 +1,9 @@
-package com.recc.recc_client.http
+package com.recc.recc_client.http.impl
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.recc.recc_client.R
+import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.*
 import com.recc.recc_client.utils.isOkCode
@@ -10,7 +11,7 @@ import com.recc.recc_client.utils.toStringList
 import okhttp3.ResponseBody
 import org.json.JSONObject
 
-class   AuthHttp(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
+class   Auth(private val context: Context, private val httpApi: ServerRouteDefinitions): ViewModel() {
 
     private fun getJsonObject(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())

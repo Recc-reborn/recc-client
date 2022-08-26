@@ -1,7 +1,7 @@
 package com.recc.recc_client.layout.auth
 
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.AuthHttp
+import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.layout.common.EventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * Login ViewModel that acts as a "two-way controller" in a MVC architecture, here we code the login's
  * logic and communicate with LoginFragment for navigation and other UI related stuff
  */
-class LoginViewModel(private val http: AuthHttp): EventViewModel<LoginScreenEvent>() {
+class LoginViewModel(private val http: Auth): EventViewModel<LoginScreenEvent>() {
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null
 
