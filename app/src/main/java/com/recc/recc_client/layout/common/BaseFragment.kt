@@ -50,6 +50,11 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
         subscribeToViewModel()
     }
 
+    protected fun getToken(): String? {
+        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
+        return sharedPref.getString(getString(R.string.auth_token_key), null)
+    }
+
     protected fun saveState(token: String) {
         val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
         with (sharedPref?.edit()) {

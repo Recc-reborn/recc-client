@@ -1,7 +1,6 @@
 package com.recc.recc_client.http.impl
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import com.recc.recc_client.R
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
@@ -12,8 +11,7 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 
 class Auth(private val context: Context, private val http: ServerRouteDefinitions) {
-
-    private fun getJsonObject(body: ResponseBody): ErrorResponse {
+    private fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())
         val message = json.getString(MESSAGE_FIELD)
         var emaiList = listOf<String>()
@@ -45,7 +43,7 @@ class Auth(private val context: Context, private val http: ServerRouteDefinition
             }
         }
         query.errorBody()?.apply {
-            return Result.Failure(failure = getJsonObject(this))
+            return Result.Failure(failure = getJsonErrorResponse(this))
         }
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
@@ -64,7 +62,7 @@ class Auth(private val context: Context, private val http: ServerRouteDefinition
             }
         }
         query.errorBody()?.apply {
-            return Result.Failure(failure = getJsonObject(this))
+            return Result.Failure(failure = getJsonErrorResponse(this))
         }
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
@@ -77,17 +75,20 @@ class Auth(private val context: Context, private val http: ServerRouteDefinition
             }
         }
         query.errorBody()?.let {
-            return Result.Failure(failure = getJsonObject(it))
+            return Result.Failure(failure = getJsonErrorResponse(it))
         }
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 
-    suspend fun me(): Result<ErrorResponse, User> {
-        val query = http.getUserMe()
+    suspend fun me(token: String?): Result<ErrorResponse, User> {
+        val query = http.getUserMe("Bearer $token")
         query.body()?.let {
             if (query.code().isOkCode()) {
                 return Result.Success(success = it)
             }
+        }
+        query.errorBody()?.let {
+            return Result.Failure(failure = getJsonErrorResponse(it))
         }
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }

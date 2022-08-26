@@ -15,7 +15,7 @@ interface ServerRouteDefinitions {
 
     @Headers("Accept: application/json")
     @GET("api/users/me")
-    suspend fun getUserMe(): Response<User>
+    suspend fun getUserMe(@Header("Authorization") token: String): Response<User>
 
     @Headers("Accept: application/json")
     @POST("api/users/")

@@ -9,6 +9,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -18,13 +19,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login) {
 
     override val viewModel: LoginViewModel by viewModel()
-    private var token: String? = null
-
-    override fun onResume() {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        token = sharedPref?.getString(getString(R.string.auth_token_key), null)
-        super.onResume()
-    }
 
     /**
      * Method which declares listeners for every LiveData in LoginViewModel
@@ -35,6 +29,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
         viewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {
+                Alert("user: $it")
                 if (it.hasSetPreferredArtists) {
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 } else {
@@ -56,7 +51,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
                 is LoginScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)
                     Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
-                    viewModel.getMeData()
+                    viewModel.getMeData(getToken())
                 }
                 is LoginScreenEvent.LoginFailed -> {
                     binding.vedfEmail.setPopupError(screenEvent.errorResponse.message)

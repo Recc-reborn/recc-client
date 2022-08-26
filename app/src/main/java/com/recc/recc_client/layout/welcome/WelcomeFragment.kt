@@ -11,6 +11,6 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
 
     override fun subscribeToViewModel() {
         Alert("calling viewModel")
-         viewModel.getToken()
+        viewModel.getToken()
     }
 }

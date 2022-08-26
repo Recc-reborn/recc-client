@@ -42,14 +42,16 @@ class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEven
         }
     }
 
-    fun getMeData() {
+    fun getMeData(token: String?) {
+
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.me()
+                http.me(token)
                     .onSuccess {
                         _meData.postValue(it)
                     }
                     .onFailure {
+                        Alert("$it")
                         postEvent(LoginScreenEvent.FetchMeDataFailed)
                     }
             }
