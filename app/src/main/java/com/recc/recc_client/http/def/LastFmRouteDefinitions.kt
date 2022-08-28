@@ -12,8 +12,8 @@ const val GET_TOP_ARTIST_METHOD = "chart.gettopartists"
 
 interface LastFmRouteDefinitions {
     @Headers("Accept: application/json")
-    @GET("/")
-    fun getTopArtists (
+    @GET("/2.0/")
+    suspend fun getTopArtists (
         @Query("method") method: String = GET_TOP_ARTIST_METHOD,
         @Query("api_key") apiKey: String,
         @Query("limit") limit: Int = DEFAULT_LIMIT,
@@ -21,8 +21,8 @@ interface LastFmRouteDefinitions {
         @Query("format") format: String = "json"): Response<Artists>
 
     @Headers("Accept: application/json")
-    @GET("/")
-    fun getArtistsByTag (
+    @GET("/2.0/")
+    suspend fun getArtistsByTag (
             @Query("method") method: String,
             @Query("api_key") apiKey: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,

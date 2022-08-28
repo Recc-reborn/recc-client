@@ -3,6 +3,7 @@ package com.recc.recc_client.layout.home
 import android.content.Context
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentHomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
@@ -14,6 +15,7 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
 
     init {
         viewModel.meData.value?.let {
+            (requireActivity() as MainActivity).disableLoadingBar()
             if (!it.hasSetPreferredArtists) {
                 findNavController().navigate(R.id.action_homeFragment_to_welcomeFragment)
             }

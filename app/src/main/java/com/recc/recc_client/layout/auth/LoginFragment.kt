@@ -1,15 +1,13 @@
 package com.recc.recc_client.layout.auth
 
-import android.content.Context
 import android.widget.EditText
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,10 +27,11 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
         viewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {
-                Alert("user: $it")
+                (requireActivity() as MainActivity).enableLoadingBar()
                 if (it.hasSetPreferredArtists) {
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 } else {
+                    Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
                 }
             }
@@ -50,7 +49,6 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
                 }
                 is LoginScreenEvent.LoginSuccessful -> {
                     saveState(screenEvent.token)
-                    Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
                     viewModel.getMeData(getToken())
                 }
                 is LoginScreenEvent.LoginFailed -> {

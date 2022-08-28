@@ -1,10 +1,9 @@
 package com.recc.recc_client.layout.auth
 
-import com.recc.recc_client.layout.common.BaseScreenEvent
 import com.recc.recc_client.models.auth.ErrorResponse
 import com.recc.recc_client.models.auth.User
 
-sealed class RegisterScreenEvent: BaseScreenEvent() {
+sealed class RegisterScreenEvent {
     object BtnRegisterPressed: RegisterScreenEvent()
     object TvLoginInsteadPressed: RegisterScreenEvent()
     object EmailAlreadyInUseCase: RegisterScreenEvent()

@@ -1,6 +1,7 @@
 package com.recc.recc_client.di
 
 import com.google.gson.GsonBuilder
+import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.http.def.LastFmRouteDefinitions
@@ -10,6 +11,8 @@ import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,7 +22,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 /*** Koin module for Data injection, it creates both singletons and factories that can be used in the
  * entirety of the application ***/
 val screenViewModels = module {
-    // Auth
     viewModel {
         LoginViewModel(get())
     }
@@ -29,13 +31,23 @@ val screenViewModels = module {
     viewModel {
         HomeViewModel(get())
     }
-    // Welcome
     viewModel {
         WelcomeViewModel(get())
     }
 }
 
 val httpModule = module {
+    single {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
+        OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+    }
     single {
         val gson = GsonBuilder()
             .setLenient()
@@ -51,6 +63,7 @@ val httpModule = module {
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
+            .client(get())
             .baseUrl(androidContext().getString(R.string.last_fm_base_endpoint))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

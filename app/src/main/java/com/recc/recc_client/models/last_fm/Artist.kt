@@ -8,5 +8,6 @@ data class Artist(
     @SerializedName("listeners") val listeners: String = "",
     @SerializedName("mbid") val mbid: String = "",
     @SerializedName("url") val url: String = "",
+    @SerializedName("streamable") val streamable: String = "0",
     @SerializedName("image") val image: List<Image> = listOf()
 )

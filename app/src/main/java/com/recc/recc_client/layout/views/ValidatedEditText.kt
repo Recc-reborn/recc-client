@@ -121,7 +121,6 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         }
     }
 
-
     private fun setInputType() {
         etField.inputType = when (type) {
             EMAIL_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS

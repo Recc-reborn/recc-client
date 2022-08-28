@@ -1,9 +1,8 @@
 package com.recc.recc_client.layout.auth
 
-import com.recc.recc_client.layout.common.BaseScreenEvent
 import com.recc.recc_client.models.auth.ErrorResponse
 
-sealed class LoginScreenEvent: BaseScreenEvent() {
+sealed class LoginScreenEvent {
     object BtnLoginPressed: LoginScreenEvent()
     object TvRegisterInsteadPressed: LoginScreenEvent()
     data class LoginSuccessful(val token: String): LoginScreenEvent()
