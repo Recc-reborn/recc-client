@@ -1,6 +1,7 @@
 package com.recc.recc_client.layout.home
 
 import android.content.Context
+import android.os.Bundle
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
@@ -15,11 +16,15 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
 
     init {
         viewModel.meData.value?.let {
-            (requireActivity() as MainActivity).disableLoadingBar()
             if (!it.hasSetPreferredArtists) {
                 findNavController().navigate(R.id.action_homeFragment_to_welcomeFragment)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity() as MainActivity).disableLoadingBar()
     }
 
     private fun removeToken() {
