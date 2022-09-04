@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import androidx.navigation.fragment.findNavController
+import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 
 /**
@@ -47,6 +48,7 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).disableLoadingBar()
         subscribeToViewModel()
     }
 

@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
+    <action
+        android:id="@+id/action_back_to_login"
+        app:destination="@id/loginFragment"/>
+    <action
+        android:id="@+id/action_back_to_welcome"
+        app:destination="@id/welcomeFragment"/>
+    <action
+        android:id="@+id/action_back_to_home"
+        app:destination="@id/homeFragment"/>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.recc.recc_client.layout.auth.LoginFragment"

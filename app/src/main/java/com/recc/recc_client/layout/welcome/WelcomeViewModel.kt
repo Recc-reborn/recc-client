@@ -16,9 +16,9 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
             CoroutineScope(Dispatchers.IO).launch {
                 http.getTopArtists()
                     .onSuccess {
-                        Alert("Artists: $it")
+                        postEvent(WelcomeScreenEvent.ArtistsFetched(it))
                     }.onFailure {
-                        Alert("Error: $it")
+                        postEvent(WelcomeScreenEvent.ArtistsNotFetched)
                     }
             }
         }
