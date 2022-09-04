@@ -9,6 +9,7 @@ import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
 import com.recc.recc_client.utils.Regex
+import com.recc.recc_client.utils.RegexType
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -22,8 +23,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
      * Method which declares listeners for every LiveData in LoginViewModel
      */
     override fun subscribeToViewModel() {
-        viewModel.emailRegex = Regex(requireContext(), "email")
-        viewModel.passwordRegex = Regex(requireContext(), "password")
+        viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL)
+        viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD)
 
         viewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {

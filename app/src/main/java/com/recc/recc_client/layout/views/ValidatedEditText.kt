@@ -6,38 +6,33 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.R
+import com.recc.recc_client.databinding.ValidatedEditTextBinding
 import com.recc.recc_client.utils.*
 
 class ValidatedEditTextFragment @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : LinearLayoutCompat(context, attrs) {
-    private val linearLayout: LinearLayoutCompat
-    private val etField: AppCompatEditText
-    private val tvTitle: AppCompatTextView
-    private val tvError: AppCompatTextView
+    private val binding: ValidatedEditTextBinding
     private val type: String?
     private val text: String?
     private val popupErrorMsg: String?
     private val textError: String?
     private var verticalOffset = 0.toFloat()
     private val horizontalOffset = 10
-    private var hasBeenSet = 1
+    private var hasBeenSet = false
 
     init {
-        linearLayout = inflate(context, R.layout.validated_edit_text, this) as LinearLayoutCompat
-        etField = linearLayout.findViewById(R.id.et_field)
-        tvTitle = linearLayout.findViewById(R.id.tv_title)
-        tvError = linearLayout.findViewById(R.id.tv_error)
-        etField.viewTreeObserver.addOnGlobalLayoutListener {
-            verticalOffset = ((tvTitle.height) / 2 + 3).toPx(context)
-            if (hasBeenSet-- > 0) {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.validated_edit_text, this, true)
+        binding.etField.viewTreeObserver.addOnGlobalLayoutListener {
+            verticalOffset = ((binding.tvTitle.height) / 2 + 3).toPx(context)
+            if (!hasBeenSet) {
                 tvTitleAnimationIn(0)
+                hasBeenSet = true
             }
         }
         context.theme.obtainStyledAttributes(
@@ -57,24 +52,24 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
 
         // Sets regex type
         val regex = type?.let {
-            Regex(context, it)
+            Regex(context, getRegexType())
         }
-        tvTitle.text = text
-        tvError.text = textError
+        binding.tvTitle.text = text
+        binding.tvError.text = textError
 
-        etField.addTextChangedListener(object: TextWatcher {
+        binding.etField.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                tvError.text = text
+                binding.tvError.text = text
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let { charSequence ->
                     regex?.let { ex ->
                         if (charSequence.toString().matches(ex) || charSequence.toString().isEmpty()) {
-                            etField.background = context.getDrawable(R.drawable.edit_text_background)
-                            tvError.visibility = View.INVISIBLE
+                            binding.etField.background = context.getDrawable(R.drawable.edit_text_background)
+                            binding.tvError.visibility = View.INVISIBLE
                         } else {
-                            etField.background = context.getDrawable(R.drawable.edit_text_error_background)
-                            tvError.visibility = View.VISIBLE
+                            binding.etField.background = context.getDrawable(R.drawable.edit_text_error_background)
+                            binding.tvError.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -82,8 +77,8 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
             override fun afterTextChanged(p0: Editable?) {}
         })
 
-        etField.setOnFocusChangeListener { _, notActive ->
-            if (!notActive && etField.text.isNullOrEmpty()) {
+        binding.etField.setOnFocusChangeListener { _, notActive ->
+            if (!notActive && binding.etField.text.isNullOrEmpty()) {
                 tvTitleAnimationIn()
             } else {
                 tvTitleAnimationOut()
@@ -92,40 +87,49 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
     }
 
     fun setPopupError(customError: String? = null) {
-        etField.background = context.getDrawable(R.drawable.edit_text_error_background)
+        binding.etField.background = context.getDrawable(R.drawable.edit_text_error_background)
         customError
-            ?. let { tvError.text = it }
-            ?: run { tvError.text = popupErrorMsg }
-        tvError.visibility = View.VISIBLE
+            ?. let { binding.tvError.text = it }
+            ?: run { binding.tvError.text = popupErrorMsg }
+        binding.tvError.visibility = View.VISIBLE
     }
 
     private fun tvTitleAnimationIn(time: Long = 100) {
-        ObjectAnimator.ofFloat(tvTitle, "translationX", horizontalOffset.toPx(context)).apply {
+        ObjectAnimator.ofFloat(binding.tvTitle, "translationX", horizontalOffset.toPx(context)).apply {
             duration = time
             start()
         }
-        ObjectAnimator.ofFloat(tvTitle, "translationY", verticalOffset).apply {
+        ObjectAnimator.ofFloat(binding.tvTitle, "translationY", verticalOffset).apply {
             duration = time
             start()
         }
     }
 
     private fun tvTitleAnimationOut(time: Long = 100) {
-        ObjectAnimator.ofFloat(tvTitle, "translationX", 0.toFloat()).apply {
+        ObjectAnimator.ofFloat(binding.tvTitle, "translationX", 0.toFloat()).apply {
             duration = time
             start()
         }
-        ObjectAnimator.ofFloat(tvTitle, "translationY", 0.toFloat()).apply {
+        ObjectAnimator.ofFloat(binding.tvTitle, "translationY", 0.toFloat()).apply {
             duration = time
             start()
         }
     }
 
+    private fun getRegexType(): RegexType {
+        return when (type) {
+            "email" -> RegexType.EMAIL
+            "password" -> RegexType.PASSWORD
+            "username" -> RegexType.USERNAME
+            else -> throw IllegalArgumentException("$type argument isn't valid")
+        }
+    }
+
     private fun setInputType() {
-        etField.inputType = when (type) {
-            EMAIL_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-            PASSWORD_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            USERNAME_TYPE -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+        binding.etField.inputType = when (type) {
+            "email" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            "password" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            "username" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
             else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
         }
     }
