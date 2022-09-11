@@ -8,6 +8,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
 import com.recc.recc_client.utils.RegexType
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -23,8 +24,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
      * Method which declares listeners for every LiveData in LoginViewModel
      */
     override fun subscribeToViewModel() {
-        viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL)
-        viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD)
+        viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL.type)
+        viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD.type)
 
         viewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {
@@ -41,8 +42,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is LoginScreenEvent.BtnLoginPressed -> {
-                    val email = binding.vedfEmail.findViewById<EditText>(R.id.ll_field_container).text.toString()
-                    val pass = binding.vedfPassword.findViewById<EditText>(R.id.ll_field_container).text.toString()
+                    val email = binding.vedfEmail.findViewById<EditText>(R.id.et_field).text.toString()
+                    val pass = binding.vedfPassword.findViewById<EditText>(R.id.et_field).text.toString()
                     viewModel.login(email, pass)
                 }
                 is LoginScreenEvent.TvRegisterInsteadPressed -> {

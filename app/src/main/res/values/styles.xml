@@ -29,8 +29,8 @@
         <item name="android:textColor">@color/red</item>
         <item name="android:gravity">right</item>
         <item name="android:visibility">invisible</item>
-        <item name="android:paddingRight">@dimen/form_horizontal_padding</item>
-        <item name="android:paddingLeft">@dimen/form_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/form_horizontal_padding</item>
+        <item name="android:paddingStart">@dimen/form_horizontal_padding</item>
     </style>
 
     <style name="FormItem.TextClickable" parent="FormItem.Text">
@@ -39,9 +39,9 @@
     </style>
 
     <style name="FormItem.EditText" parent="FormItem.Text">
-        <item name="android:padding">@dimen/form_edit_text_padding</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@drawable/edit_text_background</item>
+        <!--Disables underline-->
+        <item name="android:background">@null</item>
         <item name="android:textCursorDrawable">@drawable/text_cursor_color</item>
     </style>
 

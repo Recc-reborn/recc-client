@@ -10,9 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.ValidatedEditTextBinding
 import com.recc.recc_client.utils.*
+
+enum class IconType(val type: String) {
+    SEARCH("search")
+}
 
 class ValidatedEditTextFragment @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -20,6 +25,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
     private val binding: ValidatedEditTextBinding
     private val type: String?
     private val text: String?
+    private val icon: String?
     private val popupErrorMsg: String?
     private val textError: String?
     private var verticalOffset = 0.toFloat()
@@ -29,7 +35,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
     init {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.validated_edit_text, this, true)
         binding.etField.viewTreeObserver.addOnGlobalLayoutListener {
-            verticalOffset = ((binding.tvTitle.height) / 2 + 3).toPx(context)
+            verticalOffset = ((binding.tvTitle.height) / 2 + 5).toPx(context)
             if (!hasBeenSet) {
                 tvTitleAnimationIn(0)
                 hasBeenSet = true
@@ -42,6 +48,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
                 type = getString(R.styleable.ValidatedEditText_type)
                 text = getString(R.styleable.ValidatedEditText_text)
                 textError = getString(R.styleable.ValidatedEditText_text_error)
+                icon = getString(R.styleable.ValidatedEditText_icon_img)
                 popupErrorMsg = getString(R.styleable.ValidatedEditText_popup_error_msg)
         }
         setInputType()
@@ -52,23 +59,32 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
 
         // Sets regex type
         val regex = type?.let {
-            Regex(context, getRegexType())
+            Regex(context, it)
         }
         binding.tvTitle.text = text
         binding.tvError.text = textError
+        icon?.let {
+            binding.ivIcon.apply {
+                visibility = View.VISIBLE
+                Glide.with(binding.root)
+                    .load(getIcon(it))
+                    .fitCenter()
+                    .into(this)
+            }
+        }
 
         binding.etField.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                binding.tvError.text = text
+                binding.tvError.text = textError
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let { charSequence ->
                     regex?.let { ex ->
                         if (charSequence.toString().matches(ex) || charSequence.toString().isEmpty()) {
-                            binding.etField.background = context.getDrawable(R.drawable.edit_text_background)
+                            binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_background)
                             binding.tvError.visibility = View.INVISIBLE
                         } else {
-                            binding.etField.background = context.getDrawable(R.drawable.edit_text_error_background)
+                            binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_error_background)
                             binding.tvError.visibility = View.VISIBLE
                         }
                     }
@@ -87,7 +103,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
     }
 
     fun setPopupError(customError: String? = null) {
-        binding.etField.background = context.getDrawable(R.drawable.edit_text_error_background)
+        binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_error_background)
         customError
             ?. let { binding.tvError.text = it }
             ?: run { binding.tvError.text = popupErrorMsg }
@@ -116,21 +132,18 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         }
     }
 
-    private fun getRegexType(): RegexType {
-        return when (type) {
-            "email" -> RegexType.EMAIL
-            "password" -> RegexType.PASSWORD
-            "username" -> RegexType.USERNAME
-            else -> throw IllegalArgumentException("$type type argument isn't valid")
+    private fun setInputType() {
+        binding.etField.inputType = when (type) {
+            RegexType.EMAIL.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            RegexType.PASSWORD.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            RegexType.USERNAME.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+            RegexType.RAW.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
+            else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
         }
     }
 
-    private fun setInputType() {
-        binding.etField.inputType = when (type) {
-            "email" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-            "password" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            "username" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-            else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-        }
+    private fun getIcon(iconType: String): Int = when (iconType) {
+        IconType.SEARCH.type -> R.drawable.ic_baseline_search_24
+        else -> throw IllegalArgumentException("$iconType icon type does not exist")
     }
 }

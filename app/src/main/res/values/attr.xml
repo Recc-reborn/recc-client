@@ -5,5 +5,6 @@
         <attr name="text_error" format="string" />
         <attr name="type" format="string" />
         <attr name="popup_error_msg" format="string" />
+        <attr name="icon_img" format="string"/>
     </declare-styleable>
 </resources>

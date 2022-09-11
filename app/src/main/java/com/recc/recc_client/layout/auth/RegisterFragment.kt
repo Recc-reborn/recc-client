@@ -7,6 +7,8 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentRegisterBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.utils.Regex
+import com.recc.recc_client.utils.RegexType
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, FragmentRegisterBinding>(R.layout.fragment_register) {
@@ -14,15 +16,15 @@ class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, Fr
     override val viewModel: RegisterViewModel by viewModel()
 
     override fun subscribeToViewModel() {
-        viewModel.emailRegex = getString(R.string.regex_email).toRegex()
-        viewModel.passwordRegex = getString(R.string.regex_pass).toRegex()
-        viewModel.usernameRegex = getString(R.string.regex_username).toRegex()
+        viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL.type)
+        viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD.type)
+        viewModel.usernameRegex = Regex(requireContext(), RegexType.USERNAME.type)
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is RegisterScreenEvent.BtnRegisterPressed -> {
-                    val username = binding.vetfUsername.findViewById<EditText>(R.id.ll_field_container).text.toString()
-                    val email = binding.vetfEmail.findViewById<EditText>(R.id.ll_field_container).text.toString()
-                    val password = binding.vetfPassword.findViewById<EditText>(R.id.ll_field_container).text.toString()
+                    val username = binding.vetfUsername.findViewById<EditText>(R.id.et_field).text.toString()
+                    val email = binding.vetfEmail.findViewById<EditText>(R.id.et_field).text.toString()
+                    val password = binding.vetfPassword.findViewById<EditText>(R.id.et_field).text.toString()
                     viewModel.register(username, email, password)
                 }
                 is RegisterScreenEvent.TvLoginInsteadPressed -> {

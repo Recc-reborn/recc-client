@@ -8,6 +8,13 @@
         android:orientation="vertical"
         tools:context=".layout.welcome.WelcomeFragment">
 
+        <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+            android:id="@+id/vetf_search_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:type="raw"
+            app:icon_img="search" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_select_artists"
             android:layout_width="match_parent"
