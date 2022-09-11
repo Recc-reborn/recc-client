@@ -7,13 +7,26 @@
         android:orientation="vertical"
         tools:context=".layout.views.ValidatedEditTextFragment">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_field"
-            style="@style/FormItem.EditText"
+        <LinearLayout
+            android:id="@+id/ll_field_container"
+            style="@style/FormItem.Container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_below="@id/tv_title"
-            tools:text="@string/hello_blank_fragment" />
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/et_field"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                tools:text="@string/hello_blank_fragment" />
+            <ImageView
+                android:id="@+id/iv_search_icon"
+                style="@style/FormItem.EditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_search_24" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_title"
@@ -24,11 +37,11 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_error"
+            style="@style/FormItem.TextError"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
             android:layout_below="@id/et_field"
-            style="@style/FormItem.TextError"
+            android:maxLines="2"
             tools:text="@string/hello_blank_fragment" />
 
     </RelativeLayout>

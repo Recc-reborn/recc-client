@@ -20,9 +20,9 @@ class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, Fr
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is RegisterScreenEvent.BtnRegisterPressed -> {
-                    val username = binding.vetfUsername.findViewById<EditText>(R.id.et_field).text.toString()
-                    val email = binding.vetfEmail.findViewById<EditText>(R.id.et_field).text.toString()
-                    val password = binding.vetfPassword.findViewById<EditText>(R.id.et_field).text.toString()
+                    val username = binding.vetfUsername.findViewById<EditText>(R.id.ll_field_container).text.toString()
+                    val email = binding.vetfEmail.findViewById<EditText>(R.id.ll_field_container).text.toString()
+                    val password = binding.vetfPassword.findViewById<EditText>(R.id.ll_field_container).text.toString()
                     viewModel.register(username, email, password)
                 }
                 is RegisterScreenEvent.TvLoginInsteadPressed -> {

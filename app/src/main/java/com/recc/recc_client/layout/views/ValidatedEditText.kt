@@ -121,7 +121,7 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
             "email" -> RegexType.EMAIL
             "password" -> RegexType.PASSWORD
             "username" -> RegexType.USERNAME
-            else -> throw IllegalArgumentException("$type argument isn't valid")
+            else -> throw IllegalArgumentException("$type type argument isn't valid")
         }
     }
 

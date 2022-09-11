@@ -41,8 +41,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is LoginScreenEvent.BtnLoginPressed -> {
-                    val email = binding.vedfEmail.findViewById<EditText>(R.id.et_field).text.toString()
-                    val pass = binding.vedfPassword.findViewById<EditText>(R.id.et_field).text.toString()
+                    val email = binding.vedfEmail.findViewById<EditText>(R.id.ll_field_container).text.toString()
+                    val pass = binding.vedfPassword.findViewById<EditText>(R.id.ll_field_container).text.toString()
                     viewModel.login(email, pass)
                 }
                 is LoginScreenEvent.TvRegisterInsteadPressed -> {
