@@ -8,6 +8,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.models.auth.User
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
 import com.recc.recc_client.utils.RegexType
@@ -20,24 +21,34 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
     override val viewModel: LoginViewModel by viewModel()
 
+    private fun afterLoginAction(user: User) {
+        Alert("stored user: $user")
+        (requireActivity() as MainActivity).enableLoadingBar()
+        if (user.hasSetPreferredArtists) {
+            findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        } else {
+            Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMeData(getToken())
+    }
+
     /**
      * Method which declares listeners for every LiveData in LoginViewModel
      */
     override fun subscribeToViewModel() {
         viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL.type)
         viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD.type)
-
         viewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {
-                (requireActivity() as MainActivity).enableLoadingBar()
-                if (it.hasSetPreferredArtists) {
-                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
-                } else {
-                    Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
-                }
+                afterLoginAction(it)
             }
         }
+
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
@@ -50,7 +61,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
                     findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
                 }
                 is LoginScreenEvent.LoginSuccessful -> {
-                    saveState(screenEvent.token)
+                    saveToken(screenEvent.token)
                     viewModel.getMeData(getToken())
                 }
                 is LoginScreenEvent.LoginFailed -> {

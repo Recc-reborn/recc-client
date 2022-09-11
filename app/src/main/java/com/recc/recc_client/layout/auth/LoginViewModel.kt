@@ -43,7 +43,6 @@ class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEven
     }
 
     fun getMeData(token: String?) {
-
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 http.me(token)
