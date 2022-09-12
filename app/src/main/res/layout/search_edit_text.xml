@@ -22,6 +22,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="17"
+                android:inputType="text"
+                android:maxLines="1"
                 tools:text="@string/hello_blank_fragment" />
 
             <ImageView
@@ -30,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:padding="@dimen/icon_padding"
-                android:visibility="gone" />
+                android:src="@drawable/ic_baseline_search_24" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -38,16 +40,6 @@
             style="@style/FormItem.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/hello_blank_fragment" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_error"
-            style="@style/FormItem.TextError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_field_container"
-            android:maxLines="2"
-            android:visibility="invisible"
             tools:text="@string/hello_blank_fragment" />
 
     </RelativeLayout>

@@ -19,17 +19,17 @@ enum class IconType(val type: String) {
     SEARCH("search")
 }
 
-class ValidatedEditTextFragment @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null
-) : LinearLayoutCompat(context, attrs) {
+open class ValidatedEditTextFragment @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null,
+    override var verticalOffset: Float = 0.toFloat(),
+    override val horizontalOffset: Int = 10,
+) : LinearLayoutCompat(context, attrs), BaseEditText {
     private val binding: ValidatedEditTextBinding
     private val type: String?
     private val text: String?
-    private val icon: String?
+    var icon: String?
     private val popupErrorMsg: String?
     private val textError: String?
-    private var verticalOffset = 0.toFloat()
-    private val horizontalOffset = 10
     private var hasBeenSet = false
 
     init {
@@ -37,21 +37,29 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         binding.etField.viewTreeObserver.addOnGlobalLayoutListener {
             verticalOffset = ((binding.tvTitle.height) / 2 + 5).toPx(context)
             if (!hasBeenSet) {
-                tvTitleAnimationIn(0)
+                tvTitleAnimationIn(binding.tvTitle, 0, context)
                 hasBeenSet = true
             }
         }
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.ValidatedEditText,
-            0, 0).apply {
+            0,
+            0)
+            .apply {
                 type = getString(R.styleable.ValidatedEditText_type)
                 text = getString(R.styleable.ValidatedEditText_text)
                 textError = getString(R.styleable.ValidatedEditText_text_error)
                 icon = getString(R.styleable.ValidatedEditText_icon_img)
                 popupErrorMsg = getString(R.styleable.ValidatedEditText_popup_error_msg)
         }
-        setInputType()
+        type?.let {
+            setInputType(binding.etField, binding.tvError, it)
+        }
+    }
+
+    fun setPopupError(msg: String) {
+        setPopupError(binding.llFieldContainer, binding.tvError, msg, textError, context)
     }
 
     override fun onFinishInflate() {
@@ -63,15 +71,6 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
         }
         binding.tvTitle.text = text
         binding.tvError.text = textError
-        icon?.let {
-            binding.ivIcon.apply {
-                visibility = View.VISIBLE
-                Glide.with(binding.root)
-                    .load(getIcon(it))
-                    .fitCenter()
-                    .into(this)
-            }
-        }
 
         binding.etField.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -81,10 +80,10 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
                 p0?.let { charSequence ->
                     regex?.let { ex ->
                         if (charSequence.toString().matches(ex) || charSequence.toString().isEmpty()) {
-                            binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_background)
+                            binding.llFieldContainer.background = context.getDrawable(R.drawable.bg_edit_text)
                             binding.tvError.visibility = View.INVISIBLE
                         } else {
-                            binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_error_background)
+                            binding.llFieldContainer.background = context.getDrawable(R.drawable.bg_edit_text_error)
                             binding.tvError.visibility = View.VISIBLE
                         }
                     }
@@ -95,55 +94,10 @@ class ValidatedEditTextFragment @JvmOverloads constructor(
 
         binding.etField.setOnFocusChangeListener { _, notActive ->
             if (!notActive && binding.etField.text.isNullOrEmpty()) {
-                tvTitleAnimationIn()
+                tvTitleAnimationIn(binding.tvTitle, 100, context)
             } else {
-                tvTitleAnimationOut()
+                tvTitleAnimationOut(binding.tvTitle)
             }
         }
-    }
-
-    fun setPopupError(customError: String? = null) {
-        binding.llFieldContainer.background = context.getDrawable(R.drawable.edit_text_error_background)
-        customError
-            ?. let { binding.tvError.text = it }
-            ?: run { binding.tvError.text = popupErrorMsg }
-        binding.tvError.visibility = View.VISIBLE
-    }
-
-    private fun tvTitleAnimationIn(time: Long = 100) {
-        ObjectAnimator.ofFloat(binding.tvTitle, "translationX", horizontalOffset.toPx(context)).apply {
-            duration = time
-            start()
-        }
-        ObjectAnimator.ofFloat(binding.tvTitle, "translationY", verticalOffset).apply {
-            duration = time
-            start()
-        }
-    }
-
-    private fun tvTitleAnimationOut(time: Long = 100) {
-        ObjectAnimator.ofFloat(binding.tvTitle, "translationX", 0.toFloat()).apply {
-            duration = time
-            start()
-        }
-        ObjectAnimator.ofFloat(binding.tvTitle, "translationY", 0.toFloat()).apply {
-            duration = time
-            start()
-        }
-    }
-
-    private fun setInputType() {
-        binding.etField.inputType = when (type) {
-            RegexType.EMAIL.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-            RegexType.PASSWORD.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            RegexType.USERNAME.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-            RegexType.RAW.type -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-            else -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_NORMAL
-        }
-    }
-
-    private fun getIcon(iconType: String): Int = when (iconType) {
-        IconType.SEARCH.type -> R.drawable.ic_baseline_search_24
-        else -> throw IllegalArgumentException("$iconType icon type does not exist")
     }
 }

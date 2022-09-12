@@ -8,6 +8,15 @@
         android:orientation="vertical"
         tools:context=".layout.welcome.WelcomeFragment">
 
+        <com.recc.recc_client.layout.views.ValidatedEditTextFragment
+            android:id="@+id/vetf_search_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:text="Look up for an artist..."
+            app:type="raw"
+            app:icon_img="search" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_select_artists"
             android:layout_width="match_parent"
@@ -16,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="6" />
+            app:spanCount="5" />
 
     </LinearLayout>
 </layout>

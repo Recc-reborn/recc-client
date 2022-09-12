@@ -18,7 +18,19 @@ class ArtistGridItemFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist_grid_item, container, false)
-
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        selectItem()
+    }
+
+    fun selectItem() {
+        binding.llArtistContainer.background = requireContext().getDrawable(R.drawable.bg_artist_item_selected)
+    }
+
+    fun unselectItem() {
+        binding.ivArtist.background = null
     }
 }

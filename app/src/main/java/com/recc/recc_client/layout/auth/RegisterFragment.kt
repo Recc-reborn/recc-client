@@ -30,9 +30,6 @@ class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, Fr
                 is RegisterScreenEvent.TvLoginInsteadPressed -> {
                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                 }
-                RegisterScreenEvent.EmailAlreadyInUseCase -> {
-                    binding.vetfEmail.setPopupError()
-                }
                 is RegisterScreenEvent.RegisterSuccessful -> {
                     viewModel.login(screenEvent.user, screenEvent.password)
                 }
