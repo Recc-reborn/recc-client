@@ -63,7 +63,7 @@ val httpModule = module {
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
-            .client(get())
+//            .client(get())
             .baseUrl(androidContext().getString(R.string.last_fm_base_endpoint))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

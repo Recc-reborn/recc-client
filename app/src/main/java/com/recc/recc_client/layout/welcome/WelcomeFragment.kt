@@ -1,9 +1,7 @@
 package com.recc.recc_client.layout.welcome
 
-import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentWelcomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
@@ -18,16 +16,25 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, FragmentWelcomeBinding>(R.layout.fragment_welcome) {
     override val viewModel: WelcomeViewModel by viewModel()
+    private lateinit var  adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>
 
     override fun subscribeToViewModel() {
         viewModel.getTopArtists()
+
+        // Sets recyclerview item's color
+        viewModel.setSelectedItemColor(requireContext().getColor(R.color.bright_green))
+        viewModel.setUnselectedItemColor(requireContext().getColor(R.color.white))
+
+        viewModel.presenterList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is WelcomeScreenEvent.ArtistsFetched -> {
-                    val adapter = DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>(AdapterType.ARTISTS_GRID)
-                    val presenterList = screenEvent.artist.artists.artist.map { ArtistPresenter(it) }
+                    adapter = DynamicAdapter(AdapterType.ARTISTS_GRID, viewModel)
                     binding.rvSelectArtists.rv_select_artists.adapter = adapter
-                    adapter.submitList(presenterList)
+                    viewModel.appendPageToList(screenEvent.presenters)
                 }
                 WelcomeScreenEvent.ArtistsNotFetched -> {
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()
