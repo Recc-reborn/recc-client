@@ -4,7 +4,11 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
@@ -87,5 +91,29 @@ class SearchEditText(context: Context, attrs: AttributeSet? = null) :
             .load(icon)
             .fitCenter()
             .into(binding.ivIcon)
+    }
+
+    fun onSearch(callback: (search: String) -> Unit) {
+        binding.etField.setOnEditorActionListener(object: TextView.OnEditorActionListener {
+            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
+                val fieldValue = binding.etField.text.toString()
+                if (p1 == EditorInfo.IME_ACTION_SEARCH && fieldValue.isNotEmpty()) {
+                    callback(fieldValue)
+                    return true
+                }
+                return false
+            }
+
+        })
+    }
+
+    fun onClear(callback: () -> Unit) {
+        binding.ivIcon.setOnClickListener {
+            if (!isEmpty) {
+                binding.etField.text?.clear()
+                binding.etField.clearFocus()
+                callback()
+            }
+        }
     }
 }

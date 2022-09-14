@@ -9,7 +9,7 @@
         tools:context=".layout.welcome.WelcomeFragment">
 
         <com.recc.recc_client.layout.views.SearchEditText
-            android:id="@+id/vetf_search_artist"
+            android:id="@+id/set_search_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -19,7 +19,7 @@
             android:id="@+id/rv_select_artists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/vetf_search_artist"
+            android:layout_below="@id/set_search_artist"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

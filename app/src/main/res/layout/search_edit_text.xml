@@ -24,6 +24,7 @@
                 android:layout_weight="17"
                 android:inputType="text"
                 android:maxLines="1"
+                android:imeOptions="actionSearch"
                 tools:text="@string/hello_blank_fragment" />
 
             <ImageView

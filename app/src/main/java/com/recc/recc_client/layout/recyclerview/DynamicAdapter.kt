@@ -57,4 +57,9 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
     }
 
     override fun getItemCount(): Int = currentList.count()
+
+    fun clearList() {
+        currentList.clear()
+        notifyDataSetChanged()
+    }
 }

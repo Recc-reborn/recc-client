@@ -54,6 +54,13 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
         }
     }
 
+    fun replaceList(newList: List<ArtistPresenter>) {
+        viewModelScope.launch {
+            _currentPage.postValue(DEFAULT_PAGE)
+            _presenterList.postValue(newList)
+        }
+    }
+
     fun addArtist(url: String) {
         viewModelScope.launch {
             Alert("adding: $url, ${_selectedArtists.value}")
@@ -86,9 +93,9 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
                     val currentPage = oldPage + 1
                     http.getTopArtists(currentPage)
                         .onSuccess { artists ->
-                            val presenterList = artists.artists.artist.map { ArtistPresenter(it) }
+                            val list = artists.artists.artist.map { ArtistPresenter(it) }
                             _currentPage.postValue(currentPage)
-                            appendPageToList(presenterList)
+                            appendPageToList(list)
                         }.onFailure {
                             Alert("Couldn't fetch page $currentPage of Top Artists")
                             // TODO: Error msg
@@ -103,10 +110,25 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
             CoroutineScope(Dispatchers.IO).launch {
                 http.getTopArtists()
                     .onSuccess { artists ->
-                        val presenterList = artists.artists.artist.map { ArtistPresenter(it) }
-                        postEvent(WelcomeScreenEvent.ArtistsFetched(presenterList))
+                        val list = artists.artists.artist.map { ArtistPresenter(it) }
+                        replaceList(list)
+                        postEvent(WelcomeScreenEvent.ArtistsFetched)
                     }.onFailure {
                         postEvent(WelcomeScreenEvent.ArtistsNotFetched)
+                    }
+            }
+        }
+    }
+
+    fun searchArtist(artist: String) {
+        viewModelScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                http.getArtistSearch(artist)
+                    .onSuccess { search ->
+                        val list = search.results.artistMatches.artist.map { ArtistPresenter(it) }
+                        replaceList(list)
+                    }.onFailure {
+                        // TODO: Error msg
                     }
             }
         }

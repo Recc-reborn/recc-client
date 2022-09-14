@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".layout.welcome.WelcomeFragment">
 
-        <com.recc.recc_client.layout.views.ValidatedEditTextFragment
-            android:id="@+id/vetf_search_artist"
+        <com.recc.recc_client.layout.views.SearchEditText
+            android:id="@+id/set_search_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:text="Look up for an artist..."
-            app:type="raw"
-            app:icon_img="search" />
+            app:text="Look up for an artist..." />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_select_artists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/set_search_artist"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:spanCount="5" />
 
-    </LinearLayout>
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/lb_main"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center"
+            android:layout_below="@id/rv_select_artists"
+            android:indeterminate="true" />
+
+    </RelativeLayout>
 </layout>

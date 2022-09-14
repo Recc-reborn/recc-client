@@ -1,16 +1,13 @@
 package com.recc.recc_client.layout.views
 
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.ValidatedEditTextBinding
 import com.recc.recc_client.utils.*
