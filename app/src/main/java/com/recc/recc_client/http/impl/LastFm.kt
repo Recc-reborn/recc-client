@@ -32,6 +32,7 @@ class LastFm(private val context: Context, private val http: LastFmRouteDefiniti
         val query = http.getTopArtists(GET_TOP_ARTIST_METHOD, context.getString(R.string.last_fm_token), limit, page)
         query.body()?.let {
             if (query.code().isOkCode()) {
+                Alert("query: ${it}")
                 return Result.Success(success = it)
             }
         }

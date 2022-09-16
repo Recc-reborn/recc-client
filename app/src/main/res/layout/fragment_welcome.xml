@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         tools:context=".layout.welcome.WelcomeFragment">
 
         <com.recc.recc_client.layout.views.SearchEditText
@@ -34,6 +33,5 @@
             android:gravity="center"
             android:layout_below="@id/rv_select_artists"
             android:indeterminate="true" />
-
     </RelativeLayout>
 </layout>

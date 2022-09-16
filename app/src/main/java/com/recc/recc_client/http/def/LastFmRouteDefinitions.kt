@@ -8,7 +8,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 const val DEFAULT_LIMIT = 50
-const val DEFAULT_PAGE = 1
+const val DEFAULT_PAGE = 2
 const val GET_TOP_ARTIST_METHOD = "chart.gettopartists"
 const val GET_ARTIST_SEARCH_METHOD = "artist.search"
 

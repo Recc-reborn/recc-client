@@ -44,7 +44,6 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()
                 }
                 is WelcomeScreenEvent.ArtistSearchFetched -> {
-                    adapter?.submitList(screenEvent.presenters)
                 }
             }
         })
