@@ -14,6 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+const val MIN_SELECTED_ARTISTS = 3
+
 class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScreenEvent>() {
     private val _selectedItemColor = MutableLiveData<Int>()
     val selectedItemColor: LiveData<Int>
@@ -128,6 +130,17 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
                     }.onFailure {
                         // TODO: Error msg
                     }
+            }
+        }
+    }
+
+    fun gotoHomeBtnClicked() {
+        viewModelScope.launch {
+            _selectedArtists.value?.let {
+                if (it.count() >= MIN_SELECTED_ARTISTS) {
+
+                    postEvent(WelcomeScreenEvent.GotoHomeBtnClicked)
+                }
             }
         }
     }

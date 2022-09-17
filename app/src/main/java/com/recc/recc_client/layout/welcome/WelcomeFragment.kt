@@ -1,6 +1,7 @@
 package com.recc.recc_client.layout.welcome
 
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentWelcomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
@@ -9,7 +10,6 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.ArtistGridViewHolder
-import com.recc.recc_client.utils.Alert
 import kotlinx.android.synthetic.main.fragment_welcome.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -18,8 +18,33 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
     private var adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>? = null
 
     override fun subscribeToViewModel() {
+        binding.btnGotoHome?.text = getString(R.string.artists_left_cta, MIN_SELECTED_ARTISTS)
+
         viewModel.presenterList.observe(viewLifecycleOwner) {
             adapter?.submitList(it)
+        }
+
+        viewModel.selectedArtists.observe(viewLifecycleOwner) { selectedArtists ->
+            when (val left = MIN_SELECTED_ARTISTS - selectedArtists.count()) {
+                in 2 .. MIN_SELECTED_ARTISTS -> {
+                    binding.btnGotoHome?.apply {
+                        background = requireContext().getDrawable(R.drawable.bg_disabled_floating_button)
+                        text = getString(R.string.artists_left_cta, left)
+                    }
+                }
+                1 -> {
+                    binding.btnGotoHome?.apply {
+                        background = requireContext().getDrawable(R.drawable.bg_disabled_floating_button)
+                        text = getString(R.string.one_artist_left_cta, left)
+                    }
+                }
+                else -> {
+                    binding.btnGotoHome?.apply {
+                        background = requireContext().getDrawable(R.drawable.bg_floating_button)
+                        text = getString(R.string.go_to_home_cta)
+                    }
+                }
+            }
         }
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
@@ -38,7 +63,10 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
                 WelcomeScreenEvent.ArtistsNotFetched -> {
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()
                 }
-                is WelcomeScreenEvent.ArtistSearchFetched -> {
+                WelcomeScreenEvent.GotoHomeBtnClicked -> {
+                    // TODO: Sent artists selected by user to server
+
+                    findNavController().navigate(R.id.action_welcomeFragment_to_homeFragment)
                 }
             }
         })
