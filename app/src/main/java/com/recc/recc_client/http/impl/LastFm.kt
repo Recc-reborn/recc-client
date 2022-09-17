@@ -28,11 +28,13 @@ class LastFm(private val context: Context, private val http: LastFmRouteDefiniti
         return LastFmErrorResponse(msg, error)
     }
 
-    suspend fun getTopArtists(page: Int = DEFAULT_PAGE, limit: Int = DEFAULT_LIMIT): Result<LastFmErrorResponse, Artists> {
+    suspend fun getTopArtists(
+        page: Int? = null,
+        limit: Int? = null
+    ): Result<LastFmErrorResponse, Artists> {
         val query = http.getTopArtists(GET_TOP_ARTIST_METHOD, context.getString(R.string.last_fm_token), limit, page)
         query.body()?.let {
             if (query.code().isOkCode()) {
-                Alert("query: ${it}")
                 return Result.Success(success = it)
             }
         }
@@ -44,13 +46,12 @@ class LastFm(private val context: Context, private val http: LastFmRouteDefiniti
 
     suspend fun getArtistSearch(
         artist: String,
-        page: Int = DEFAULT_PAGE,
-        limit: Int = DEFAULT_LIMIT
+        page: Int? = null,
+        limit: Int? = null
     ):Result<LastFmErrorResponse, Search> {
         val query = http.getArtistSearch(artist, GET_ARTIST_SEARCH_METHOD, context.getString(R.string.last_fm_token), limit, page)
         query.body()?.let {
             if (query.code().isOkCode()) {
-                Alert("query: ${it}")
                 return Result.Success(success = it)
             }
         }

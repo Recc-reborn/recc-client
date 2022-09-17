@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
@@ -14,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.SearchEditTextBinding
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.toPx
 import kotlinx.android.synthetic.main.search_edit_text.view.*
 
@@ -94,10 +96,10 @@ class SearchEditText(context: Context, attrs: AttributeSet? = null) :
     }
 
     fun onSearch(callback: (search: String) -> Unit) {
-        binding.etField.setOnEditorActionListener(object: TextView.OnEditorActionListener {
-            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-                val fieldValue = binding.etField.text.toString()
-                if (p1 == EditorInfo.IME_ACTION_SEARCH && fieldValue.isNotEmpty()) {
+        binding.etField.setOnKeyListener(object: OnKeyListener {
+            override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+                if (p2?.action == KeyEvent.ACTION_DOWN && p2.keyCode == KeyEvent.KEYCODE_ENTER) {
+                    val fieldValue = binding.etField.text.toString()
                     callback(fieldValue)
                     return true
                 }
@@ -112,6 +114,7 @@ class SearchEditText(context: Context, attrs: AttributeSet? = null) :
             if (!isEmpty) {
                 binding.etField.text?.clear()
                 binding.etField.clearFocus()
+                tvTitleAnimationIn(binding.tvTitle, 100, context)
                 callback()
             }
         }

@@ -3,7 +3,7 @@ package com.recc.recc_client.layout.welcome
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.def.DEFAULT_PAGE
+import com.recc.recc_client.http.def.DEFAULT_CHART_PAGE
 import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.common.onFailure
@@ -27,7 +27,7 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
     val selectedArtists: LiveData<Set<String>>
         get() = _selectedArtists
 
-    private val _currentPage = MutableLiveData<Int>(DEFAULT_PAGE)
+    private val _currentPage = MutableLiveData(DEFAULT_CHART_PAGE)
     val currentPage: LiveData<Int>
         get() = _currentPage
 
@@ -43,27 +43,25 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
         _unselectedItemColor.postValue(color)
     }
 
-    fun appendPageToList(newList: List<ArtistPresenter>) {
+    private fun appendPageToList(newList: List<ArtistPresenter>) {
         viewModelScope.launch {
             var oldList = mutableListOf<ArtistPresenter>()
             _presenterList.value?.let { artistPresenters ->
                 oldList = artistPresenters.toMutableList()
             }
-            oldList += newList
-            _presenterList.postValue(oldList)
+            _presenterList.postValue(oldList + newList)
         }
     }
 
-    fun replaceList(newList: List<ArtistPresenter>) {
+    private fun replaceList(newList: List<ArtistPresenter>) {
         viewModelScope.launch {
-            _currentPage.postValue(DEFAULT_PAGE)
+            _currentPage.postValue(DEFAULT_CHART_PAGE)
             _presenterList.postValue(newList)
         }
     }
 
     fun addArtist(url: String) {
         viewModelScope.launch {
-            Alert("adding: $url, ${_selectedArtists.value}")
             var set = mutableSetOf<String>()
             _selectedArtists.value?.let { artistsSet ->
                 set = artistsSet.toMutableSet()
@@ -91,13 +89,13 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
             _currentPage.value?.let { oldPage ->
                 CoroutineScope(Dispatchers.IO).launch {
                     val currentPage = oldPage + 1
+                    Alert("currentPage: $currentPage")
                     http.getTopArtists(currentPage)
                         .onSuccess { artists ->
                             val list = artists.artists.artist.map { ArtistPresenter(it) }
                             _currentPage.postValue(currentPage)
                             appendPageToList(list)
                         }.onFailure {
-                            Alert("Couldn't fetch page $currentPage of Top Artists")
                             // TODO: Error msg
                         }
                 }
@@ -108,7 +106,7 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
     fun getTopArtists() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.getTopArtists()
+                http.getTopArtists(DEFAULT_CHART_PAGE)
                     .onSuccess { artists ->
                         val list = artists.artists.artist.map { ArtistPresenter(it) }
                         replaceList(list)

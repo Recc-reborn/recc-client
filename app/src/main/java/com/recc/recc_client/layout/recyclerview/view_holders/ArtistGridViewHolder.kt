@@ -6,7 +6,6 @@ import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
 import com.recc.recc_client.layout.recyclerview.BaseViewHolder
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
-import com.recc.recc_client.utils.Alert
 
 class ArtistGridViewHolder(
     private val binding: FragmentArtistGridItemBinding,
@@ -38,7 +37,6 @@ class ArtistGridViewHolder(
         binding.tvArtistName.text = presenter.name
         viewModel.selectedArtists.value?.let {
             if (presenter.url in it && !isSelected) {
-                Alert("presenter ${presenter.url} in $it")
                 selectItem()
             }
         }
