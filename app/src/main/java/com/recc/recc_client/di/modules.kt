@@ -1,12 +1,18 @@
 package com.recc.recc_client.di
 
 import com.google.gson.GsonBuilder
+import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
-import com.recc.recc_client.http.AuthHttp
-import com.recc.recc_client.http.ServerRouteDefinitions
+import com.recc.recc_client.http.impl.Auth
+import com.recc.recc_client.http.def.LastFmRouteDefinitions
+import com.recc.recc_client.http.def.ServerRouteDefinitions
+import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.layout.welcome.WelcomeViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -25,10 +31,23 @@ val screenViewModels = module {
     viewModel {
         HomeViewModel(get())
     }
+    viewModel {
+        WelcomeViewModel(get())
+    }
 }
 
 val httpModule = module {
-
+    single {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
+        OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
+    }
     single {
         val gson = GsonBuilder()
             .setLenient()
@@ -40,6 +59,20 @@ val httpModule = module {
         retrofit.create(ServerRouteDefinitions::class.java)
     }
     single {
-        AuthHttp(androidContext(), get())
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .client(get())
+            .baseUrl(androidContext().getString(R.string.last_fm_base_endpoint))
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        retrofit.create(LastFmRouteDefinitions::class.java)
+    }
+    single {
+        Auth(androidContext(), get())
+    }
+    single {
+        LastFm(androidContext(), get())
     }
 }

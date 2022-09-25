@@ -4,17 +4,21 @@ import android.content.Context
 import com.recc.recc_client.R
 import kotlin.text.Regex
 
-const val EMAIL_TYPE = "email"
-const val PASSWORD_TYPE = "password"
-const val USERNAME_TYPE = "username"
+enum class RegexType(val type: String) {
+    EMAIL("email"),
+    PASSWORD("password"),
+    USERNAME("username"),
+    RAW("raw")
+}
 
 object Regex {
     operator fun invoke(context: Context, type: String): Regex {
         return when (type) {
-            EMAIL_TYPE -> context.getString(R.string.regex_email).toRegex()
-            PASSWORD_TYPE -> context.getString(R.string.regex_pass).toRegex()
-            USERNAME_TYPE -> context.getString(R.string.regex_username).toRegex()
-            else -> ".".toRegex()
+            RegexType.EMAIL.type -> context.getString(R.string.regex_email).toRegex()
+            RegexType.PASSWORD.type -> context.getString(R.string.regex_pass).toRegex()
+            RegexType.USERNAME.type -> context.getString(R.string.regex_username).toRegex()
+            RegexType.RAW.type -> ".".toRegex()
+            else -> throw IllegalArgumentException("$type type argument isn't valid")
         }
     }
 }

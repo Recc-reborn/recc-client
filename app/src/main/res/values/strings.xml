@@ -19,6 +19,7 @@
     <string name="preference_auth_key_file">shared_preferences_auth</string>
     <string name="auth_token_key">auth_token_file</string>
     <string name="invalid_credentials_label">email address and/or password incorrect</string>
+    <string name="fetch_me_data_error_msg">Error! User data couldn\'t get fetched</string>
 
     <string name="failed_query_msg">Error connecting to server</string>
 
@@ -27,4 +28,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Last.fm-->
+    <string name="last_fm_api_error_msg">Couldn\'t connect to Last.fm API, try again in a while</string>
 </resources>

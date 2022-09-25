@@ -2,8 +2,6 @@ package com.recc.recc_client.models.auth
 
 import com.google.gson.annotations.SerializedName
 
-const val ROLE_USER = "user"
-
 data class User (
     @SerializedName("id") val id: Int = 0,
     @SerializedName("name") val name: String = "",
@@ -12,6 +10,7 @@ data class User (
     @SerializedName("email_verified_at") val emailVerifiedAt: String = "",
     @SerializedName("created_at") val createdAt: String = "",
     @SerializedName("updated_at") val updatedAt: String = "",
+    @SerializedName("has_set_preferred_artists") val hasSetPreferredArtists: Boolean = false
 )
 
 data class CreateUser(

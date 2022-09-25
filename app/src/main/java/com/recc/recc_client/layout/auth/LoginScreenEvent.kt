@@ -7,4 +7,5 @@ sealed class LoginScreenEvent {
     object TvRegisterInsteadPressed: LoginScreenEvent()
     data class LoginSuccessful(val token: String): LoginScreenEvent()
     data class LoginFailed(val errorResponse: ErrorResponse): LoginScreenEvent()
+    object FetchMeDataFailed: LoginScreenEvent()
 }

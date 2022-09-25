@@ -37,7 +37,7 @@
                 app:popup_error_msg="@string/invalid_credentials_label"
                 app:type="password"
                 app:text="@string/password_label"
-                app:text_error="@string/password_error_label"/>
+                app:text_error="@string/password_error_label" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_login"
