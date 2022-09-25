@@ -45,5 +45,9 @@ interface ServerRouteDefinitions {
     @DELETE("api/tracks/{track}")
     suspend fun deleteTrack(@Path("track") track: Int): Response<String>
 
+//    @Headers("Accept: application/json")
+//    @PATCH("api/user/preferred-artists")
+//    suspend fun addPreferredArtists(): Response<>
+
     // TODO: PUT and DELETE queries (and still missing POST petitions)
 }

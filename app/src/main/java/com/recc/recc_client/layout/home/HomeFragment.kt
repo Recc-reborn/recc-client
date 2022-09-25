@@ -14,13 +14,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
     override val viewModel: HomeViewModel by viewModel()
 
-    init {
-        viewModel.meData.value?.let {
-            if (!it.hasSetPreferredArtists) {
-                findNavController().navigate(R.id.action_homeFragment_to_welcomeFragment)
-            }
-        }
-    }
+//    init {
+//        viewModel.meData.value?.let {
+//            if (!it.hasSetPreferredArtists) {
+//                findNavController().navigate(R.id.action_homeFragment_to_welcomeFragment)
+//            }
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

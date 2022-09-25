@@ -16,4 +16,12 @@ class ArtistPresenter(artist: Artist): BasePresenter() {
 
     override val viewId: Int
         get() = R.layout.fragment_artist_grid_item
+
+    override fun areContentsTheSame(other: BasePresenter): Boolean {
+        if ((other as ArtistPresenter).url == url) {
+            return true
+        }
+        return false
+    }
+
 }

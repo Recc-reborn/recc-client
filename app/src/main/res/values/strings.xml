@@ -20,8 +20,12 @@
     <string name="auth_token_key">auth_token_file</string>
     <string name="invalid_credentials_label">email address and/or password incorrect</string>
     <string name="fetch_me_data_error_msg">Error! User data couldn\'t get fetched</string>
-
     <string name="failed_query_msg">Error connecting to server</string>
+
+    <!--WELCOME-->
+    <string name="artists_left_cta"><b>SELECT %d MORE ARTISTS</b></string>
+    <string name="one_artist_left_cta"><b>SELECT %d MORE ARTIST</b></string>
+    <string name="go_to_home_cta">CONTINUE</string>
 
     <!--HOME-->
     <string name="logout_cta">Log out</string>
