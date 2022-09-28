@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
-import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
+import com.recc.recc_client.layout.user_msg.UserMsgViewModel
+import org.koin.android.ext.android.inject
 
 /**
  * @param [T] Event type
@@ -19,8 +21,10 @@ import com.recc.recc_client.R
  * @param [B] Fragment Binding
  */
 abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>(
-    private val layoutId: Int) : Fragment() {
+    private val layoutId: Int
+    ) : Fragment() {
     protected abstract val viewModel: V
+    private val msgViewModel: UserMsgViewModel by inject()
     private var bindingNullable: B? = null
     protected val binding get() = bindingNullable!!
 
@@ -39,6 +43,12 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
         return binding.root
     }
 
+    private fun subscribeToMsgViewModel() {
+        msgViewModel.msg.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     abstract fun subscribeToViewModel()
 
     override fun onDestroyView() {
@@ -50,6 +60,7 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).disableLoadingBar()
         subscribeToViewModel()
+        subscribeToMsgViewModel()
     }
 
     protected fun getToken(): String? {

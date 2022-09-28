@@ -1,5 +1,6 @@
 package com.recc.recc_client.http
 
+import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.utils.Alert
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -8,7 +9,9 @@ import java.net.SocketTimeoutException
 
 private const val RETRY_TIME: Long = 3000
 
-class ErrorInterceptor: Interceptor {
+class ErrorInterceptor(private val viewModel: UserMsgViewModel): Interceptor {
+
+
     override fun intercept(chain: Interceptor.Chain): Response {
         lateinit var response: Response
         val request = chain.request()
@@ -22,6 +25,7 @@ class ErrorInterceptor: Interceptor {
             } catch(e: SocketTimeoutException) {
                 Thread.sleep(RETRY_TIME)
                 Alert("No connection, retrying in ${ RETRY_TIME / 1000 } seconds...")
+                viewModel.postMessage("No connection, retrying in ${ RETRY_TIME / 1000 } seconds...")
             } catch(e: HttpException) {
                 // TODO: delete sharedPref token
                 Alert("User not authenticated")

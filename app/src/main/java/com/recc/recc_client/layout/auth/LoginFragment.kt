@@ -22,7 +22,6 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
     override val viewModel: LoginViewModel by viewModel()
 
     private fun afterLoginAction(user: User) {
-        Alert("stored user: $user")
         (requireActivity() as MainActivity).enableLoadingBar()
         if (user.hasSetPreferredArtists) {
             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
