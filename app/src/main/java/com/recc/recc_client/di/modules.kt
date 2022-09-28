@@ -3,6 +3,7 @@ package com.recc.recc_client.di
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
+import com.recc.recc_client.http.ErrorInterceptor
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.http.def.LastFmRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
@@ -18,6 +19,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
+const val TIMEOUT: Long = 10
 
 /*** Koin module for Data injection, it creates both singletons and factories that can be used in the
  * entirety of the application ***/
@@ -45,19 +49,25 @@ val httpModule = module {
             HttpLoggingInterceptor.Level.NONE
         }
         OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(ErrorInterceptor())
             .build()
     }
+    // Recc Server client
     single {
         val gson = GsonBuilder()
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
+            .client(get())
             .baseUrl(androidContext().getString(R.string.api_host))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
     }
+    // Last.fm API client
     single {
         val gson = GsonBuilder()
             .setLenient()

@@ -1,6 +1,7 @@
 package com.recc.recc_client.http.def
 
 import com.recc.recc_client.models.auth.*
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -15,7 +16,7 @@ interface ServerRouteDefinitions {
 
     @Headers("Accept: application/json")
     @GET("api/users/me")
-    suspend fun getUserMe(@Header("Authorization") token: String): Response<User>
+    suspend fun getUserMe(@Header("Authorization") token: String): Call<User>
 
     @Headers("Accept: application/json")
     @POST("api/users/")
