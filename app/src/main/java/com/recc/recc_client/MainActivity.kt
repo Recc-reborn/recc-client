@@ -16,6 +16,14 @@ class MainActivity : AppCompatActivity() {
         Status( "Launching Main Activity...")
     }
 
+    fun enableNoConnectionView() {
+        binding.noConnectionView.show()
+    }
+
+    fun disableNoConnectionView() {
+        binding.noConnectionView.hide()
+    }
+
     fun enableLoadingBar() {
         binding.lbMain.visibility = View.VISIBLE
     }

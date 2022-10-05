@@ -30,10 +30,8 @@ class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEven
                     ) {
                         http.login(email, password)
                             .onSuccess {
-                                Alert("token: $it")
                                 postEvent(LoginScreenEvent.LoginSuccessful(it))
                             }.onFailure {
-                                Alert("msg: $it")
                                 postEvent(LoginScreenEvent.LoginFailed(it ?: ErrorResponse()))
                             }
                     }
@@ -45,12 +43,13 @@ class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEven
     fun getMeData(token: String?) {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.me(token)
+                http.me(token.orEmpty())
                     .onSuccess {
+                        Alert("getMeData success")
                         _meData.postValue(it)
                     }
                     .onFailure {
-                        Alert("$it")
+                        Alert("getMeData error: $it")
                         postEvent(LoginScreenEvent.FetchMeDataFailed)
                     }
             }

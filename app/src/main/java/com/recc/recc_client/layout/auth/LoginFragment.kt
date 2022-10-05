@@ -34,6 +34,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
     override fun onResume() {
         super.onResume()
         val token = getToken()
+        Alert("token: $token")
         token?.let {
             viewModel.getMeData(it)
         }

@@ -12,6 +12,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
+import com.recc.recc_client.layout.user_msg.UserMsgScreenEvent
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import org.koin.android.ext.android.inject
 
@@ -44,9 +45,16 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
     }
 
     private fun subscribeToMsgViewModel() {
-        msgViewModel.msg.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
+        msgViewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
+            when (screenEvent) {
+                UserMsgScreenEvent.NoConnection -> {
+                    (requireActivity() as MainActivity).enableNoConnectionView()
+                }
+                is UserMsgScreenEvent.PrintMessage -> {
+                    Toast.makeText(requireContext(), screenEvent.msg, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     abstract fun subscribeToViewModel()

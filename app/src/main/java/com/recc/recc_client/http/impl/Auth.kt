@@ -86,29 +86,17 @@ class Auth(private val context: Context, private val http: ServerRouteDefinition
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 
-    suspend fun me(token: String?): Result<ErrorResponse, User> {
+    suspend fun me(token: String): Result<ErrorResponse, User> {
+        Alert("getMeData function $token")
         val query = http.getUserMe("Bearer $token")
-        Alert("me function")
-        lateinit var result: Result<ErrorResponse, User>
-        query.enqueue(object: Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                response.body()?.let {
-                    result = Result.Success(success = it)
-                } ?: run {
-                    response.errorBody()?.let {
-                        result = Result.Failure(failure = getJsonErrorResponse(it))
-                    }
-                }
+        query.body()?.let {
+            if (query.code().isOkCode()) {
+                return Result.Success(success = it)
             }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Alert("t: $t")
-                result = Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
-                Alert("calling again...")
-                query.clone()
-            }
-        })
-        Alert("result: $result")
-        return result
+        }
+        query.errorBody()?.let {
+            return Result.Failure(failure = getJsonErrorResponse(it))
+        }
+        return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 }

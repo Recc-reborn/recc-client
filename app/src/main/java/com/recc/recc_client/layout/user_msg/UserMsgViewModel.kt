@@ -1,16 +1,14 @@
 package com.recc.recc_client.layout.user_msg
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.recc.recc_client.layout.common.BaseEventViewModel
 
-class UserMsgViewModel: ViewModel() {
-
-    private val _msg = MutableLiveData<String>()
-    val msg: LiveData<String>
-        get() = _msg
+class UserMsgViewModel: BaseEventViewModel<UserMsgScreenEvent>() {
 
     fun postMessage(msg: String) {
-        _msg.postValue(msg)
+        postEvent(UserMsgScreenEvent.PrintMessage(msg))
+    }
+
+    fun handleNoConnection() {
+        postEvent(UserMsgScreenEvent.NoConnection)
     }
 }
