@@ -8,6 +8,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentLoginBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.models.auth.User
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
@@ -20,6 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login) {
 
     override val viewModel: LoginViewModel by viewModel()
+    private val meDataViewModel: MeDataViewModel by viewModel()
 
     private fun afterLoginAction(user: User) {
         (requireActivity() as MainActivity).enableLoadingBar()
@@ -46,7 +48,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
     override fun subscribeToViewModel() {
         viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL.type)
         viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD.type)
-        viewModel.meData.observe(viewLifecycleOwner) { user ->
+        meDataViewModel.meData.observe(viewLifecycleOwner) { user ->
             user?.let {
                 afterLoginAction(it)
             }

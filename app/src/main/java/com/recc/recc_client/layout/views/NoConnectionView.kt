@@ -1,16 +1,17 @@
 package com.recc.recc_client.layout.views
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
-import com.recc.recc_client.MainActivity
+import androidx.lifecycle.Observer
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.NoConnectionViewBinding
+import com.recc.recc_client.http.InterceptorViewModel
+import com.recc.recc_client.layout.common.Event
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class NoConnectionView @JvmOverloads constructor(
@@ -22,12 +23,26 @@ class NoConnectionView @JvmOverloads constructor(
     private val viewModel: NoConnectionViewModel by lazy {
         (context as FragmentActivity).getViewModel()
     }
+    private val interceptorViewModel: InterceptorViewModel by lazy {
+        (context as FragmentActivity).getViewModel()
+    }
+    private val observer = Observer<Boolean> {
+        if (it) {
+            hide()
+        }
+    }
     init {
         binding.viewModel = viewModel
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
+        interceptorViewModel.connection.observeForever(observer)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        interceptorViewModel.connection.removeObserver(observer)
     }
 
     fun show() {

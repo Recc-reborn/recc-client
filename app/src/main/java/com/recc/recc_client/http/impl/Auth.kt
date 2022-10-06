@@ -1,6 +1,8 @@
 package com.recc.recc_client.http.impl
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.recc.recc_client.R
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
@@ -8,13 +10,17 @@ import com.recc.recc_client.models.auth.*
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
 import com.recc.recc_client.utils.toStringList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Auth(private val context: Context, private val http: ServerRouteDefinitions) {
+class Auth(
+    private val context: Context,
+    private val http: ServerRouteDefinitions) {
 
     private fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())

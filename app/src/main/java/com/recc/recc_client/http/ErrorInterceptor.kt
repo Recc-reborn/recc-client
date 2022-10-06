@@ -2,6 +2,7 @@ package com.recc.recc_client.http
 
 import android.content.Context
 import com.recc.recc_client.R
+import com.recc.recc_client.di.TIMEOUT
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.utils.Alert
 import okhttp3.Interceptor
@@ -11,16 +12,20 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
-private const val RETRY_TIME: Long = 3000
 private const val ATTEMPTS = 3
 private const val INTERNAL_SERVER_ERROR_CODE = 500
 
 class ErrorInterceptor(
     private val context: Context,
-    private val viewModel: UserMsgViewModel
-): Interceptor {
-
+    private val viewModel: InterceptorViewModel,
+    private val msgViewModel: UserMsgViewModel): Interceptor {
     private var retryAttempts = 1
+
+    init {
+        viewModel.retry.observeForever {
+            retryAttempts = 1
+        }
+    }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -31,27 +36,29 @@ class ErrorInterceptor(
             .message("No internet connection")
             .request(request)
             .build()
-        var connection = false
-        while (!connection && retryAttempts <= ATTEMPTS) {
+        while (retryAttempts <= ATTEMPTS) {
             try {
                 response = chain.proceed(request)
                 response.body?.let {
-                    connection = true
+                    viewModel.setIsConnected(true)
                 }
+                break
             } catch(e: SocketTimeoutException) {
-                Thread.sleep(RETRY_TIME)
+                viewModel.setIsConnected(false)
+                Thread.sleep(TIMEOUT * 1000)
                 if (retryAttempts < ATTEMPTS) {
-                    viewModel.postMessage(context.getString(R.string.no_connection_interceptor_msg, retryAttempts, ATTEMPTS, RETRY_TIME / 1000))
+                    msgViewModel.postMessage(context.getString(R.string.no_connection_interceptor_msg, retryAttempts, ATTEMPTS, TIMEOUT))
                 }
             } catch(e: HttpException) {
+                viewModel.setIsConnected(false)
                 // TODO: delete sharedPref token
                 Alert("User not authenticated")
             }
             retryAttempts++
         }
-        if (retryAttempts == ATTEMPTS + 1) {
-            viewModel.handleNoConnection()
-
+        if (viewModel.connection.value != true) {
+            Alert("retry: $retryAttempts")
+            msgViewModel.handleNoConnection()
         }
         return response
     }

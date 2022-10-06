@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
 import com.recc.recc_client.http.ErrorInterceptor
+import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.http.def.LastFmRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
@@ -17,7 +18,6 @@ import com.recc.recc_client.layout.views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -25,7 +25,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val TIMEOUT: Long = 3
+const val TIMEOUT: Long = 2
 
 /*** Koin module for Data injection, it creates both singletons and factories that can be used in the
  * entirety of the application ***/
@@ -34,7 +34,7 @@ val screenViewModels = module {
         UserMsgViewModel()
     }
     viewModel {
-        LoginViewModel(get())
+        LoginViewModel(get(), get())
     }
     viewModel {
         RegisterViewModel(get())
@@ -46,10 +46,13 @@ val screenViewModels = module {
         WelcomeViewModel(get())
     }
     single {
-        NoConnectionViewModel(androidApplication(), get())
+        NoConnectionViewModel(androidContext(), get(), get())
     }
     single{
         MeDataViewModel()
+    }
+    single {
+        InterceptorViewModel()
     }
 }
 
@@ -65,7 +68,7 @@ val httpModule = module {
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(ErrorInterceptor(androidContext(), get()))
+            .addInterceptor(ErrorInterceptor(androidContext(), get(), get()))
             .build()
     }
     // Recc Server client

@@ -2,10 +2,7 @@ package com.recc.recc_client.layout.auth
 
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.impl.Auth
-import com.recc.recc_client.layout.common.BLANK_REGEX
-import com.recc.recc_client.layout.common.BaseEventViewModel
-import com.recc.recc_client.layout.common.onFailure
-import com.recc.recc_client.layout.common.onSuccess
+import com.recc.recc_client.layout.common.*
 import com.recc.recc_client.models.auth.ErrorResponse
 import com.recc.recc_client.utils.Alert
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +13,10 @@ import kotlinx.coroutines.launch
  * Login ViewModel that acts as a "two-way controller" in a MVC architecture, here we code the login's
  * logic and communicate with LoginFragment for navigation and other UI related stuff
  */
-class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEvent>() {
+class LoginViewModel(
+    private val http: Auth,
+    private val meData: MeDataViewModel
+): BaseEventViewModel<LoginScreenEvent>() {
     var emailRegex: Regex? = null
     var passwordRegex: Regex? = null
 
@@ -46,7 +46,7 @@ class LoginViewModel(private val http: Auth): BaseEventViewModel<LoginScreenEven
                 http.me(token.orEmpty())
                     .onSuccess {
                         Alert("getMeData success")
-                        _meData.postValue(it)
+                        meData.postUser(it)
                     }
                     .onFailure {
                         Alert("getMeData error: $it")
