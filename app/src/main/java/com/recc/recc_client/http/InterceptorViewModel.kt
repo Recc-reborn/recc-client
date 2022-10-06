@@ -19,7 +19,6 @@ class InterceptorViewModel: ViewModel() {
     }
 
     fun retryConnection() {
-        Alert("post value")
         _retry.postValue(true)
     }
 }

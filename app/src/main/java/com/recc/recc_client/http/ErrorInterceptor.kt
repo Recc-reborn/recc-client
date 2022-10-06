@@ -57,7 +57,6 @@ class ErrorInterceptor(
             retryAttempts++
         }
         if (viewModel.connection.value != true) {
-            Alert("retry: $retryAttempts")
             msgViewModel.handleNoConnection()
         }
         return response

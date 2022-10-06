@@ -93,7 +93,6 @@ class Auth(
     }
 
     suspend fun me(token: String): Result<ErrorResponse, User> {
-        Alert("getMeData function $token")
         val query = http.getUserMe("Bearer $token")
         query.body()?.let {
             if (query.code().isOkCode()) {
