@@ -31,6 +31,13 @@ class NoConnectionView @JvmOverloads constructor(
             hide()
         }
     }
+    private val screenEventObserver = Event.EventObserver<NoConnectionScreenEvent> { screenEvent ->
+        when (screenEvent) {
+            NoConnectionScreenEvent.NoAccount -> {
+                hide()
+            }
+        }
+    }
     init {
         binding.viewModel = viewModel
     }
@@ -38,11 +45,13 @@ class NoConnectionView @JvmOverloads constructor(
     override fun onFinishInflate() {
         super.onFinishInflate()
         interceptorViewModel.connection.observeForever(observer)
+        viewModel.screenEvent.observeForever(screenEventObserver)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         interceptorViewModel.connection.removeObserver(observer)
+        viewModel.screenEvent.removeObserver(screenEventObserver)
     }
 
     fun show() {

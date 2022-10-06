@@ -3,7 +3,6 @@ package com.recc.recc_client.http
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.recc.recc_client.utils.Alert
 
 class InterceptorViewModel: ViewModel() {
     private val _connection = MutableLiveData(false)
