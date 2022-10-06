@@ -1,31 +1,43 @@
 package com.recc.recc_client.http.impl
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.recc.recc_client.R
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.*
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
 import com.recc.recc_client.utils.toStringList
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class Auth(private val context: Context, private val http: ServerRouteDefinitions) {
+class Auth(
+    private val context: Context,
+    private val http: ServerRouteDefinitions) {
+
     private fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())
         val message = json.getString(MESSAGE_FIELD)
-        var emaiList = listOf<String>()
+        Alert("message: $message")
+        var emailList = listOf<String>()
         var passwordList = listOf<String>()
         if (json.has(ERRORS_FIELD)) {
             val errors = json.getJSONObject(ERRORS_FIELD)
             if (errors.has(EMAIL_FIELD)) {
-                emaiList = errors.getJSONArray(EMAIL_FIELD).toStringList()
+                emailList = errors.getJSONArray(EMAIL_FIELD).toStringList()
             }
             if (errors.has(PASSWORD_FIELD)) {
                 passwordList = errors.getJSONArray(PASSWORD_FIELD).toStringList()
             }
         }
-        return ErrorResponse(message, Errors(emaiList, passwordList))
+        return ErrorResponse(message, Errors(emailList, passwordList))
     }
 
     suspend fun login(email: String, password: String): Result<ErrorResponse, String> {
@@ -80,7 +92,7 @@ class Auth(private val context: Context, private val http: ServerRouteDefinition
         return Result.Failure(failure = ErrorResponse(context.getString(R.string.failed_query_msg)))
     }
 
-    suspend fun me(token: String?): Result<ErrorResponse, User> {
+    suspend fun me(token: String): Result<ErrorResponse, User> {
         val query = http.getUserMe("Bearer $token")
         query.body()?.let {
             if (query.code().isOkCode()) {

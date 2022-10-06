@@ -17,10 +17,6 @@ abstract class BaseEventViewModel<T>: ViewModel() {
     val screenEvent: LiveData<Event<T>>
         get() = _screenEvent
 
-    protected val _meData = MutableLiveData<User>()
-    val meData: LiveData<User>
-        get() = _meData
-
     protected fun postEvent(eventContent: T) {
         _screenEvent.postValue(Event(eventContent))
     }

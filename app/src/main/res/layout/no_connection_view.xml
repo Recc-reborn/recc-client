@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.recc.recc_client.layout.views.NoConnectionViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="102dp"
+        tools:context=".layout.views.NoConnectionView">
+
+        <ImageView
+            android:id="@+id/iv_no_wifi"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/ic_baseline_signal_wifi_off_24"
+            tools:src="@drawable/ic_baseline_signal_wifi_off_24" />
+
+        <TextView
+            android:id="@+id/tv_no_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_internet_msg"
+            style="@style/FormItem.HeaderText"
+            app:layout_constraintTop_toBottomOf="@id/iv_no_wifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/no_internet_msg" />
+
+        <TextView
+            android:id="@+id/tv_reconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reconnect_cta"
+            android:layout_marginTop="8dp"
+            android:onClick="@{() -> viewModel.tryForConnection()}"
+            style="@style/FormItem.TextClickable"
+            app:layout_constraintTop_toBottomOf="@id/tv_no_wifi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/reconnect_cta" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

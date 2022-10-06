@@ -7,6 +7,12 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+        <com.recc.recc_client.layout.views.NoConnectionView
+            android:id="@+id/no_connection_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/lb_main"
             style="@style/Widget.AppCompat.ProgressBar"
