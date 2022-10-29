@@ -9,5 +9,5 @@ data class CreateToken(
 )
 
 data class Token(
-    @SerializedName("token") val token: String = ""
+    @SerializedName("token") var token: String = ""
 )

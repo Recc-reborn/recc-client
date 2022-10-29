@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.def.DEFAULT_CHART_PAGE
+import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.common.onFailure
@@ -16,7 +17,10 @@ import kotlinx.coroutines.launch
 
 const val MIN_SELECTED_ARTISTS = 3
 
-class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScreenEvent>() {
+class WelcomeViewModel(
+    private val http: LastFm,
+    private val control: Control
+): BaseEventViewModel<WelcomeScreenEvent>() {
     private val _selectedItemColor = MutableLiveData<Int>()
     val selectedItemColor: LiveData<Int>
         get() = _selectedItemColor
@@ -36,6 +40,7 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
     private val _presenterList = MutableLiveData<List<ArtistPresenter>>()
     val presenterList: LiveData<List<ArtistPresenter>>
         get() = _presenterList
+
 
     fun setSelectedItemColor(color: Int) {
         _selectedItemColor.postValue(color)
@@ -136,10 +141,20 @@ class WelcomeViewModel(private val http: LastFm): BaseEventViewModel<WelcomeScre
 
     fun gotoHomeBtnClicked() {
         viewModelScope.launch {
-            _selectedArtists.value?.let {
-                if (it.count() >= MIN_SELECTED_ARTISTS) {
-
-                    postEvent(WelcomeScreenEvent.GotoHomeBtnClicked)
+            CoroutineScope(Dispatchers.IO).launch {
+                _selectedArtists.value?.let { artistsSet ->
+                    if (artistsSet.count() >= MIN_SELECTED_ARTISTS) {
+                        val artistList = artistsSet.toList()
+                        token.value?.let { token ->
+                            control.addPreferredArtists(token, artistList)
+                                .onSuccess {
+                                    Alert("success: $it")
+                                }.onFailure {
+                                    Alert("failure: $it")
+                                }
+                            postEvent(WelcomeScreenEvent.GotoHomeBtnClicked)
+                        }
+                    }
                 }
             }
         }

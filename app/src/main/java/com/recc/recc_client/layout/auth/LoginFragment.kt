@@ -10,7 +10,6 @@ import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.models.auth.User
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.Regex
 import com.recc.recc_client.utils.RegexType
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,9 +34,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
     override fun onResume() {
         super.onResume()
-        val token = getToken()
-        Alert("token: $token")
-        token?.let {
+        getToken()?.let {
             viewModel.getMeData(it)
         }
     }
@@ -48,12 +45,12 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
     override fun subscribeToViewModel() {
         viewModel.emailRegex = Regex(requireContext(), RegexType.EMAIL.type)
         viewModel.passwordRegex = Regex(requireContext(), RegexType.PASSWORD.type)
-        meDataViewModel.meData.observe(viewLifecycleOwner) { user ->
-            user?.let {
-                afterLoginAction(it)
+
+        meDataViewModel.meData.observe(viewLifecycleOwner) { nullableUser ->
+            nullableUser?.let { user ->
+                afterLoginAction(user)
             }
         }
-
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
