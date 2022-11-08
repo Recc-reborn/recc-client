@@ -18,6 +18,9 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
     private var adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>? = null
 
     override fun subscribeToViewModel() {
+        getToken()?.let {
+            viewModel.setToken(it)
+        }
         binding.btnGotoHome?.text = getString(R.string.artists_left_cta, MIN_SELECTED_ARTISTS)
 
         viewModel.presenterList.observe(viewLifecycleOwner) {
@@ -64,8 +67,6 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()
                 }
                 WelcomeScreenEvent.GotoHomeBtnClicked -> {
-                    // TODO: Sent artists selected by user to server
-
                     findNavController().navigate(R.id.action_welcomeFragment_to_homeFragment)
                 }
             }

@@ -1,6 +1,7 @@
 package com.recc.recc_client.layout.common
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +11,13 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.layout.user_msg.UserMsgScreenEvent
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
+import com.recc.recc_client.models.auth.Token
 import org.koin.android.ext.android.inject
 
 /**
@@ -67,19 +71,29 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).disableLoadingBar()
+
         subscribeToViewModel()
         subscribeToMsgViewModel()
     }
 
-    protected fun getToken(): String? {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        return sharedPref.getString(getString(R.string.auth_token_key), null)
-    }
+    protected fun getToken(): String?
+        = getSharedPref().getString(getString(R.string.auth_token_key), null)
+
+    private fun getSharedPref(): SharedPreferences
+        = requireActivity().getSharedPreferences(
+            getString(R.string.preference_auth_key_file),
+            Context.MODE_PRIVATE)
 
     protected fun saveToken(token: String) {
-        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.preference_auth_key_file), Context.MODE_PRIVATE)
-        with (sharedPref?.edit()) {
+        with (getSharedPref().edit()) {
             this?.putString(getString(R.string.auth_token_key), token)
+            this?.apply()
+        }
+    }
+
+    protected fun removeToken() {
+        with (getSharedPref().edit()) {
+            this?.remove(getString(R.string.auth_token_key))
             this?.apply()
         }
     }
