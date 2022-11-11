@@ -28,7 +28,6 @@ class PagerFragment : BaseFragment<PagerScreenEvent, PagerViewModel, FragmentPag
         super.onCreate(savedInstanceState)
         (requireActivity() as MainActivity).disableLoadingBar()
     }
-
     override fun subscribeToViewModel() {
         // Sets a new adapter for ViewPager
         binding.vpHome.adapter = PageAdapter(this)
