@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.recc.recc_client.layout.settings.SettingsViewModel" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".layout.settings.SettingsFragment">
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/logout_cta"
+            android:onClick="@{(view) -> viewModel.onBtnLogout()}"
+            tools:text="@string/logout_cta" />
+
+    </FrameLayout>
+</layout>
