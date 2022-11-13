@@ -1,7 +1,6 @@
 package com.recc.recc_client.layout.recyclerview.presenters
 
 import com.recc.recc_client.R
-import com.recc.recc_client.layout.recyclerview.BasePresenter
 import com.recc.recc_client.models.last_fm.Artist
 import com.recc.recc_client.models.last_fm.Image
 
