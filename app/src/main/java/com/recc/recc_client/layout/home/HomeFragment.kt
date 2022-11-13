@@ -9,7 +9,7 @@ import com.recc.recc_client.databinding.FragmentHomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_pager) {
+class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

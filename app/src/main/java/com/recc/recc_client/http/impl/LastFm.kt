@@ -9,7 +9,6 @@ import com.recc.recc_client.models.auth.LastFmErrorResponse
 import com.recc.recc_client.models.auth.MESSAGE_FIELD_NAME
 import com.recc.recc_client.models.last_fm.Artists
 import com.recc.recc_client.models.last_fm.Search
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
 import okhttp3.ResponseBody
 import org.json.JSONObject
