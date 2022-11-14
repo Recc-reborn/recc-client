@@ -19,7 +19,8 @@ import com.recc.recc_client.models.last_fm.Artist
 import java.io.Serializable
 
 enum class AdapterType {
-    ARTISTS_GRID
+    ARTISTS_GRID,
+    PLAYLISTS
 }
 
 class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
@@ -37,6 +38,9 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                 )
                 return ArtistGridViewHolder(binding, viewModel as WelcomeViewModel) as VH
             }
+            AdapterType.PLAYLISTS -> {
+
+            }
         }
         throw ClassNotFoundException("The given ViewHolder doesn't exist")
     }
@@ -51,6 +55,9 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                         (viewModel as WelcomeViewModel).getNextPage()
                     }
                     holder.bind(presenter)
+                }
+                AdapterType.PLAYLISTS -> {
+
                 }
             }
         }

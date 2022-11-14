@@ -1,6 +1,5 @@
 package com.recc.recc_client.di
 
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
@@ -11,14 +10,16 @@ import com.recc.recc_client.http.def.LastFmRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.LastFm
+import com.recc.recc_client.http.impl.MockApi
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.layout.home.PagerViewModel
+import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
-import com.recc.recc_client.models.auth.Token
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -43,10 +44,16 @@ val screenViewModels = module {
         RegisterViewModel(get())
     }
     viewModel {
-        HomeViewModel(get())
+        PagerViewModel(get())
     }
     viewModel {
         WelcomeViewModel(get(), get())
+    }
+    viewModel {
+        HomeViewModel()
+    }
+    viewModel {
+        SettingsViewModel(get())
     }
     single {
         NoConnectionViewModel(androidContext(), get(), get())
@@ -81,7 +88,7 @@ val httpModule = module {
             .create()
         val retrofit = Retrofit.Builder()
             .client(get())
-            .baseUrl(androidContext().getString(R.string.api_host))
+            .baseUrl(androidContext().getString(R.string.recc_base_endpoint))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
@@ -106,5 +113,8 @@ val httpModule = module {
     }
     single {
         LastFm(androidContext(), get())
+    }
+    single {
+        MockApi(androidContext(), get())
     }
 }

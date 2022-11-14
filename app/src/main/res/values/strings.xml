@@ -38,4 +38,8 @@
 
     <!--Last.fm-->
     <string name="last_fm_api_error_msg">Couldn\'t connect to Last.fm API, try again in a while</string>
+
+    <!--MENU-->
+    <string name="menu_home">Home</string>
+    <string name="menu_settings">Settings</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_host">http://10.0.2.2:8000</string>
+    <string name="recc_base_endpoint">http://10.0.2.2:8000</string>
     <string name="token_path">token.tmp</string>
     <string name="user_info_path">user_info.json</string>
 
@@ -8,4 +8,7 @@
     <string name="last_fm_base_endpoint">https://ws.audioscrobbler.com/2.0/</string>
     <string name="last_fm_token">4ee5fa23159bc4e2e42356c2ac641895</string>
     <string name="last_fm_shared_secret">55554623db88900ea7e0823c82bfc99c</string>
+
+    <!--MockAPI-->
+    <string name="mockapi_base_endpoint">https://636d8a2eb567eed48ac3bd2d.mockapi.io/api/</string>
 </resources>
