@@ -11,6 +11,7 @@
     <color name="black_25">#3F000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>
+    <color name="white_10">#1AFFFFFF</color>
 
     <color name="dark_blue">#0d0d23</color>
     <color name="purple_50">#803C3C68</color>

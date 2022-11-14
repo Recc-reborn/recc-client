@@ -53,7 +53,7 @@
             tools:text="@string/hello_blank_fragment"/>
 
         <TextView
-            android:id="@+id/tv_tags"
+            android:id="@+id/fl_tags"
             style="@style/FormItem.SubText"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
-            android:background="@drawable/bg_arrow_circle_blue"
+            android:background="@drawable/bg_arrow_circle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" >
