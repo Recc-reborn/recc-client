@@ -14,7 +14,10 @@
             android:id="@+id/iv_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_margin="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_foreground" />
@@ -33,7 +36,7 @@
         <TextView
             android:id="@+id/tv_created_at"
             style="@style/FormItem.SubText"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white_50"

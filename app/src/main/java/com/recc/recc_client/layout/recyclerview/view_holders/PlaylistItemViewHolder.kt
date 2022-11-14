@@ -20,6 +20,7 @@ class PlaylistItemViewHolder(
         binding.tvName.text = presenter.name
         Glide.with(binding.ivImage)
             .load(presenter.image)
+            .fitCenter()
             .into(binding.ivImage)
 
         // TODO: Use real data
