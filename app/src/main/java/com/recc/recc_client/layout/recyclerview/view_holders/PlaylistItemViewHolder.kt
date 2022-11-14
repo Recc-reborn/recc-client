@@ -27,11 +27,7 @@ class PlaylistItemViewHolder(
         // TODO: Use real data
         val genres = GenreFactory.generate(5)
         // Removes existing tags so that won't have to worry about duplicates
-        binding.flTags.children.forEach {
-            if (it is TextView) {
-                it.text = ""
-            }
-        }
+        binding.flTags.removeAllViews()
         for (genre in genres) {
             val textView = TextView(binding.root.context)
             val layoutParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
