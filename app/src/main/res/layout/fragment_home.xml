@@ -3,33 +3,23 @@
     <data>
         <variable
             name="viewModel"
-            type="com.recc.recc_client.layout.home.PagerViewModel" />
+            type="com.recc.recc_client.layout.home.HomeViewModel" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".layout.home.HomeFragment">
-
-        <ScrollView
+        <LinearLayout
             android:id="@+id/sv_home"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".layout.home.HomeFragment">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_scroll_container"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home_playlist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_home_playlists"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </ScrollView>
-
-    </FrameLayout>
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </LinearLayout>
 </layout>

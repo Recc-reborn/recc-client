@@ -7,6 +7,7 @@ import com.recc.recc_client.http.ErrorInterceptor
 import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.http.def.LastFmRouteDefinitions
+import com.recc.recc_client.http.def.MockApiRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.LastFm
@@ -50,7 +51,7 @@ val screenViewModels = module {
         WelcomeViewModel(get(), get())
     }
     viewModel {
-        HomeViewModel()
+        HomeViewModel(get())
     }
     viewModel {
         SettingsViewModel(get())
@@ -104,6 +105,18 @@ val httpModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(LastFmRouteDefinitions::class.java)
+    }
+    // MockApi
+    single {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .client(get())
+            .baseUrl(androidContext().getString(R.string.mockapi_base_endpoint))
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        retrofit.create(MockApiRouteDefinitions::class.java)
     }
     single {
         Auth(androidContext(), get())

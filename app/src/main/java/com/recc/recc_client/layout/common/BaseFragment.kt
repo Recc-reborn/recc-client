@@ -18,6 +18,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.layout.user_msg.UserMsgScreenEvent
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.models.auth.Token
+import com.recc.recc_client.utils.Alert
 import org.koin.android.ext.android.inject
 
 /**
@@ -40,6 +41,7 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
         bindingNullable = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.also {
             // Sets viewModel variable in layout
+            Alert("viewModel: ${BR.viewModel}, $viewModel")
             binding.setVariable(BR.viewModel, viewModel)
             binding.lifecycleOwner = viewLifecycleOwner
             binding.executePendingBindings()
