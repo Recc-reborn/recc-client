@@ -88,4 +88,25 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+
+    <!--InfoBox-->
+    <style name="InfoBox">
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="InfoBox.Title" parent="InfoBox">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="InfoBox.Subtitle" parent="InfoBox">
+        <item name="android:textSize">16sp</item>
+        <item name="android:maxHeight">22dp</item>
+    </style>
+
+    <style name="InfoBox.Subtext" parent="InfoBox">
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxHeight">19dp</item>
+    </style>
+
 </resources>

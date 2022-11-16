@@ -18,6 +18,15 @@ class HomeViewModel(private val mockApi: MockApi): BaseEventViewModel<HomeScreen
     val playlists: LiveData<List<PlaylistPresenter>>
         get() = _playlists
 
+    private val _selectedPlaylist = MutableLiveData<PlaylistPresenter>()
+    val selectedPlaylist: LiveData<PlaylistPresenter>
+        get() = _selectedPlaylist
+
+    fun selectPlaylist(playlist: PlaylistPresenter) {
+        _selectedPlaylist.postValue(playlist)
+        postEvent(HomeScreenEvent.PlaylistSelected)
+    }
+
     fun getPlaylists() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {

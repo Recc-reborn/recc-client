@@ -14,3 +14,9 @@ fun Int.toPx(context: Context) = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,
     this.toFloat(),
     context.resources.displayMetrics)
+
+fun Int.secondsToMinutes(): String {
+    val minutes = this / 60
+    val remaining = this % 60
+    return "$minutes:$remaining"
+}

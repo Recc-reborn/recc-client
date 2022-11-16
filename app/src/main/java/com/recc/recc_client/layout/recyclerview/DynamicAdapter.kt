@@ -6,18 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ListAdapter
 import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
 import com.recc.recc_client.databinding.FragmentPlaylistItemBinding
+import com.recc.recc_client.databinding.FragmentSongItemBinding
 import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.recyclerview.view_holders.ArtistGridViewHolder
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.recyclerview.presenters.BasePresenter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
+import com.recc.recc_client.layout.recyclerview.presenters.SongPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.BaseViewHolder
 import com.recc.recc_client.layout.recyclerview.view_holders.PlaylistItemViewHolder
+import com.recc.recc_client.layout.recyclerview.view_holders.SongViewHolder
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
 
 enum class AdapterType {
     ARTISTS_GRID,
-    PLAYLISTS
+    PLAYLISTS,
+    SONGS
 }
 
 class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
@@ -43,6 +48,14 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                 )
                 return PlaylistItemViewHolder(binding, viewModel as HomeViewModel) as VH
             }
+            AdapterType.SONGS -> {
+                val binding = FragmentSongItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return SongViewHolder(binding, viewModel as PlaylistViewModel) as VH
+            }
         }
         throw ClassNotFoundException("The given ViewHolder doesn't exist")
     }
@@ -61,6 +74,11 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                 AdapterType.PLAYLISTS -> {
                     holder as PlaylistItemViewHolder
                     val presenter = currentList[position] as PlaylistPresenter
+                    holder.bind(presenter)
+                }
+                AdapterType.SONGS -> {
+                    holder as SongViewHolder
+                    val presenter = currentList[position] as SongPresenter
                     holder.bind(presenter)
                 }
             }
