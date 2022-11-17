@@ -9,7 +9,6 @@ class PlaylistPresenter(playlist: Playlist): BasePresenter() {
     val name = playlist.name
     val image = playlist.image
     val tags = playlist.tags
-    val artists = playlist.artists
 
     override val viewId: Int
         get() = R.layout.fragment_playlist_item

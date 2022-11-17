@@ -8,5 +8,4 @@ data class Playlist(
     @SerializedName("name") val name: String = "",
     @SerializedName("image") val image: String = "",
     @SerializedName("tags") val tags: List<String>,
-    @SerializedName("artists") val artists: List<String>,
 )
