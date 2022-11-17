@@ -18,5 +18,10 @@ fun Int.toPx(context: Context) = TypedValue.applyDimension(
 fun Int.secondsToMinutes(): String {
     val minutes = this / 60
     val remaining = this % 60
-    return "$minutes:$remaining"
+    val hours = minutes / 60
+    return if (hours == 0) {
+        "$minutes:$remaining"
+    } else {
+        "$hours:${ minutes % 60 }:$remaining"
+    }
 }

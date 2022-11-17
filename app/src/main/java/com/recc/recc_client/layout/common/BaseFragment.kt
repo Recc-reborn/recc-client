@@ -41,7 +41,6 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
         bindingNullable = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.also {
             // Sets viewModel variable in layout
-            Alert("viewModel: ${BR.viewModel}, $viewModel")
             binding.setVariable(BR.viewModel, viewModel)
             binding.lifecycleOwner = viewLifecycleOwner
             binding.executePendingBindings()
