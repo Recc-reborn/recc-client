@@ -1,6 +1,6 @@
 package com.recc.recc_client.http.def
 
-import com.recc.recc_client.models.mockapi.Playlist
+import com.recc.recc_client.models.control.Playlist
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

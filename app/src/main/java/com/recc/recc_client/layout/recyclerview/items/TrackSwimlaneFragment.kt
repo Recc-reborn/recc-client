@@ -9,14 +9,14 @@ import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
 
-class PlaylistItemFragment : Fragment() {
+class TrackSwimlaneFragment : Fragment() {
     private lateinit var binding: FragmentArtistGridItemBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist_item, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_swimlane_item, container, false)
 
         return binding.root
     }

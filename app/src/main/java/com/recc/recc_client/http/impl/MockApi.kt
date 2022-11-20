@@ -5,7 +5,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.http.def.MockApiRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.LastFmErrorResponse
-import com.recc.recc_client.models.mockapi.Playlist
+import com.recc.recc_client.models.control.Playlist
 import com.recc.recc_client.utils.isOkCode
 
 class MockApi(
