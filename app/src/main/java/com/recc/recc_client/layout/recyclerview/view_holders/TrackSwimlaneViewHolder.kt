@@ -1,11 +1,11 @@
 package com.recc.recc_client.layout.recyclerview.view_holders
 
-import com.recc.recc_client.databinding.FragmentTrackSwimlaneItemBinding
+import com.recc.recc_client.databinding.FragmentTrackSwimlaneBinding
 import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 
 class TrackSwimlaneViewHolder(
-    private val binding: FragmentTrackSwimlaneItemBinding,
+    private val binding: FragmentTrackSwimlaneBinding,
     private val viewModel: HomeViewModel
 ): BaseViewHolder(binding.root) {
 

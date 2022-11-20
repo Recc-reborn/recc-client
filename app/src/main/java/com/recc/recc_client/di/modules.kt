@@ -17,6 +17,7 @@ import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.home.PagerViewModel
+import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
@@ -55,6 +56,9 @@ val screenViewModels = module {
     }
     viewModel {
         SettingsViewModel(get())
+    }
+    viewModel{
+        PlaylistViewModel(get())
     }
     single {
         NoConnectionViewModel(androidContext(), get(), get())
