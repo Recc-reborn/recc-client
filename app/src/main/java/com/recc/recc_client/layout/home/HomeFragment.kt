@@ -10,6 +10,7 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.TrackSwimlaneViewHolder
+import com.recc.recc_client.utils.Alert
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,12 +29,15 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
                         findNavController().navigate(R.id.action_pagerFragment_to_playlistSongsFragment, bundle)
                     }
                 }
+                HomeScreenEvent.PlaylistFetched -> {
+                    viewModel.getTracks()
+                }
+                is HomeScreenEvent.TracksFetched -> {
+                    adapter?.submitList(screenEvent.presenters)
+                }
             }
         })
 
-        viewModel.playlists.observe(viewLifecycleOwner) {
-            adapter?.submitList(it)
-        }
         adapter = DynamicAdapter(AdapterType.TRACK_SWIMLANE, viewModel)
         binding.rvHomePlaylist.rv_home_playlist.adapter = adapter
         viewModel.getPlaylists()
