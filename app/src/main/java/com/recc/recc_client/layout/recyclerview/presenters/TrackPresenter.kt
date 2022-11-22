@@ -7,18 +7,11 @@ class TrackPresenter(track: Track): BasePresenter() {
     val id = track.id
     val albumArtUrl = track.albumArtUrl
     val artist = track.artist
-    val url = track.url
     val duration = track.duration
     val title = track.title
 
     override val viewId: Int
         get() = R.layout.fragment_track_item
 
-    override fun areContentsTheSame(other: BasePresenter): Boolean {
-        if ((other as TrackPresenter).id == id) {
-            return true
-        }
-        return false
-    }
-
+    override fun areContentsTheSame(other: BasePresenter) = (other as TrackPresenter).id == id
 }

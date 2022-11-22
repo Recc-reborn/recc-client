@@ -11,10 +11,5 @@ class PlaylistPresenter(playlist: Playlist): BasePresenter() {
     override val viewId: Int
         get() = R.layout.fragment_track_swimlane
 
-    override fun areContentsTheSame(other: BasePresenter): Boolean {
-        if ((other as PlaylistPresenter).id == id) {
-            return true
-        }
-        return false
-    }
+    override fun areContentsTheSame(other: BasePresenter) = (other as PlaylistPresenter).id == id
 }

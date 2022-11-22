@@ -11,14 +11,10 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.layout.user_msg.UserMsgScreenEvent
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
-import com.recc.recc_client.models.auth.Token
-import com.recc.recc_client.utils.Alert
 import org.koin.android.ext.android.inject
 
 /**

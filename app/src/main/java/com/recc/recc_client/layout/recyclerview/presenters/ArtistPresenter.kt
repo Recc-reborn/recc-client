@@ -1,26 +1,18 @@
 package com.recc.recc_client.layout.recyclerview.presenters
 
 import com.recc.recc_client.R
-import com.recc.recc_client.models.last_fm.Artist
-import com.recc.recc_client.models.last_fm.Image
+import com.recc.recc_client.models.control.TopArtists
 
-class ArtistPresenter(artist: Artist): BasePresenter() {
+class ArtistPresenter(artist: TopArtists): BasePresenter() {
+    val id: Int = artist.id
     val name: String = artist.name
-    val playcount: String = artist.playcount
-    val listeners: String = artist.listeners
-    val mbid: String = artist.mbid
-    val url: String = artist.url
-    val streamable: String = artist.streamable
-    val image: List<Image> = artist.image
+    val listeners: Int = artist.listeners
+    val lastFmUrl: String = artist.lastFmUrl
+    val imageUrl: String = artist.imageUrl
 
     override val viewId: Int
         get() = R.layout.fragment_artist_grid_item
 
-    override fun areContentsTheSame(other: BasePresenter): Boolean {
-        if ((other as ArtistPresenter).url == url) {
-            return true
-        }
-        return false
-    }
+    override fun areContentsTheSame(other: BasePresenter) = (other as ArtistPresenter).id == id
 
 }

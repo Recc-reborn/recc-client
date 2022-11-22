@@ -6,11 +6,9 @@ import com.recc.recc_client.R
 import com.recc.recc_client.http.ErrorInterceptor
 import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.http.impl.Auth
-import com.recc.recc_client.http.def.LastFmRouteDefinitions
 import com.recc.recc_client.http.def.MockApiRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.http.impl.Control
-import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.http.impl.MockApi
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
@@ -49,7 +47,7 @@ val screenViewModels = module {
         PagerViewModel(get())
     }
     viewModel {
-        WelcomeViewModel(get(), get())
+        WelcomeViewModel(get())
     }
     viewModel {
         HomeViewModel(get())
@@ -86,7 +84,7 @@ val httpModule = module {
             .addInterceptor(ErrorInterceptor(androidContext(), get(), get()))
             .build()
     }
-    // Recc Server client
+    // Recc Server
     single {
         val gson = GsonBuilder()
             .setLenient()
@@ -97,18 +95,6 @@ val httpModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
-    }
-    // Last.fm API client
-    single {
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        val retrofit = Retrofit.Builder()
-            .client(get())
-            .baseUrl(androidContext().getString(R.string.last_fm_base_endpoint))
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        retrofit.create(LastFmRouteDefinitions::class.java)
     }
     // MockApi
     single {
@@ -127,9 +113,6 @@ val httpModule = module {
     }
     single {
         Control(androidContext(), get())
-    }
-    single {
-        LastFm(androidContext(), get())
     }
     single {
         MockApi(androidContext(), get())
