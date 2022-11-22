@@ -6,7 +6,6 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
-import com.recc.recc_client.utils.Alert
 
 private const val MAX_TRACK_PER_SWIMLANE = 10
 
@@ -28,7 +27,7 @@ class TrackSwimlaneViewHolder(
 
         // listeners
         binding.clTitleContainer.setOnClickListener {
-            // TODO: navigates to PlaylistView
+            viewModel.selectPlaylist(presenter)
         }
     }
 }
