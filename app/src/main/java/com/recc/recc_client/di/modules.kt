@@ -1,16 +1,13 @@
 package com.recc.recc_client.di
 
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
 import com.recc.recc_client.http.ErrorInterceptor
 import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.http.impl.Auth
-import com.recc.recc_client.http.def.LastFmRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.http.impl.Control
-import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
@@ -18,7 +15,6 @@ import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
-import com.recc.recc_client.models.auth.Token
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -46,7 +42,7 @@ val screenViewModels = module {
         HomeViewModel(get())
     }
     viewModel {
-        WelcomeViewModel(get(), get())
+        WelcomeViewModel(get())
     }
     single {
         NoConnectionViewModel(androidContext(), get(), get())
@@ -86,25 +82,10 @@ val httpModule = module {
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
     }
-    // Last.fm API client
-    single {
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
-        val retrofit = Retrofit.Builder()
-            .client(get())
-            .baseUrl(androidContext().getString(R.string.last_fm_base_endpoint))
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        retrofit.create(LastFmRouteDefinitions::class.java)
-    }
     single {
         Auth(androidContext(), get())
     }
     single {
         Control(androidContext(), get())
-    }
-    single {
-        LastFm(androidContext(), get())
     }
 }

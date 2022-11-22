@@ -20,7 +20,7 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = true
-        viewModel.addArtist(presenter.url)
+        viewModel.addArtist(presenter.lastFmUrl)
     }
 
     private fun unselectItem() {
@@ -29,14 +29,14 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = false
-        viewModel.removeArtist(presenter.url)
+        viewModel.removeArtist(presenter.lastFmUrl)
     }
 
     fun bind(presenter: ArtistPresenter) {
         this.presenter = presenter
         binding.tvArtistName.text = presenter.name
         viewModel.selectedArtists.value?.let {
-            if (presenter.url in it && !isSelected) {
+            if (presenter.lastFmUrl in it && !isSelected) {
                 selectItem()
             }
         }
@@ -48,7 +48,7 @@ class ArtistGridViewHolder(
             }
         }
         Glide.with(binding.root)
-            .load(this.presenter.image.last().url)
+            .load(this.presenter.imageUrl)
             .fitCenter()
             .circleCrop()
             .into(binding.ivArtist)

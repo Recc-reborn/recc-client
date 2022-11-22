@@ -3,10 +3,9 @@ package com.recc.recc_client.layout.welcome
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.def.DEFAULT_CHART_PAGE
 import com.recc.recc_client.http.impl.Control
+import com.recc.recc_client.http.impl.DEFAULT_CURRENT_PAGE
 import com.recc.recc_client.layout.common.BaseEventViewModel
-import com.recc.recc_client.http.impl.LastFm
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 const val MIN_SELECTED_ARTISTS = 3
 
 class WelcomeViewModel(
-    private val http: LastFm,
     private val control: Control
 ): BaseEventViewModel<WelcomeScreenEvent>() {
     private val _selectedItemColor = MutableLiveData<Int>()
@@ -33,7 +31,7 @@ class WelcomeViewModel(
     val selectedArtists: LiveData<Set<String>>
         get() = _selectedArtists
 
-    private val _currentPage = MutableLiveData(DEFAULT_CHART_PAGE)
+    private val _currentPage = MutableLiveData(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int>
         get() = _currentPage
 
@@ -62,7 +60,7 @@ class WelcomeViewModel(
 
     private fun replaceList(newList: List<ArtistPresenter>) {
         viewModelScope.launch {
-            _currentPage.postValue(DEFAULT_CHART_PAGE)
+            _currentPage.postValue(DEFAULT_CURRENT_PAGE)
             _presenterList.postValue(newList)
         }
     }
@@ -96,12 +94,11 @@ class WelcomeViewModel(
             _currentPage.value?.let { oldPage ->
                 CoroutineScope(Dispatchers.IO).launch {
                     val currentPage = oldPage + 1
-                    Alert("currentPage: $currentPage")
-                    http.getTopArtists(currentPage)
-                        .onSuccess { artists ->
-                            val list = artists.artists.artist.map { ArtistPresenter(it) }
+                    control.getArtists(currentPage)
+                        .onSuccess { topArtists ->
+                            val presenters = topArtists.map { ArtistPresenter(it) }
                             _currentPage.postValue(currentPage)
-                            appendPageToList(list)
+                            appendPageToList(presenters)
                         }.onFailure {
                             // TODO: Error msg
                         }
@@ -113,10 +110,10 @@ class WelcomeViewModel(
     fun getTopArtists() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.getTopArtists(DEFAULT_CHART_PAGE)
-                    .onSuccess { artists ->
-                        val list = artists.artists.artist.map { ArtistPresenter(it) }
-                        replaceList(list)
+                control.getArtists(DEFAULT_CURRENT_PAGE)
+                    .onSuccess { topArtists ->
+                        val presenters = topArtists.map { ArtistPresenter(it) }
+                        replaceList(presenters)
                         postEvent(WelcomeScreenEvent.ArtistsFetched)
                     }.onFailure {
                         postEvent(WelcomeScreenEvent.ArtistsNotFetched)
@@ -128,10 +125,10 @@ class WelcomeViewModel(
     fun searchArtist(artist: String) {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.getArtistSearch(artist)
-                    .onSuccess { search ->
-                        val list = search.results.artistMatches.artist.map { ArtistPresenter(it) }
-                        replaceList(list)
+                control.getArtists(search = artist)
+                    .onSuccess { artists ->
+                        val presenters = artists.map { ArtistPresenter(it) }
+                        replaceList(presenters)
                     }.onFailure {
                         // TODO: Error msg
                     }
