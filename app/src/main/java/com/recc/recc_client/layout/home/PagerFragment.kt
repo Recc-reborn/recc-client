@@ -16,11 +16,6 @@ import com.recc.recc_client.layout.settings.SettingsFragment
 import com.recc.recc_client.utils.Alert
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private val fragmentPages = listOf<Class<*>>(
-    HomeFragment::class.java,
-    SettingsFragment::class.java
-)
-
 class PagerFragment : BaseFragment<PagerScreenEvent, PagerViewModel, FragmentPagerBinding>(R.layout.fragment_pager) {
     override val viewModel: PagerViewModel by viewModel()
 
@@ -29,23 +24,17 @@ class PagerFragment : BaseFragment<PagerScreenEvent, PagerViewModel, FragmentPag
         (requireActivity() as MainActivity).disableLoadingBar()
     }
     override fun subscribeToViewModel() {
-        // Sets a new adapter for ViewPager
-        binding.vpHome.adapter = PageAdapter(this)
-        // Changes Bottom Navigation View's selected item whenever we scroll to another page using the ViewPager.
-        binding.vpHome.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                binding.bnvHome.menu[position].isChecked = true
-            }
-        })
+        loadFragment(HomeFragment())
+
         // Changes the currently displayed Fragment on ViewPager whenever an item from Bottom Navigation View is selected
         binding.bnvHome.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.action_home -> {
-                    binding.vpHome.currentItem = fragmentPages.indexOf(HomeFragment::class.java)
+                    loadFragment(HomeFragment())
                     true
                 }
                 R.id.action_settings -> {
-                    binding.vpHome.currentItem = fragmentPages.indexOf(SettingsFragment::class.java)
+                    loadFragment(SettingsFragment())
                     true
                 }
                 else -> false
@@ -55,9 +44,9 @@ class PagerFragment : BaseFragment<PagerScreenEvent, PagerViewModel, FragmentPag
         })
     }
 
-    inner class PageAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
-        override fun getItemCount(): Int = fragmentPages.count()
-
-        override fun createFragment(position: Int): Fragment = fragmentPages[position].constructors.first().newInstance() as Fragment
+    private fun loadFragment(fragment: Fragment) {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fl_content, fragment)
+        transaction.commit()
     }
 }

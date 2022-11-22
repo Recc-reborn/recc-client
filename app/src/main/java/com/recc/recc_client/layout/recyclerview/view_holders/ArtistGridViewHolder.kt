@@ -3,7 +3,6 @@ package com.recc.recc_client.layout.recyclerview.view_holders
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
-import com.recc.recc_client.layout.recyclerview.BaseViewHolder
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
 

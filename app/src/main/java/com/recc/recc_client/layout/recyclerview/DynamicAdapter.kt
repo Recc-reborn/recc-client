@@ -2,25 +2,23 @@ package com.recc.recc_client.layout.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
-import com.recc.recc_client.layout.common.BaseEventViewModel
-import com.recc.recc_client.layout.recyclerview.view_holders.ArtistGridViewHolder
-import com.recc.recc_client.layout.recyclerview.items.ArtistGridItemFragment
-import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
+import com.recc.recc_client.databinding.FragmentTrackItemBinding
+import com.recc.recc_client.databinding.FragmentTrackSwimlaneBinding
+import com.recc.recc_client.databinding.FragmentTrackSwimlaneItemBinding
+import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.layout.playlist.PlaylistViewModel
+import com.recc.recc_client.layout.recyclerview.presenters.*
+import com.recc.recc_client.layout.recyclerview.view_holders.*
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
-import com.recc.recc_client.models.last_fm.Artist
-import java.io.Serializable
 
 enum class AdapterType {
     ARTISTS_GRID,
-    PLAYLISTS
+    TRACK_SWIMLANE,
+    TRACKS_SWIMLANE_ITEMS,
+    TRACKS,
 }
 
 class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
@@ -38,8 +36,29 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                 )
                 return ArtistGridViewHolder(binding, viewModel as WelcomeViewModel) as VH
             }
-            AdapterType.PLAYLISTS -> {
-
+            AdapterType.TRACK_SWIMLANE -> {
+                val binding = FragmentTrackSwimlaneBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return TrackSwimlaneViewHolder(binding, viewModel as HomeViewModel) as VH
+            }
+            AdapterType.TRACKS_SWIMLANE_ITEMS -> {
+                val binding = FragmentTrackSwimlaneItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return TrackSwimlaneItemViewHolder(binding, viewModel as HomeViewModel) as VH
+            }
+            AdapterType.TRACKS -> {
+                val binding = FragmentTrackItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                return TrackViewHolder(binding, viewModel as PlaylistViewModel) as VH
             }
         }
         throw ClassNotFoundException("The given ViewHolder doesn't exist")
@@ -56,8 +75,20 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                     }
                     holder.bind(presenter)
                 }
-                AdapterType.PLAYLISTS -> {
-
+                AdapterType.TRACK_SWIMLANE -> {
+                    holder as TrackSwimlaneViewHolder
+                    val presenter = currentList[position] as PlaylistPresenter
+                    holder.bind(presenter)
+                }
+                AdapterType.TRACKS -> {
+                    holder as TrackViewHolder
+                    val presenter = currentList[position] as TrackPresenter
+                    holder.bind(presenter)
+                }
+                AdapterType.TRACKS_SWIMLANE_ITEMS -> {
+                    holder as TrackSwimlaneItemViewHolder
+                    val presenter = currentList[position] as TrackPresenter
+                    holder.bind(presenter)
                 }
             }
         }
