@@ -12,6 +12,8 @@ import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
+import com.recc.recc_client.layout.home.PagerViewModel
+import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
@@ -39,10 +41,16 @@ val screenViewModels = module {
         RegisterViewModel(get())
     }
     viewModel {
-        HomeViewModel(get())
+        PagerViewModel(get())
     }
     viewModel {
         WelcomeViewModel(get())
+    }
+    viewModel {
+        HomeViewModel()
+    }
+    viewModel {
+        SettingsViewModel(get())
     }
     single {
         NoConnectionViewModel(androidContext(), get(), get())
@@ -77,7 +85,7 @@ val httpModule = module {
             .create()
         val retrofit = Retrofit.Builder()
             .client(get())
-            .baseUrl(androidContext().getString(R.string.api_host))
+            .baseUrl(androidContext().getString(R.string.recc_base_endpoint))
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
