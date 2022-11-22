@@ -48,6 +48,7 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_marginTop="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
