@@ -1,4 +1,4 @@
-package com.recc.recc_client.layout.views
+package com.recc.recc_client.layout.common_views
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -7,9 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.recc.recc_client.R
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.RegexType
 import com.recc.recc_client.utils.toPx
 

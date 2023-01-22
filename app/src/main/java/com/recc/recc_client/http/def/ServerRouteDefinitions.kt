@@ -5,7 +5,6 @@ import com.recc.recc_client.http.impl.DEFAULT_CURRENT_PAGE
 import com.recc.recc_client.models.auth.*
 import com.recc.recc_client.models.control.BaseRequest
 import com.recc.recc_client.models.control.TopArtists
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -52,7 +51,7 @@ interface ServerRouteDefinitions {
 
     @Headers("Accept: application/json")
     @PATCH("api/user/preferred-artists")
-    suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<String>): Response<Void>
+    suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<Int>): Response<Void>
 
     @Headers("Accept: application/json")
     @GET("api/artists")

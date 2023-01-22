@@ -18,7 +18,7 @@ import com.recc.recc_client.layout.home.PagerViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
-import com.recc.recc_client.layout.views.NoConnectionViewModel
+import com.recc.recc_client.layout.common_views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.WelcomeViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -70,6 +70,7 @@ val screenViewModels = module {
 }
 
 val httpModule = module {
+    // Client that prevent no connection errors and adds Http log for debug mode
     single {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = if (BuildConfig.DEBUG) {
@@ -90,9 +91,9 @@ val httpModule = module {
             .setLenient()
             .create()
         val retrofit = Retrofit.Builder()
-            .client(get())
             .baseUrl(androidContext().getString(R.string.recc_base_endpoint))
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(get())
             .build()
         retrofit.create(ServerRouteDefinitions::class.java)
     }
