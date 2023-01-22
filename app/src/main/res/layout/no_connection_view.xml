@@ -5,14 +5,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.recc.recc_client.layout.views.NoConnectionViewModel" />
+            type="com.recc.recc_client.layout.common_views.NoConnectionViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="102dp"
-        tools:context=".layout.views.NoConnectionView">
+        tools:context=".layout.common_views.NoConnectionView">
 
         <ImageView
             android:id="@+id/iv_no_wifi"

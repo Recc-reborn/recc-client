@@ -1,4 +1,4 @@
-package com.recc.recc_client.layout.views
+package com.recc.recc_client.layout.common_views
 
 import android.content.Context
 import android.text.Editable
@@ -7,15 +7,11 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.SearchEditTextBinding
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.toPx
 import kotlinx.android.synthetic.main.search_edit_text.view.*
 

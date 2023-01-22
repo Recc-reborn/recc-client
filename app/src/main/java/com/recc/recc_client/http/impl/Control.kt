@@ -6,7 +6,6 @@ import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.ErrorResponse
 import com.recc.recc_client.models.control.TopArtists
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.isOkCode
 
 const val DEFAULT_CURRENT_PAGE = 1
@@ -17,7 +16,7 @@ class Control(
     private val http: ServerRouteDefinitions
 ): BaseImpl() {
 
-    suspend fun addPreferredArtists(token: String, artists: List<String>): Result<ErrorResponse, String> {
+    suspend fun addPreferredArtists(token: String, artists: List<Int>): Result<ErrorResponse, String> {
         val query = http.addPreferredArtists("Bearer $token", artists)
         if (query.isSuccessful) {
             if (query.code().isOkCode()) {

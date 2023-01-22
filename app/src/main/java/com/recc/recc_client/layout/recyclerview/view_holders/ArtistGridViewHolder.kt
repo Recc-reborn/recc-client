@@ -19,7 +19,7 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = true
-        viewModel.addArtist(presenter.lastFmUrl)
+        viewModel.addArtist(presenter.id)
     }
 
     private fun unselectItem() {
@@ -28,14 +28,14 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = false
-        viewModel.removeArtist(presenter.lastFmUrl)
+        viewModel.removeArtist(presenter.id)
     }
 
     fun bind(presenter: ArtistPresenter) {
         this.presenter = presenter
         binding.tvArtistName.text = presenter.name
         viewModel.selectedArtists.value?.let {
-            if (presenter.lastFmUrl in it && !isSelected) {
+            if (presenter.id in it && !isSelected) {
                 selectItem()
             }
         }

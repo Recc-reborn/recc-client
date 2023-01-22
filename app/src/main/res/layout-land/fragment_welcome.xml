@@ -8,7 +8,7 @@
         android:orientation="vertical"
         tools:context=".layout.welcome.WelcomeFragment">
 
-        <com.recc.recc_client.layout.views.SearchEditText
+        <com.recc.recc_client.layout.common_views.SearchEditText
             android:id="@+id/set_search_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

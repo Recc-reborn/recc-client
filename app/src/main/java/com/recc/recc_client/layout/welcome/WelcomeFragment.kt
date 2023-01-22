@@ -1,6 +1,7 @@
 package com.recc.recc_client.layout.welcome
 
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentWelcomeBinding
@@ -21,30 +22,29 @@ class WelcomeFragment : BaseFragment<WelcomeScreenEvent, WelcomeViewModel, Fragm
         getToken()?.let {
             viewModel.setToken(it)
         }
-        binding.btnGotoHome?.text = getString(R.string.artists_left_cta, MIN_SELECTED_ARTISTS)
+        binding.btnGotoSelectPreferredTracks?.text = getString(R.string.artists_left_cta, MIN_SELECTED_ARTISTS)
 
         viewModel.presenterList.observe(viewLifecycleOwner) {
             adapter?.submitList(it)
         }
 
         viewModel.selectedArtists.observe(viewLifecycleOwner) { selectedArtists ->
+            binding.btnGotoSelectPreferredTracks?.background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_disabled_floating_button)
             when (val left = MIN_SELECTED_ARTISTS - selectedArtists.count()) {
                 in 2 .. MIN_SELECTED_ARTISTS -> {
-                    binding.btnGotoHome?.apply {
-                        background = requireContext().getDrawable(R.drawable.bg_disabled_floating_button)
+                    binding.btnGotoSelectPreferredTracks?.apply {
                         text = getString(R.string.artists_left_cta, left)
                     }
                 }
                 1 -> {
-                    binding.btnGotoHome?.apply {
-                        background = requireContext().getDrawable(R.drawable.bg_disabled_floating_button)
+                    binding.btnGotoSelectPreferredTracks?.apply {
                         text = getString(R.string.one_artist_left_cta, left)
                     }
                 }
                 else -> {
-                    binding.btnGotoHome?.apply {
-                        background = requireContext().getDrawable(R.drawable.bg_floating_button)
+                    binding.btnGotoSelectPreferredTracks?.apply {
                         text = getString(R.string.go_to_home_cta)
+                        background = AppCompatResources.getDrawable(requireContext(), R.drawable.bg_floating_button)
                     }
                 }
             }

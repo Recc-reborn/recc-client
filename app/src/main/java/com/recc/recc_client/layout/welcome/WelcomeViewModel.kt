@@ -27,8 +27,8 @@ class WelcomeViewModel(
     val unselectedItemColor: LiveData<Int>
         get() = _unselectedItemColor
 
-    private val _selectedArtists = MutableLiveData<Set<String>>()
-    val selectedArtists: LiveData<Set<String>>
+    private val _selectedArtists = MutableLiveData<Set<Int>>()
+    val selectedArtists: LiveData<Set<Int>>
         get() = _selectedArtists
 
     private val _currentPage = MutableLiveData(DEFAULT_CURRENT_PAGE)
@@ -65,26 +65,24 @@ class WelcomeViewModel(
         }
     }
 
-    fun addArtist(url: String) {
+    fun addArtist(id: Int) {
         viewModelScope.launch {
-            var set = mutableSetOf<String>()
+            var set = mutableSetOf<Int>()
             _selectedArtists.value?.let { artistsSet ->
                 set = artistsSet.toMutableSet()
             }
-            if (url.isNotEmpty()) {
-                set.add(url)
-                _selectedArtists.postValue(set)
-            }
+            set.add(id)
+            _selectedArtists.postValue(set)
         }
     }
 
-    fun removeArtist(url: String) {
+    fun removeArtist(id: Int) {
         viewModelScope.launch {
-            var set = mutableSetOf<String>()
+            var set = mutableSetOf<Int>()
             _selectedArtists.value?.let { artistsSet ->
                 set = artistsSet.toMutableSet()
             }
-            set.remove(url)
+            set.remove(id)
             _selectedArtists.postValue(set)
         }
     }
