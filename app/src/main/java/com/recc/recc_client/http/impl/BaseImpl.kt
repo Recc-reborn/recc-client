@@ -7,6 +7,8 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 
 open class BaseImpl {
+
+    protected fun formatToken(token: String) = "Bearer $token"
     fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())
         val message = json.getString(MESSAGE_FIELD)

@@ -44,7 +44,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tracks"
+            android:id="@+id/rv_content"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="150dp"

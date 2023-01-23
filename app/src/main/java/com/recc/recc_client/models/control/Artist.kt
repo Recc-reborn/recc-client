@@ -2,7 +2,7 @@ package com.recc.recc_client.models.control
 
 import com.google.gson.annotations.SerializedName
 
-data class TopArtists(
+data class Artist(
     @SerializedName("id") val id: Int = 0,
     @SerializedName("name") val name: String = "",
     @SerializedName("mbid") val mbid: String = "",

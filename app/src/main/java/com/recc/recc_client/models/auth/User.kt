@@ -10,7 +10,8 @@ data class User (
     @SerializedName("email_verified_at") val emailVerifiedAt: String = "",
     @SerializedName("created_at") val createdAt: String = "",
     @SerializedName("updated_at") val updatedAt: String = "",
-    @SerializedName("has_set_preferred_artists") val hasSetPreferredArtists: Boolean = false
+    @SerializedName("has_set_preferred_artists") val hasSetPreferredArtists: Boolean = false,
+    @SerializedName("has_set_preferred_tracks") val hasSetPreferredTracks: Boolean = false
 )
 
 data class CreateUser(

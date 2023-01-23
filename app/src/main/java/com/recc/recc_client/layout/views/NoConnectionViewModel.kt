@@ -1,4 +1,4 @@
-package com.recc.recc_client.layout.common_views
+package com.recc.recc_client.layout.views
 
 import android.content.Context
 import com.recc.recc_client.R

@@ -1,4 +1,4 @@
-package com.recc.recc_client.models.auth
+package com.recc.recc_client.models.control
 
 import com.google.gson.annotations.SerializedName
 

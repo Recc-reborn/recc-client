@@ -4,7 +4,9 @@ import com.recc.recc_client.http.impl.DEFAULT_ARTISTS_PER_PAGE
 import com.recc.recc_client.http.impl.DEFAULT_CURRENT_PAGE
 import com.recc.recc_client.models.auth.*
 import com.recc.recc_client.models.control.BaseRequest
-import com.recc.recc_client.models.control.TopArtists
+import com.recc.recc_client.models.control.Playback
+import com.recc.recc_client.models.control.Artist
+import com.recc.recc_client.models.control.Track
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -34,10 +36,6 @@ interface ServerRouteDefinitions {
     suspend fun deleteToken(): Response<SimpleResponse>
 
     @Headers("Accept: application/json")
-    @GET("api/tracks")
-    suspend fun getTracks(): Response<Track>
-
-    @Headers("Accept: application/json")
     @PUT("api/tracks")
     suspend fun putTracks(): Response<String>
 
@@ -54,11 +52,20 @@ interface ServerRouteDefinitions {
     suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<Int>): Response<Void>
 
     @Headers("Accept: application/json")
+    @PATCH("api/user/preferred-tracks")
+    suspend fun addPreferredTracks(@Header("Authorization") token: String, @Body preferredTracks: List<Int>): Response<Void>
+
+    @Headers("Accept: application/json")
     @GET("api/artists")
-    suspend fun getTopArtists(
+    suspend fun fetchTopArtists(
         @Query("per_page") perPage: Int = DEFAULT_ARTISTS_PER_PAGE,
         @Query("page") page: Int = DEFAULT_CURRENT_PAGE,
-        @Query("search") search: String? = null): Response<BaseRequest<TopArtists>>
+        @Query("search") search: String? = null): Response<BaseRequest<Artist>>
 
-    // TODO: PUT and DELETE queries (and still missing POST petitions)
+    @Headers("Accept: application/json")
+    @GET("api/tracks")
+    suspend fun fetchTopTracks(
+        @Query("per_page") perPage: Int = DEFAULT_ARTISTS_PER_PAGE,
+        @Query("page") page: Int = DEFAULT_CURRENT_PAGE,
+        @Query("search") search: String? = null): Response<BaseRequest<Track>>
 }

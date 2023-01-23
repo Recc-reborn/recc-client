@@ -2,13 +2,13 @@ package com.recc.recc_client.layout.recyclerview.view_holders
 
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
-import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
+import com.recc.recc_client.databinding.ViewArtistGridItemBinding
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
-import com.recc.recc_client.layout.welcome.WelcomeViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
 
 class ArtistGridViewHolder(
-    private val binding: FragmentArtistGridItemBinding,
-    private val viewModel: WelcomeViewModel
+    private val binding: ViewArtistGridItemBinding,
+    private val viewModel: SelectPreferredArtistsViewModel
 ): BaseViewHolder(binding.root) {
     private lateinit var presenter: ArtistPresenter
     private var isSelected = false
@@ -19,7 +19,7 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = true
-        viewModel.addArtist(presenter.id)
+        viewModel.addItem(presenter.id)
     }
 
     private fun unselectItem() {
@@ -28,23 +28,19 @@ class ArtistGridViewHolder(
             binding.tvArtistName.setTextColor(it)
         }
         isSelected = false
-        viewModel.removeArtist(presenter.id)
+        viewModel.removeItem(presenter.id)
     }
 
     fun bind(presenter: ArtistPresenter) {
         this.presenter = presenter
         binding.tvArtistName.text = presenter.name
-        viewModel.selectedArtists.value?.let {
+        viewModel.selectedItems.value?.let {
             if (presenter.id in it && !isSelected) {
                 selectItem()
             }
         }
         binding.llArtistContainer.setOnClickListener {
-            if (isSelected) {
-                unselectItem()
-            } else {
-                selectItem()
-            }
+            if (isSelected) unselectItem() else selectItem()
         }
         Glide.with(binding.root)
             .load(this.presenter.imageUrl)

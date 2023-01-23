@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.DEFAULT_CURRENT_PAGE
-import com.recc.recc_client.layout.common.BaseEventViewModel
+import com.recc.recc_client.layout.common.InteractiveViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
@@ -16,39 +16,14 @@ import kotlinx.coroutines.launch
 
 const val MIN_SELECTED_ARTISTS = 3
 
-class WelcomeViewModel(
+class SelectPreferredArtistsViewModel(
     private val control: Control
-): BaseEventViewModel<WelcomeScreenEvent>() {
-    private val _selectedItemColor = MutableLiveData<Int>()
-    val selectedItemColor: LiveData<Int>
-        get() = _selectedItemColor
-
-    private val _unselectedItemColor = MutableLiveData<Int>()
-    val unselectedItemColor: LiveData<Int>
-        get() = _unselectedItemColor
-
-    private val _selectedArtists = MutableLiveData<Set<Int>>()
-    val selectedArtists: LiveData<Set<Int>>
-        get() = _selectedArtists
-
-    private val _currentPage = MutableLiveData(DEFAULT_CURRENT_PAGE)
-    val currentPage: LiveData<Int>
-        get() = _currentPage
+): InteractiveViewModel<SelectPreferredArtistsScreenEvent>() {
 
     private val _presenterList = MutableLiveData<List<ArtistPresenter>>()
-    val presenterList: LiveData<List<ArtistPresenter>>
-        get() = _presenterList
+    val presenterList: LiveData<List<ArtistPresenter>> = _presenterList
 
-
-    fun setSelectedItemColor(color: Int) {
-        _selectedItemColor.postValue(color)
-    }
-
-    fun setUnselectedItemColor(color: Int) {
-        _unselectedItemColor.postValue(color)
-    }
-
-    private fun appendPageToList(newList: List<ArtistPresenter>) {
+        private fun appendPageToList(newList: List<ArtistPresenter>) {
         viewModelScope.launch {
             var oldList = mutableListOf<ArtistPresenter>()
             _presenterList.value?.let { artistPresenters ->
@@ -65,37 +40,15 @@ class WelcomeViewModel(
         }
     }
 
-    fun addArtist(id: Int) {
-        viewModelScope.launch {
-            var set = mutableSetOf<Int>()
-            _selectedArtists.value?.let { artistsSet ->
-                set = artistsSet.toMutableSet()
-            }
-            set.add(id)
-            _selectedArtists.postValue(set)
-        }
-    }
-
-    fun removeArtist(id: Int) {
-        viewModelScope.launch {
-            var set = mutableSetOf<Int>()
-            _selectedArtists.value?.let { artistsSet ->
-                set = artistsSet.toMutableSet()
-            }
-            set.remove(id)
-            _selectedArtists.postValue(set)
-        }
-    }
-
-    fun getNextPage() {
+    fun fetchNextPage() {
         viewModelScope.launch {
             _currentPage.value?.let { oldPage ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    val currentPage = oldPage + 1
-                    control.getArtists(currentPage)
+                    val newPage = oldPage + 1
+                    control.fetchArtists(page = newPage)
                         .onSuccess { topArtists ->
                             val presenters = topArtists.map { ArtistPresenter(it) }
-                            _currentPage.postValue(currentPage)
+                            _currentPage.postValue(newPage)
                             appendPageToList(presenters)
                         }.onFailure {
                             // TODO: Error msg
@@ -105,16 +58,16 @@ class WelcomeViewModel(
         }
     }
 
-    fun getTopArtists() {
+    fun fetchArtists() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                control.getArtists(DEFAULT_CURRENT_PAGE)
+                control.fetchArtists(DEFAULT_CURRENT_PAGE)
                     .onSuccess { topArtists ->
                         val presenters = topArtists.map { ArtistPresenter(it) }
                         replaceList(presenters)
-                        postEvent(WelcomeScreenEvent.ArtistsFetched)
+                        postEvent(SelectPreferredArtistsScreenEvent.ArtistsFetched)
                     }.onFailure {
-                        postEvent(WelcomeScreenEvent.ArtistsNotFetched)
+                        postEvent(SelectPreferredArtistsScreenEvent.ArtistsNotFetched)
                     }
             }
         }
@@ -123,7 +76,7 @@ class WelcomeViewModel(
     fun searchArtist(artist: String) {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                control.getArtists(search = artist)
+                control.fetchArtists(search = artist)
                     .onSuccess { artists ->
                         val presenters = artists.map { ArtistPresenter(it) }
                         replaceList(presenters)
@@ -134,10 +87,10 @@ class WelcomeViewModel(
         }
     }
 
-    fun gotoHomeBtnClicked() {
+    fun preferredArtistsSelectedButtonPressed() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                _selectedArtists.value?.let { artistsSet ->
+                selectedItems.value?.let { artistsSet ->
                     if (artistsSet.count() >= MIN_SELECTED_ARTISTS) {
                         val artistList = artistsSet.toList()
                         token.value?.let { token ->
@@ -147,7 +100,7 @@ class WelcomeViewModel(
                                 }.onFailure {
                                     Alert("failure: $it")
                                 }
-                            postEvent(WelcomeScreenEvent.GotoHomeBtnClicked)
+                            postEvent(SelectPreferredArtistsScreenEvent.GotoHomeBtnClicked)
                         }
                     }
                 }

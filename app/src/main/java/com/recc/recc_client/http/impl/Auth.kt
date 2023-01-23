@@ -65,7 +65,7 @@ class Auth(
     }
 
     suspend fun me(token: String): Result<ErrorResponse, User> {
-        val query = http.getUserMe("Bearer $token")
+        val query = http.getUserMe(formatToken(token))
         query.body()?.let {
             if (query.code().isOkCode()) {
                 return Result.Success(success = it)

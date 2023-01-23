@@ -9,13 +9,13 @@ import com.recc.recc_client.layout.common.Event
 import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
-import com.recc.recc_client.layout.recyclerview.view_holders.TrackSwimlaneViewHolder
+import com.recc.recc_client.layout.recyclerview.view_holders.PlaylistSwimlaneViewHolder
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
     override val viewModel: HomeViewModel by viewModel()
-    private var adapter: DynamicAdapter<PlaylistPresenter, TrackSwimlaneViewHolder>? = null
+    private var adapter: DynamicAdapter<PlaylistPresenter, PlaylistSwimlaneViewHolder>? = null
 
     override fun subscribeToViewModel() {
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
@@ -37,7 +37,7 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
             }
         })
 
-        adapter = DynamicAdapter(AdapterType.TRACK_SWIMLANE, viewModel)
+        adapter = DynamicAdapter(AdapterType.SWIMLANE_PLAYLIST, viewModel)
         binding.rvHomePlaylist.rv_home_playlist.adapter = adapter
         viewModel.getPlaylists()
     }

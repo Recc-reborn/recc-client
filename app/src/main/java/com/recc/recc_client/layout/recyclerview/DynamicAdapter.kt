@@ -4,21 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ListAdapter
-import com.recc.recc_client.databinding.FragmentArtistGridItemBinding
-import com.recc.recc_client.databinding.FragmentTrackItemBinding
-import com.recc.recc_client.databinding.FragmentTrackSwimlaneBinding
-import com.recc.recc_client.databinding.FragmentTrackSwimlaneItemBinding
+import com.recc.recc_client.databinding.*
 import com.recc.recc_client.layout.home.HomeViewModel
-import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.recyclerview.presenters.*
 import com.recc.recc_client.layout.recyclerview.view_holders.*
-import com.recc.recc_client.layout.welcome.WelcomeViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
 
 enum class AdapterType {
-    ARTISTS_GRID,
-    TRACK_SWIMLANE,
-    TRACKS_SWIMLANE_ITEMS,
-    TRACKS,
+    GRID_ARTISTS,
+    SWIMLANE_PLAYLIST,
+    SWIMLANE_PLAYLIST_TRACKS,
+    LIST_TRACKS,
+    LIST_PREFERRED_TRACKS,
 }
 
 class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
@@ -28,37 +26,25 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         when(type) {
-            AdapterType.ARTISTS_GRID -> {
-                val binding = FragmentArtistGridItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                return ArtistGridViewHolder(binding, viewModel as WelcomeViewModel) as VH
+            AdapterType.GRID_ARTISTS -> {
+                val binding = ViewArtistGridItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return ArtistGridViewHolder(binding, viewModel as SelectPreferredArtistsViewModel) as VH
             }
-            AdapterType.TRACK_SWIMLANE -> {
-                val binding = FragmentTrackSwimlaneBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                return TrackSwimlaneViewHolder(binding, viewModel as HomeViewModel) as VH
+            AdapterType.SWIMLANE_PLAYLIST -> {
+                val binding = ViewSwimlaneBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return PlaylistSwimlaneViewHolder(binding, viewModel as HomeViewModel) as VH
             }
-            AdapterType.TRACKS_SWIMLANE_ITEMS -> {
-                val binding = FragmentTrackSwimlaneItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                return TrackSwimlaneItemViewHolder(binding, viewModel as HomeViewModel) as VH
+            AdapterType.SWIMLANE_PLAYLIST_TRACKS -> {
+                val binding = ViewSwimlaneTracksBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return TracksSwimlaneViewHolder(binding, viewModel as HomeViewModel) as VH
             }
-            AdapterType.TRACKS -> {
-                val binding = FragmentTrackItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                return TrackViewHolder(binding, viewModel as PlaylistViewModel) as VH
+            AdapterType.LIST_TRACKS -> {
+                val binding = ViewTrackListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return TrackListViewHolder(binding, viewModel, true) as VH
+            }
+            AdapterType.LIST_PREFERRED_TRACKS -> {
+                val binding = ViewTrackListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return TrackListViewHolder(binding, viewModel, true) as VH
             }
         }
         throw ClassNotFoundException("The given ViewHolder doesn't exist")
@@ -67,28 +53,34 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
     override fun onBindViewHolder(holder: VH, position: Int) {
         if (currentList.isNotEmpty()) {
             when (type) {
-                AdapterType.ARTISTS_GRID -> {
+                AdapterType.GRID_ARTISTS -> {
                     holder as ArtistGridViewHolder
                     val presenter = currentList[position] as ArtistPresenter
-                    if (position == currentList.count() - 1) {
-                        (viewModel as WelcomeViewModel).getNextPage()
-                    }
+                    if (position == currentList.count() - 1)
+                        (viewModel as SelectPreferredArtistsViewModel).fetchNextPage()
                     holder.bind(presenter)
                 }
-                AdapterType.TRACK_SWIMLANE -> {
-                    holder as TrackSwimlaneViewHolder
+                AdapterType.SWIMLANE_PLAYLIST -> {
+                    holder as PlaylistSwimlaneViewHolder
                     val presenter = currentList[position] as PlaylistPresenter
                     holder.bind(presenter)
                 }
-                AdapterType.TRACKS -> {
-                    holder as TrackViewHolder
+                AdapterType.LIST_TRACKS -> {
+                    holder as TrackListViewHolder
+                    val presenter = currentList[position] as TrackPresenter
+                    holder.bindPlaylist(presenter)
+                }
+                AdapterType.SWIMLANE_PLAYLIST_TRACKS -> {
+                    holder as TracksSwimlaneViewHolder
                     val presenter = currentList[position] as TrackPresenter
                     holder.bind(presenter)
                 }
-                AdapterType.TRACKS_SWIMLANE_ITEMS -> {
-                    holder as TrackSwimlaneItemViewHolder
+                AdapterType.LIST_PREFERRED_TRACKS -> {
+                    holder as TrackListViewHolder
                     val presenter = currentList[position] as TrackPresenter
-                    holder.bind(presenter)
+                    if (position == currentList.count() - 1)
+                        (viewModel as SelectPreferredTracksViewModel).fetchNextPage()
+                    holder.bindPreferredList(presenter, true)
                 }
             }
         }
