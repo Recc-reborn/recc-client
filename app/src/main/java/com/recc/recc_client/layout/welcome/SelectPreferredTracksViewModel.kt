@@ -53,7 +53,7 @@ class SelectPreferredTracksViewModel(private val control: Control): InteractiveV
                             _currentPage.postValue(newPage)
                             appendPageToList(presenters)
                         }.onFailure {
-                            // TODO: Error msg
+                            postEvent(SelectPreferredTracksScreenEvent.FailedFetchingNextPage(it.message))
                         }
                 }
             }
@@ -88,6 +88,7 @@ class SelectPreferredTracksViewModel(private val control: Control): InteractiveV
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
                 if (token.value.isNullOrBlank() || selectedItems.value.isNullOrEmpty()) {
+                    Alert("no entra")
                     return@launch
                 }
                 control.addPreferredTracks(token.value!!, selectedItems.value!!.toMutableList())
