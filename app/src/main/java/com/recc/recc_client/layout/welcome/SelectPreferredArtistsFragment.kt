@@ -23,6 +23,9 @@ class SelectPreferredArtistsFragment
     private lateinit var adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>
 
     override fun subscribeToViewModel() {
+        adapter = DynamicAdapter(AdapterType.GRID_ARTISTS, viewModel)
+        binding.rvSelectArtists.adapter = adapter
+
         getToken()?.let {
             viewModel.setToken(it)
         }
@@ -64,8 +67,6 @@ class SelectPreferredArtistsFragment
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is SelectPreferredArtistsScreenEvent.ArtistsFetched -> {
-                    adapter = DynamicAdapter(AdapterType.GRID_ARTISTS, viewModel)
-                    binding.rvSelectArtists.adapter = adapter
                 }
                 SelectPreferredArtistsScreenEvent.ArtistsNotFetched -> {
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()

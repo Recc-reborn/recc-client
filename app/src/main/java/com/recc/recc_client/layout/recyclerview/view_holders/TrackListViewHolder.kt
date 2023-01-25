@@ -28,9 +28,9 @@ class TrackListViewHolder(
     }
 
     private fun handleSelection(presenter: TrackPresenter, vm: SelectPreferredTracksViewModel) {
+        val hasBeenSelected = vm.selectedItems.value?.contains(presenter.id)
         // select if not previously selected
         binding.clContainer.setOnClickListener {
-            val hasBeenSelected = vm.selectedItems.value?.contains(presenter.id)
             if (hasBeenSelected != null && hasBeenSelected) {
                 binding.clContainer.setBackgroundResource(R.drawable.bg_playlist_item)
                 vm.removeItem(presenter.id)
@@ -38,6 +38,11 @@ class TrackListViewHolder(
                 binding.clContainer.setBackgroundResource(R.drawable.bg_playlist_item_selected)
                 vm.addItem(presenter.id)
             }
+        }
+        if (hasBeenSelected != null && hasBeenSelected) {
+            binding.clContainer.setBackgroundResource(R.drawable.bg_playlist_item_selected)
+        } else {
+            binding.clContainer.setBackgroundResource(R.drawable.bg_playlist_item)
         }
     }
 

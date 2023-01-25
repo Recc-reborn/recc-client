@@ -8,4 +8,5 @@ sealed class SelectPreferredTracksScreenEvent {
     data class SearchingTracksUnsuccessfully(val error: String): SelectPreferredTracksScreenEvent()
     object PreferredTracksAdded: SelectPreferredTracksScreenEvent()
     data class FailedAddingPreferredTracks(val error: String): SelectPreferredTracksScreenEvent()
+    data class FailedFetchingNextPage(val error: String): SelectPreferredTracksScreenEvent()
 }

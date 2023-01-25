@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.welcome
 
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.R
@@ -10,7 +11,6 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.TrackListViewHolder
-import com.recc.recc_client.utils.Alert
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SelectPreferredTracksFragment
@@ -19,6 +19,9 @@ class SelectPreferredTracksFragment
     private lateinit var adapter: DynamicAdapter<TrackPresenter, TrackListViewHolder>
 
     override fun subscribeToViewModel() {
+        adapter = DynamicAdapter(AdapterType.LIST_PREFERRED_TRACKS, viewModel)
+        binding.rvSelectArtists.adapter = adapter
+
         getToken()?.let {
             viewModel.setToken(it)
         }
@@ -57,21 +60,21 @@ class SelectPreferredTracksFragment
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is SelectPreferredTracksScreenEvent.TracksFetched -> {
-                    adapter = DynamicAdapter(AdapterType.LIST_PREFERRED_TRACKS, viewModel)
-                    binding.rvSelectArtists.adapter = adapter
                     viewModel.replaceList(screenEvent.trackPresenterList)
                 }
                 is SelectPreferredTracksScreenEvent.TracksNotFetched -> {
-                    // TODO: Add error message
+                    Toast.makeText(requireContext(), screenEvent.error, Toast.LENGTH_SHORT).show()
                 }
                 is SelectPreferredTracksScreenEvent.SearchingTracksUnsuccessfully -> {
-                    // TODO: Add error message
+                    Toast.makeText(requireContext(), screenEvent.error, Toast.LENGTH_SHORT).show()
                 }
                 is SelectPreferredTracksScreenEvent.FailedAddingPreferredTracks -> {
-                    Alert("failed")
+                    Toast.makeText(requireContext(), screenEvent.error, Toast.LENGTH_SHORT).show()
+                }
+                is SelectPreferredTracksScreenEvent.FailedFetchingNextPage -> {
+                    Toast.makeText(requireContext(), screenEvent.error, Toast.LENGTH_SHORT).show()
                 }
                 SelectPreferredTracksScreenEvent.PreferredTracksAdded -> {
-                    Alert("yes")
                     findNavController().navigate(R.id.action_selectPreferredTracksFragment2_to_pagerFragment)
                 }
             }
