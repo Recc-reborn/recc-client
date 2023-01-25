@@ -19,7 +19,7 @@
 
             <include layout="@layout/layout_form_title" />
 
-            <com.recc.recc_client.layout.common_views.ValidatedEditTextFragment
+            <com.recc.recc_client.layout.views.ValidatedEditTextView
                 android:id="@+id/vetf_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 app:text="@string/register_name_label"
                 app:text_error="@string/name_error_label"/>
 
-            <com.recc.recc_client.layout.common_views.ValidatedEditTextFragment
+            <com.recc.recc_client.layout.views.ValidatedEditTextView
                 android:id="@+id/vetf_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 app:text_error="@string/email_address_error_label"
                 app:popup_error_msg="@string/register_email_popup_error" />
 
-            <com.recc.recc_client.layout.common_views.ValidatedEditTextFragment
+            <com.recc.recc_client.layout.views.ValidatedEditTextView
                 android:id="@+id/vetf_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

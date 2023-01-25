@@ -32,7 +32,7 @@ class RegisterViewModel(private val http: Auth): BaseEventViewModel<RegisterScre
                             }
                         }
                         .onFailure {
-                            postEvent(RegisterScreenEvent.RegisterFailed(it ?: ErrorResponse()))
+                            postEvent(RegisterScreenEvent.RegisterFailed(it))
                         }
                 }
             }

@@ -7,7 +7,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <com.recc.recc_client.layout.common_views.NoConnectionView
+        <com.recc.recc_client.layout.views.NoConnectionView
             android:id="@+id/no_connection_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

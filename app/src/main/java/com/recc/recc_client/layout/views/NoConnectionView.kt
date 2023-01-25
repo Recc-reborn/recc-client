@@ -1,4 +1,4 @@
-package com.recc.recc_client.layout.common_views
+package com.recc.recc_client.layout.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import com.recc.recc_client.R
-import com.recc.recc_client.databinding.NoConnectionViewBinding
+import com.recc.recc_client.databinding.ViewNoConnectionBinding
 import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.layout.common.Event
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -17,8 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.getViewModel
 class NoConnectionView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs) {
-    private val binding: NoConnectionViewBinding =
-        DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.no_connection_view, this, true)
+    private val binding = ViewNoConnectionBinding.inflate(LayoutInflater.from(context), this, true)
     private var visible = false
     private val viewModel: NoConnectionViewModel by lazy {
         (context as FragmentActivity).getViewModel()

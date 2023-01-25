@@ -18,8 +18,9 @@ import com.recc.recc_client.layout.home.PagerViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
-import com.recc.recc_client.layout.common_views.NoConnectionViewModel
-import com.recc.recc_client.layout.welcome.WelcomeViewModel
+import com.recc.recc_client.layout.views.NoConnectionViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -38,6 +39,9 @@ val screenViewModels = module {
         UserMsgViewModel()
     }
     viewModel {
+        SelectPreferredTracksViewModel(get())
+    }
+    viewModel {
         LoginViewModel(get(), get())
     }
     viewModel {
@@ -47,7 +51,7 @@ val screenViewModels = module {
         PagerViewModel(get())
     }
     viewModel {
-        WelcomeViewModel(get())
+        SelectPreferredArtistsViewModel(get())
     }
     viewModel {
         HomeViewModel(get())

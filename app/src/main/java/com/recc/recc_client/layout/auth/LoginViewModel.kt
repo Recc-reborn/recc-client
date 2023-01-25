@@ -32,7 +32,7 @@ class LoginViewModel(
                             .onSuccess {
                                 postEvent(LoginScreenEvent.LoginSuccessful(it))
                             }.onFailure {
-                                postEvent(LoginScreenEvent.LoginFailed(it ?: ErrorResponse()))
+                                postEvent(LoginScreenEvent.LoginFailed(it))
                             }
                     }
                 }

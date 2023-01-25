@@ -1,4 +1,4 @@
-package com.recc.recc_client.layout.common_views
+package com.recc.recc_client.layout.views
 
 import android.content.Context
 import android.text.Editable
@@ -9,19 +9,19 @@ import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.R
-import com.recc.recc_client.databinding.ValidatedEditTextBinding
+import com.recc.recc_client.databinding.ViewValidatedEditTextBinding
 import com.recc.recc_client.utils.*
 
 enum class IconType(val type: String) {
     SEARCH("search")
 }
 
-open class ValidatedEditTextFragment @JvmOverloads constructor(
+open class ValidatedEditTextView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,
     override var verticalOffset: Float = 0.toFloat(),
     override val horizontalOffset: Int = 10,
 ) : LinearLayoutCompat(context, attrs), BaseEditText {
-    private val binding: ValidatedEditTextBinding
+    private val binding: ViewValidatedEditTextBinding
     private val type: String?
     private val text: String?
     var icon: String?
@@ -30,7 +30,7 @@ open class ValidatedEditTextFragment @JvmOverloads constructor(
     private var hasBeenSet = false
 
     init {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.validated_edit_text, this, true)
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_validated_edit_text, this, true)
         binding.etField.viewTreeObserver.addOnGlobalLayoutListener {
             verticalOffset = ((binding.tvTitle.height) / 2 + 5).toPx(context)
             if (!hasBeenSet) {

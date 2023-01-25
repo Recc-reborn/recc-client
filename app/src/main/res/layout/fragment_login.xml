@@ -20,7 +20,7 @@
 
             <include layout="@layout/layout_form_title" />
 
-            <com.recc.recc_client.layout.common_views.ValidatedEditTextFragment
+            <com.recc.recc_client.layout.views.ValidatedEditTextView
                 android:id="@+id/vedf_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 app:text="@string/email_address_label"
                 app:text_error="@string/email_address_error_label" />
 
-            <com.recc.recc_client.layout.common_views.ValidatedEditTextFragment
+            <com.recc.recc_client.layout.views.ValidatedEditTextView
                 android:id="@+id/vedf_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

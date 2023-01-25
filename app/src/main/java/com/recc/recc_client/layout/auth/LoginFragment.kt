@@ -24,11 +24,13 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
     private fun afterLoginAction(user: User) {
         (requireActivity() as MainActivity).enableLoadingBar()
-        if (user.hasSetPreferredArtists) {
+        if (user.hasSetPreferredTracks) {
             findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        } else if (user.hasSetPreferredArtists) {
+            findNavController().navigate(R.id.action_back_to_selectPreferredTracksFragment)
         } else {
             Toast.makeText(requireContext(), "It's nice to see you again!", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_selectPreferredArtistsFragment)
         }
     }
 
