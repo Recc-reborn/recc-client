@@ -10,13 +10,17 @@ import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
 import com.recc.recc_client.utils.Alert
+import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 const val MIN_SELECTED_TRACKS = 3
 
-class SelectPreferredTracksViewModel(private val control: Control): InteractiveViewModel<SelectPreferredTracksScreenEvent>() {
+class SelectPreferredTracksViewModel(
+    private val control: Control,
+    private val sharedPreferences: SharedPreferences
+    ): InteractiveViewModel<SelectPreferredTracksScreenEvent>() {
 
     private val _presenterList = MutableLiveData<List<TrackPresenter>>()
     val presenterList: LiveData<List<TrackPresenter>> = _presenterList
@@ -87,11 +91,12 @@ class SelectPreferredTracksViewModel(private val control: Control): InteractiveV
     fun preferredTracksSelectedButtonPressed() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                if (token.value.isNullOrBlank() || selectedItems.value.isNullOrEmpty()) {
+                val token = sharedPreferences.getToken()
+                if (token.isNullOrBlank() || selectedItems.value.isNullOrEmpty()) {
                     Alert("no entra")
                     return@launch
                 }
-                control.addPreferredTracks(token.value!!, selectedItems.value!!.toMutableList())
+                control.addPreferredTracks(token, selectedItems.value!!.toMutableList())
                     .onSuccess {
                         postEvent(SelectPreferredTracksScreenEvent.PreferredTracksAdded)
                     }

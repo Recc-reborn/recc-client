@@ -17,14 +17,6 @@ abstract class BaseEventViewModel<T>: ViewModel() {
     val screenEvent: LiveData<Event<T>>
         get() = _screenEvent
 
-    private val _token = MutableLiveData<String>()
-    val token: LiveData<String>
-        get() = _token
-
-    fun setToken(token: String) {
-        _token.postValue(token)
-    }
-
     protected fun postEvent(eventContent: T) {
         _screenEvent.postValue(Event(eventContent))
     }

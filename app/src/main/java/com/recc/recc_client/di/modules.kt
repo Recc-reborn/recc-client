@@ -1,5 +1,6 @@
 package com.recc.recc_client.di
 
+import androidx.work.PeriodicWorkRequestBuilder
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
@@ -21,8 +22,12 @@ import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
 import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
 import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
+import com.recc.recc_client.services.ScrobblerService
+import com.recc.recc_client.utils.SharedPreferences
+import com.spotify.android.appremote.api.ConnectionParams
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -39,7 +44,7 @@ val screenViewModels = module {
         UserMsgViewModel()
     }
     viewModel {
-        SelectPreferredTracksViewModel(get())
+        SelectPreferredTracksViewModel(get(), get())
     }
     viewModel {
         LoginViewModel(get(), get())
@@ -51,25 +56,40 @@ val screenViewModels = module {
         PagerViewModel(get())
     }
     viewModel {
-        SelectPreferredArtistsViewModel(get())
+        SelectPreferredArtistsViewModel(get(), get())
     }
     viewModel {
         HomeViewModel(get())
     }
     viewModel {
-        SettingsViewModel(get())
+        SettingsViewModel(get(), get())
     }
     viewModel{
         PlaylistViewModel(get())
     }
     single {
-        NoConnectionViewModel(androidContext(), get(), get())
+        NoConnectionViewModel(get(), get(), get())
     }
     single{
         MeDataViewModel()
     }
     single {
         InterceptorViewModel()
+    }
+}
+
+val spotify = module {
+    single {
+        ConnectionParams.Builder(androidContext().getString(R.string.spotify_client_id))
+            .setRedirectUri(androidContext().getString(R.string.spotify_redirect_uri))
+            .showAuthView(true)
+            .build()
+    }
+}
+
+val sharedPreferences = module {
+    single {
+        SharedPreferences(androidApplication())
     }
 }
 

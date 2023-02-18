@@ -3,6 +3,8 @@ package com.recc.recc_client
 import android.app.Application
 import com.recc.recc_client.di.httpModule
 import com.recc.recc_client.di.screenViewModels
+import com.recc.recc_client.di.sharedPreferences
+import com.recc.recc_client.di.spotify
 import com.recc.recc_client.utils.Status
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -13,7 +15,12 @@ class ReccApplication: Application() {
         Status("Launching ReccApplication...")
         startKoin {
             androidContext(applicationContext)
-            modules(httpModule, screenViewModels)
+            modules(
+                httpModule,
+                screenViewModels,
+                spotify,
+                sharedPreferences
+            )
         }
     }
 }

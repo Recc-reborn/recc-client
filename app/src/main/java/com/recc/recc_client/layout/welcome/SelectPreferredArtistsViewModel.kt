@@ -10,6 +10,7 @@ import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.utils.Alert
+import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 const val MIN_SELECTED_ARTISTS = 3
 
 class SelectPreferredArtistsViewModel(
-    private val control: Control
+    private val control: Control,
+    private val sharedPreferences: SharedPreferences
 ): InteractiveViewModel<SelectPreferredArtistsScreenEvent>() {
 
     private val _presenterList = MutableLiveData<List<ArtistPresenter>>()
@@ -93,7 +95,7 @@ class SelectPreferredArtistsViewModel(
                 selectedItems.value?.let { artistsSet ->
                     if (artistsSet.count() >= MIN_SELECTED_ARTISTS) {
                         val artistList = artistsSet.toList()
-                        token.value?.let { token ->
+                        sharedPreferences.getToken()?.let { token ->
                             control.addPreferredArtists(token, artistList)
                                 .onSuccess {
                                     Alert("success: $it")

@@ -61,9 +61,12 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
     abstract fun subscribeToViewModel()
 
     override fun onDestroyView() {
+        onViewDestroyed()
         super.onDestroyView()
         bindingNullable = null
     }
+
+    open fun onViewDestroyed() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,27 +74,5 @@ abstract class BaseFragment<T, out V: BaseEventViewModel<T>, B: ViewDataBinding>
 
         subscribeToViewModel()
         subscribeToMsgViewModel()
-    }
-
-    protected fun getToken(): String?
-        = getSharedPref().getString(getString(R.string.auth_token_key), null)
-
-    private fun getSharedPref(): SharedPreferences
-        = requireActivity().getSharedPreferences(
-            getString(R.string.preference_auth_key_file),
-            Context.MODE_PRIVATE)
-
-    protected fun saveToken(token: String) {
-        with (getSharedPref().edit()) {
-            this?.putString(getString(R.string.auth_token_key), token)
-            this?.apply()
-        }
-    }
-
-    protected fun removeToken() {
-        with (getSharedPref().edit()) {
-            this?.remove(getString(R.string.auth_token_key))
-            this?.apply()
-        }
     }
 }

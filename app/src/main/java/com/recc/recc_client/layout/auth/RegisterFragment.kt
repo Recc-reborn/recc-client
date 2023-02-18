@@ -9,10 +9,12 @@ import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
 import com.recc.recc_client.utils.Regex
 import com.recc.recc_client.utils.RegexType
+import com.recc.recc_client.utils.SharedPreferences
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, FragmentRegisterBinding>(R.layout.fragment_register) {
-
+    private val sharedPreferences: SharedPreferences by inject()
     override val viewModel: RegisterViewModel by viewModel()
 
     override fun subscribeToViewModel() {
@@ -44,7 +46,7 @@ class RegisterFragment : BaseFragment<RegisterScreenEvent, RegisterViewModel, Fr
                     }
                 }
                 is RegisterScreenEvent.LoginSuccessful -> {
-                    saveToken(screenEvent.token)
+                    sharedPreferences.saveToken(screenEvent.token)
                     Toast.makeText(requireContext(), "Welcome ${screenEvent.user.name}!", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_registerFragment_to_selectPreferredArtistsFragment)
                 }

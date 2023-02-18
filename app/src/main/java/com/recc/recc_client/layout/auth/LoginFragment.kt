@@ -12,13 +12,15 @@ import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.models.auth.User
 import com.recc.recc_client.utils.Regex
 import com.recc.recc_client.utils.RegexType
+import com.recc.recc_client.utils.SharedPreferences
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Login Fragment that acts as an screen, it's job is limited to navigation and UI related stuff
  */
 class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLoginBinding>(R.layout.fragment_login) {
-
+    private val sharedPreferences: SharedPreferences by inject()
     override val viewModel: LoginViewModel by viewModel()
     private val meDataViewModel: MeDataViewModel by viewModel()
 
@@ -36,7 +38,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
     override fun onResume() {
         super.onResume()
-        getToken()?.let {
+        sharedPreferences.getToken()?.let {
             viewModel.getMeData(it)
         }
     }
@@ -57,6 +59,10 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is LoginScreenEvent.BtnLoginPressed -> {
+//                    Alert("pressing btn...")
+//                    val web = Intent(activity, WebViewActivity::class.java)
+//                    web.putExtra("token", null as String?)
+//                    startActivity(web)
                     val email = binding.vedfEmail.findViewById<EditText>(R.id.et_field).text.toString()
                     val pass = binding.vedfPassword.findViewById<EditText>(R.id.et_field).text.toString()
                     viewModel.login(email, pass)
@@ -65,8 +71,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
                     findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
                 }
                 is LoginScreenEvent.LoginSuccessful -> {
-                    saveToken(screenEvent.token)
-                    viewModel.getMeData(getToken())
+                    sharedPreferences.saveToken(screenEvent.token)
+                    viewModel.getMeData(sharedPreferences.getToken())
                 }
                 is LoginScreenEvent.LoginFailed -> {
                     binding.vedfEmail.setPopupError(screenEvent.errorResponse.message)

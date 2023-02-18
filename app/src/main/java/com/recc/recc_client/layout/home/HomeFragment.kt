@@ -2,6 +2,7 @@ package com.recc.recc_client.layout.home
 
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentHomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
@@ -10,14 +11,20 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.PlaylistSwimlaneViewHolder
+import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
     override val viewModel: HomeViewModel by viewModel()
+    private val sharedPreferences: SharedPreferences by inject()
     private var adapter: DynamicAdapter<PlaylistPresenter, PlaylistSwimlaneViewHolder>? = null
 
     override fun subscribeToViewModel() {
+        if (sharedPreferences.getSpotifyStatus()) {
+            (requireActivity() as MainActivity).loginToSpotify()
+        }
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 HomeScreenEvent.PlaylistSelected -> {

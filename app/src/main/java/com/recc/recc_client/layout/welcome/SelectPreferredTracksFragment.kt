@@ -11,6 +11,8 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.TrackListViewHolder
+import com.recc.recc_client.utils.SharedPreferences
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SelectPreferredTracksFragment
@@ -21,10 +23,6 @@ class SelectPreferredTracksFragment
     override fun subscribeToViewModel() {
         adapter = DynamicAdapter(AdapterType.LIST_PREFERRED_TRACKS, viewModel)
         binding.rvSelectArtists.adapter = adapter
-
-        getToken()?.let {
-            viewModel.setToken(it)
-        }
 
         viewModel.presenterList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
