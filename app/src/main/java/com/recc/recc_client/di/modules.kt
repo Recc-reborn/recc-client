@@ -25,6 +25,7 @@ import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
 import com.recc.recc_client.services.ScrobblerService
 import com.recc.recc_client.utils.SharedPreferences
 import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.SpotifyAppRemote
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
@@ -137,7 +138,7 @@ val httpModule = module {
         Auth(androidContext(), get())
     }
     single {
-        Control(androidContext(), get())
+        Control(get())
     }
     single {
         MockApi(androidContext(), get())

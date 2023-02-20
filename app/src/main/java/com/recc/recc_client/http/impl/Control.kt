@@ -1,6 +1,5 @@
 package com.recc.recc_client.http.impl
 
-import android.content.Context
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.control.Artist
@@ -10,7 +9,6 @@ const val DEFAULT_CURRENT_PAGE = 1
 const val DEFAULT_ARTISTS_PER_PAGE = 50
 
 class Control(
-    private val context: Context,
     private val http: ServerRouteDefinitions
 ): BaseImpl() {
 

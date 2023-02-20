@@ -34,13 +34,6 @@ class MainActivity : AppCompatActivity() {
             Alert("disconnected")
         }
     }
-    var spotifyApi: SpotifyAppRemote? = null
-
-    override fun onStop() {
-        super.onStop()
-        Alert("onViewDestroyed")
-        unbindService(serviceConnection)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,18 +41,26 @@ class MainActivity : AppCompatActivity() {
         Status( "Launching Main Activity...")
     }
 
-    override fun onStart() {
-        super.onStart()
-        val intent = Intent(this, ScrobblerService::class.java)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-    }
-
     fun loginToSpotify() {
         SpotifyAppRemote.connect(applicationContext, spotifyConnectionParams, object: Connector.ConnectionListener {
             override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
                 Status("connected to spotify")
-                spotifyApi = spotifyAppRemote
+                (applicationContext as ReccApplication).spotifyApi = spotifyAppRemote
                 sharedPreferences.saveSpotifyStatus(true)
+                (applicationContext as ReccApplication).spotifyApi?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+                    Intent("com.spotify.music.playbackstatechanged").also {
+                        it.putExtra("track", playerState.track.name)
+                        it.putExtra("artist", playerState.track.artist.name)
+                        it.putExtra("album", playerState.track.album.name)
+                        it.putExtra("isPaused", playerState.isPaused)
+                        it.putExtra("position", playerState.playbackPosition)
+                        sendBroadcast(it)
+                    }
+                }
+                // Creates scrobbler
+                Intent(applicationContext, ScrobblerService::class.java).also {
+                    bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
+                }
             }
 
             override fun onFailure(error: Throwable?) {
@@ -69,12 +70,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logoutFromSpotify() {
-        spotifyApi?.let {api ->
+        (applicationContext as ReccApplication).spotifyApi?.let {api ->
             if (api.isConnected) {
                 Status("Spotify disconnected")
-                spotifyApi = null
+                (applicationContext as ReccApplication).spotifyApi = null
                 sharedPreferences.saveSpotifyStatus(false)
                 SpotifyAppRemote.disconnect(api)
+                if (sharedPreferences.getSpotifyStatus()) {
+                    unbindService(serviceConnection)
+                }
             }
         }
     }
