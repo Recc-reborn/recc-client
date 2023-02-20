@@ -41,7 +41,7 @@ interface ServerRouteDefinitions {
 
     @Headers("Accept: application/json")
     @POST("api/playbacks")
-    suspend fun postPlaybacks(): Response<Playback>
+    suspend fun postPlaybacks(@Header("Authorization") token: String, @Query("track_id") trackId: Int): Response<Playback>
 
     @Headers("Accept: application/json")
     @DELETE("api/tracks/{track}")

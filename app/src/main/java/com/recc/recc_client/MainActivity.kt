@@ -1,17 +1,12 @@
 package com.recc.recc_client
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.databinding.ActivityMainBinding
 import com.recc.recc_client.services.ScrobblerService
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import com.recc.recc_client.utils.Status
 import com.spotify.android.appremote.api.ConnectionParams
@@ -23,17 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val sharedPreferences: SharedPreferences by inject()
     private val spotifyConnectionParams: ConnectionParams by inject()
-    private lateinit var scrobblerService: ScrobblerService
-    private val serviceConnection = object: ServiceConnection {
-        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder?) {
-            Alert("connected")
-            val binder = iBinder as ScrobblerService.LocalBinder
-            scrobblerService = binder.service
-        }
-        override fun onServiceDisconnected(componentName: ComponentName) {
-            Alert("disconnected")
-        }
-    }
+    private lateinit var scrobblerService: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +43,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 // Creates scrobbler
-                Intent(applicationContext, ScrobblerService::class.java).also {
-                    bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
-                }
+                scrobblerService = Intent(applicationContext, ScrobblerService::class.java)
+                startService(scrobblerService)
             }
 
             override fun onFailure(error: Throwable?) {
@@ -77,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 sharedPreferences.saveSpotifyStatus(false)
                 SpotifyAppRemote.disconnect(api)
                 if (sharedPreferences.getSpotifyStatus()) {
-                    unbindService(serviceConnection)
+                    stopService(scrobblerService)
                 }
             }
         }
