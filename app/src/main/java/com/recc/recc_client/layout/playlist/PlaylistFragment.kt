@@ -26,7 +26,7 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
         arguments?.getString("title")?.let {
             binding.tvTitle.text = it
         }
-        adapter = DynamicAdapter(AdapterType.LIST_TRACKS, viewModel)
+        adapter = DynamicAdapter(AdapterType.LIST_TRACKS, viewModel, requireContext())
         binding.rvSongs.adapter = adapter
     }
 }
