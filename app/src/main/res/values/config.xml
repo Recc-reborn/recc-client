@@ -8,7 +8,12 @@
     <string name="last_fm_base_endpoint">https://ws.audioscrobbler.com/2.0/</string>
     <string name="last_fm_token">4ee5fa23159bc4e2e42356c2ac641895</string>
     <string name="last_fm_shared_secret">55554623db88900ea7e0823c82bfc99c</string>
+    <string name="last_fm_auth_url">https://www.last.fm/api/auth</string>
 
     <!--MockAPI-->
     <string name="mockapi_base_endpoint">https://636d8a2eb567eed48ac3bd2d.mockapi.io/api/</string>
+    
+    <!--SPOTIFY-->
+    <string name="spotify_client_id">3bf911bffb4b4058b6d8a790ade5c82a</string>
+    <string name="spotify_redirect_uri">http://localhost:8888/callback</string>
 </resources>

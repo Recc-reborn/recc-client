@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.recyclerview
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
@@ -21,7 +22,8 @@ enum class AdapterType {
 
 class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
     private val type: AdapterType,
-    private val viewModel: ViewModel
+    private val viewModel: ViewModel,
+    private val context: Context? = null
 ) : ListAdapter<P, VH>(DiffUtilCallback<P>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -44,7 +46,7 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
             }
             AdapterType.LIST_PREFERRED_TRACKS -> {
                 val binding = ViewTrackListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return TrackListViewHolder(binding, viewModel, true) as VH
+                return TrackListViewHolder(binding, viewModel, false) as VH
             }
         }
         throw ClassNotFoundException("The given ViewHolder doesn't exist")
@@ -68,7 +70,9 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                 AdapterType.LIST_TRACKS -> {
                     holder as TrackListViewHolder
                     val presenter = currentList[position] as TrackPresenter
-                    holder.bindPlaylist(presenter)
+                    context?.let {
+                        holder.bindPlaylist(presenter, it)
+                    }
                 }
                 AdapterType.SWIMLANE_PLAYLIST_TRACKS -> {
                     holder as TracksSwimlaneViewHolder

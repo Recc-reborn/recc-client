@@ -6,11 +6,56 @@
             type="com.recc.recc_client.layout.settings.SettingsViewModel" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".layout.settings.SettingsFragment">
+
+        <TextView
+            android:id="@+id/spotify_settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_spotify_title"
+            android:layout_marginTop="8dp"
+            style="@style/FormItem.HeaderText"
+            tools:textColor="@color/black"
+            tools:text="@string/settings_spotify_title"/>
+
+        <Button
+            android:id="@+id/btn_connect_spotify"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/cta_connect_to_spotify"
+            tools:text="@string/cta_connect_to_spotify" />
+
+        <TextView
+            android:id="@+id/last_fm_settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_last_fm_title"
+            android:layout_marginTop="8dp"
+            style="@style/FormItem.HeaderText"
+            tools:textColor="@color/black"
+            tools:text="@string/settings_last_fm_title"/>
+
+        <Button
+            android:id="@+id/btn_connect_last_fm"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/cta_connect_to_last_fm"
+            tools:text="@string/cta_connect_to_last_fm" />
+
+        <TextView
+            android:id="@+id/recc_settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_recc_title"
+            android:layout_marginTop="8dp"
+            style="@style/FormItem.HeaderText"
+            tools:textColor="@color/black"
+            tools:text="@string/settings_recc_title"/>
 
         <Button
             android:id="@+id/btn_logout"
@@ -20,5 +65,5 @@
             android:onClick="@{(view) -> viewModel.onBtnLogout()}"
             tools:text="@string/logout_cta" />
 
-    </FrameLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

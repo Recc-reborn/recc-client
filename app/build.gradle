@@ -52,10 +52,15 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    // View Pager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:2.8.0"
 
     // Flexbox
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation files('../libs/spotify-app-remote-release-0.7.2/classes.jar')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

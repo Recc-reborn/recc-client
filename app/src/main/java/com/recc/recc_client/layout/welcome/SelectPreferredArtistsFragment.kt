@@ -11,24 +11,22 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.ArtistGridViewHolder
+import com.recc.recc_client.utils.SharedPreferences
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SelectPreferredArtistsFragment
-    : BaseFragment
-        <SelectPreferredArtistsScreenEvent,
+class SelectPreferredArtistsFragment : BaseFragment<
+        SelectPreferredArtistsScreenEvent,
         SelectPreferredArtistsViewModel,
         FragmentSelectPreferredArtistsBinding>
     (R.layout.fragment_select_preferred_artists) {
-    override val viewModel: SelectPreferredArtistsViewModel by viewModel()
     private lateinit var adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>
+    override val viewModel: SelectPreferredArtistsViewModel by viewModel()
 
     override fun subscribeToViewModel() {
         adapter = DynamicAdapter(AdapterType.GRID_ARTISTS, viewModel)
         binding.rvSelectArtists.adapter = adapter
 
-        getToken()?.let {
-            viewModel.setToken(it)
-        }
         binding.btnGotoSelectPreferredTracks?.text = getString(R.string.artists_left_cta, MIN_SELECTED_ARTISTS)
 
         viewModel.presenterList.observe(viewLifecycleOwner) {
