@@ -1,8 +1,13 @@
 package com.recc.recc_client.layout.settings
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
+import com.recc.recc_client.WebViewActivity
 import com.recc.recc_client.databinding.FragmentSettingsBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
@@ -16,6 +21,12 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
     override val viewModel: SettingsViewModel by viewModel()
     private val meDataViewModel: MeDataViewModel by viewModel()
     private val sharedPreferences: SharedPreferences by inject()
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result?.resultCode == Activity.RESULT_OK) {
+            val code = result.data?.getStringExtra("code")
+            Alert("OOOOUYEEEA: $code")
+        }
+    }
 
     override fun subscribeToViewModel() {
         Alert("spotify satatus fragment: ${sharedPreferences.getSpotifyStatus()}")
@@ -26,7 +37,11 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
         }
 
         binding.btnConnectSpotify.setOnClickListener {
-            viewModel.handleSpotifyBtn(requireActivity() as MainActivity)
+//            viewModel.handleSpotifyBtn(requireActivity() as MainActivity)
+
+            val intent = Intent(requireContext(), WebViewActivity::class.java)
+
+            resultLauncher.launch(intent)
         }
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->

@@ -9,9 +9,11 @@ import com.recc.recc_client.utils.Status
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import se.michaelthelin.spotify.SpotifyApi
 
 class ReccApplication: Application() {
-    var spotifyApi: SpotifyAppRemote? = null
+    var spotifyApiOld: SpotifyAppRemote? = null
+    var spotifyApi: SpotifyApi? = null
 
     override fun onCreate() {
         super.onCreate()

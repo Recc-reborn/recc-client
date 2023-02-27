@@ -15,5 +15,6 @@
     
     <!--SPOTIFY-->
     <string name="spotify_client_id">3bf911bffb4b4058b6d8a790ade5c82a</string>
+    <string name="spotify_client_secret">12814ba199284db68ee24c079262dd5c</string>
     <string name="spotify_redirect_uri">http://localhost:8888/callback</string>
 </resources>

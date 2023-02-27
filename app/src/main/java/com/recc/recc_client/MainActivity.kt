@@ -1,6 +1,7 @@
 package com.recc.recc_client
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,12 @@ import com.recc.recc_client.utils.Status
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import se.michaelthelin.spotify.SpotifyApi
+import java.net.URI
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,37 +33,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginToSpotify() {
-        SpotifyAppRemote.connect(applicationContext, spotifyConnectionParams, object: Connector.ConnectionListener {
-            override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
-                Status("connected to spotify")
-                (applicationContext as ReccApplication).spotifyApi = spotifyAppRemote
-                sharedPreferences.saveSpotifyStatus(true)
-                (applicationContext as ReccApplication).spotifyApi?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
-                    Intent("com.spotify.music.playbackstatechanged").also {
-                        it.putExtra("track", playerState.track.name)
-                        it.putExtra("artist", playerState.track.artist.name)
-                        it.putExtra("album", playerState.track.album.name)
-                        it.putExtra("isPaused", playerState.isPaused)
-                        it.putExtra("position", playerState.playbackPosition)
-                        sendBroadcast(it)
-                    }
-                }
-                // Creates scrobbler
-                scrobblerService = Intent(applicationContext, ScrobblerService::class.java)
-                startService(scrobblerService)
-            }
-
-            override fun onFailure(error: Throwable?) {
-                Status("not connected to spotify: $error")
-            }
-        })
+        (applicationContext as ReccApplication).spotifyApi = SpotifyApi.Builder()
+            .setClientId(getString(R.string.spotify_client_id))
+            .setRedirectUri(URI(getString(R.string.spotify_redirect_uri)))
+            .build()
+//        CoroutineScope(Dispatchers.IO).launch {
+//
+//        }
     }
 
     fun logoutFromSpotify() {
-        (applicationContext as ReccApplication).spotifyApi?.let {api ->
+        (applicationContext as ReccApplication).spotifyApiOld?.let { api ->
             if (api.isConnected) {
                 Status("Spotify disconnected")
-                (applicationContext as ReccApplication).spotifyApi = null
+                (applicationContext as ReccApplication).spotifyApiOld = null
                 sharedPreferences.saveSpotifyStatus(false)
                 SpotifyAppRemote.disconnect(api)
                 if (sharedPreferences.getSpotifyStatus()) {

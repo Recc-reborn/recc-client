@@ -43,6 +43,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
@@ -51,6 +55,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    // Spotify Web API
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 
     // View Pager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
