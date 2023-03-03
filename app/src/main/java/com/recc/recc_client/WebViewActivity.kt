@@ -8,15 +8,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.recc.recc_client.R
 import com.recc.recc_client.databinding.ActivityWebViewBinding
-import com.recc.recc_client.utils.Alert
-import com.recc.recc_client.utils.SharedPreferences
-import org.koin.android.ext.android.inject
+import com.recc.recc_client.utils.*
 
 class WebViewActivity: AppCompatActivity() {
     private lateinit var binding: ActivityWebViewBinding
-    private val sharedPreferences: SharedPreferences by inject()
+    private val codeVerifier = String.randomString(64)
+    private val codeChallenge = codeVerifier.hashSha256().encodeBase64()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +28,12 @@ class WebViewActivity: AppCompatActivity() {
             ): Boolean {
                 Alert("url: ${request?.url}")
                 request?.let {
-                    if (it.url.toString().startsWith("http://localhost:8888/callback?code=")) {
+                    val redirectUri = getString(R.string.spotify_redirect_uri)
+                    if (it.url.toString().startsWith("${redirectUri}?code=")) {
                         val resultIntent = Intent()
-                        resultIntent.putExtra("code", it.url.toString().replace("http://localhost:8888/callback?code=", ""))
+                        resultIntent.putExtra("code", it.url.toString().replace("${redirectUri}?code=", ""))
+                        resultIntent.putExtra("codeVerifier", codeVerifier)
+                        resultIntent.putExtra("codeChallenge", codeChallenge)
                         setResult(Activity.RESULT_OK, resultIntent)
                         finish()
                         return true
@@ -44,6 +45,15 @@ class WebViewActivity: AppCompatActivity() {
 
         binding.wvWeb.webViewClient = client
 //        binding.wvWeb.loadUrl("https://www.last.fm/api/auth?api_key=${sharedPreferences.getToken()}")
-        binding.wvWeb.loadUrl("https://accounts.spotify.com/authorize?client_id=3bf911bffb4b4058b6d8a790ade5c82a&redirect_uri=http://localhost:8888/callback&response_type=code")
+
+        Alert("verifier: $codeVerifier")
+        Alert("challenge: $codeChallenge")
+
+        binding.wvWeb.loadUrl("https://accounts.spotify.com/authorize?" +
+                "client_id=3bf911bffb4b4058b6d8a790ade5c82a" +
+                "&redirect_uri=http://localhost:8888/callback" +
+                "&response_type=code" +
+                "&code_challenge_method=S256" +
+                "&code_challenge=$codeChallenge")
     }
 }

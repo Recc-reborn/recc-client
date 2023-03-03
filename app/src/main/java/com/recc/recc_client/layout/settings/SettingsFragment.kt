@@ -2,7 +2,6 @@ package com.recc.recc_client.layout.settings
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
@@ -23,13 +22,17 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
     private val sharedPreferences: SharedPreferences by inject()
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result?.resultCode == Activity.RESULT_OK) {
-            val code = result.data?.getStringExtra("code")
-            Alert("OOOOUYEEEA: $code")
+            result.data?.apply {
+                val code = getStringExtra("code")
+                val codeVerifier = getStringExtra("codeVerifier")
+                val codeChallenge = getStringExtra("codeChallenge")
+                (requireActivity() as MainActivity).loginToSpotify(code.orEmpty(), codeVerifier.orEmpty(), codeChallenge.orEmpty())
+            }
         }
     }
 
     override fun subscribeToViewModel() {
-        Alert("spotify satatus fragment: ${sharedPreferences.getSpotifyStatus()}")
+        Alert("spotify status fragment: ${sharedPreferences.getSpotifyStatus()}")
         if (sharedPreferences.getSpotifyStatus()) {
             binding.btnConnectSpotify.text = getString(R.string.cta_log_out_from_spotify)
         } else {
@@ -37,10 +40,7 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
         }
 
         binding.btnConnectSpotify.setOnClickListener {
-//            viewModel.handleSpotifyBtn(requireActivity() as MainActivity)
-
             val intent = Intent(requireContext(), WebViewActivity::class.java)
-
             resultLauncher.launch(intent)
         }
 

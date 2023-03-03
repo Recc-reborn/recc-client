@@ -25,7 +25,7 @@ class SettingsViewModel(
             activity.logoutFromSpotify()
         } else {
             postEvent(SettingsScreenEvent.SetLoginSpotifyBtn)
-            activity.loginToSpotify()
+//            activity.loginToSpotify()
         }
     }
 }

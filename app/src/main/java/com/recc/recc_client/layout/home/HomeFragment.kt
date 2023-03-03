@@ -23,7 +23,7 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
 
     override fun subscribeToViewModel() {
         if (sharedPreferences.getSpotifyStatus()) {
-            (requireActivity() as MainActivity).loginToSpotify()
+//            (requireActivity() as MainActivity).loginToSpotify()
         }
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
