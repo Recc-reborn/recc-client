@@ -6,10 +6,8 @@ import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.auth.*
 
 class Auth(
-    private val context: Context,
     private val http: ServerRouteDefinitions
 ): BaseImpl() {
-
 
     suspend fun login(email: String, password: String): Result<String> {
         val query = http.postToken(

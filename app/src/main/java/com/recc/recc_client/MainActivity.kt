@@ -30,16 +30,18 @@ class MainActivity : AppCompatActivity() {
         SpotifyAppRemote.connect(applicationContext, spotifyConnectionParams, object: Connector.ConnectionListener {
             override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
                 Status("connected to spotify")
-                (applicationContext as ReccApplication).spotifyApi = spotifyAppRemote
                 sharedPreferences.saveSpotifyStatus(true)
-                (applicationContext as ReccApplication).spotifyApi?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
-                    Intent("com.spotify.music.playbackstatechanged").also {
-                        it.putExtra("track", playerState.track.name)
-                        it.putExtra("artist", playerState.track.artist.name)
-                        it.putExtra("album", playerState.track.album.name)
-                        it.putExtra("isPaused", playerState.isPaused)
-                        it.putExtra("position", playerState.playbackPosition)
-                        sendBroadcast(it)
+                (applicationContext as ReccApplication).apply {
+                    spotifyApi = spotifyAppRemote
+                    spotifyApi?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
+                        Intent("com.spotify.music.playbackstatechanged").also {
+                            it.putExtra("track", playerState.track.name)
+                            it.putExtra("artist", playerState.track.artist.name)
+                            it.putExtra("album", playerState.track.album.name)
+                            it.putExtra("isPaused", playerState.isPaused)
+                            it.putExtra("position", playerState.playbackPosition)
+                            sendBroadcast(it)
+                        }
                     }
                 }
                 // Creates scrobbler

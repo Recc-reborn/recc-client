@@ -46,7 +46,7 @@
         </activity>
 
         <activity
-            android:name=".layout.auth.WebViewActivity"
+            android:name=".WebViewActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />

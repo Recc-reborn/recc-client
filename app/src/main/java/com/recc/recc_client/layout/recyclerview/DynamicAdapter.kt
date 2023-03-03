@@ -71,7 +71,7 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                     holder as TrackListViewHolder
                     val presenter = currentList[position] as TrackPresenter
                     context?.let {
-                        holder.bindPlaylist(presenter, it)
+                        holder.bindPlaylistTrack(presenter, it)
                     }
                 }
                 AdapterType.SWIMLANE_PLAYLIST_TRACKS -> {
@@ -84,7 +84,7 @@ class DynamicAdapter<P: BasePresenter, VH: BaseViewHolder> (
                     val presenter = currentList[position] as TrackPresenter
                     if (position == currentList.count() - 1)
                         (viewModel as SelectPreferredTracksViewModel).fetchNextPage()
-                    holder.bindPreferredList(presenter, true)
+                    holder.bindPreferredTrack(presenter, true)
                 }
             }
         }

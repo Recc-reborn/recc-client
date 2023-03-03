@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 private const val CACHE_KEYS_FILENAME = "shared_preferences_auth"
 private const val AUTH_TOKEN_KEY = "auth_token_file"
 private const val SPOTIFY_STATUS_KEY = "spotify_status_key"
+private const val SPOTIFY_ACCESS_TOKEN = "spotify_access_token"
 
 class SharedPreferences(private val context: Context) {
     private fun getSharedPref(): SharedPreferences = context.getSharedPreferences(
@@ -34,6 +35,15 @@ class SharedPreferences(private val context: Context) {
     fun saveSpotifyStatus(status: Boolean) {
         with (getSharedPref().edit()) {
             this?.putBoolean(SPOTIFY_STATUS_KEY, status)
+            this?.apply()
+        }
+    }
+
+    fun getSpotifyToken(): String = getSharedPref().getString(SPOTIFY_ACCESS_TOKEN, null).orEmpty()
+
+    fun saveSpotifyToken(token: String) {
+        with (getSharedPref().edit()) {
+            this?.putString(SPOTIFY_ACCESS_TOKEN, token)
             this?.apply()
         }
     }

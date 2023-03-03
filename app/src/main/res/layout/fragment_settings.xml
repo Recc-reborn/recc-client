@@ -14,7 +14,7 @@
         tools:context=".layout.settings.SettingsFragment">
 
         <TextView
-            android:id="@+id/spotify_settings_title"
+            android:id="@+id/tv_spotify_scrobbler_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_spotify_title"
@@ -31,7 +31,7 @@
             tools:text="@string/cta_connect_to_spotify" />
 
         <TextView
-            android:id="@+id/last_fm_settings_title"
+            android:id="@+id/tv_last_fm_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_last_fm_title"
@@ -48,7 +48,7 @@
             tools:text="@string/cta_connect_to_last_fm" />
 
         <TextView
-            android:id="@+id/recc_settings_title"
+            android:id="@+id/tv_recc_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_recc_title"
