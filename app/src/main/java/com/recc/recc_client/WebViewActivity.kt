@@ -1,6 +1,5 @@
 package com.recc.recc_client
 
-import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -8,7 +7,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.databinding.ActivityWebViewBinding
-import com.recc.recc_client.di.sharedPreferences
 import com.recc.recc_client.utils.*
 import org.koin.android.ext.android.inject
 

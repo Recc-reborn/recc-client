@@ -59,7 +59,7 @@ val screenViewModels = module {
         SelectPreferredArtistsViewModel(get(), get())
     }
     viewModel {
-        HomeViewModel(get())
+        HomeViewModel(get(), get())
     }
     viewModel {
         SettingsViewModel(get(), get())

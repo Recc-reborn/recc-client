@@ -4,6 +4,7 @@ import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.control.Artist
 import com.recc.recc_client.models.control.Playback
+import com.recc.recc_client.models.control.Playlist
 import com.recc.recc_client.models.control.Track
 
 const val DEFAULT_CURRENT_PAGE = 1
@@ -40,6 +41,16 @@ class Control(
 
     suspend fun createPlayback(token: String, trackId: Int): Result<Playback> {
         val query = http.postPlaybacks(formatToken(token), trackId)
+        return handleQuery(query) { it }
+    }
+
+    suspend fun fetchPlaylists(token: String): Result<List<Playlist>> {
+        val query = http.fetchPlaylists(formatToken(token))
+        return handleQuery(query) { it }
+    }
+
+    suspend fun fetchPlaylistTracks(token: String, playlistId: Int): Result<List<Track>> {
+        val query = http.fetchPlaylistTracks(formatToken(token), playlistId)
         return handleQuery(query) { it }
     }
 }

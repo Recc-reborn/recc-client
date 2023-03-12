@@ -5,5 +5,4 @@ import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 sealed class HomeScreenEvent {
     object PlaylistSelected: HomeScreenEvent()
     data class TracksFetched(val presenters: List<PlaylistPresenter>): HomeScreenEvent()
-    object PlaylistFetched: HomeScreenEvent()
 }

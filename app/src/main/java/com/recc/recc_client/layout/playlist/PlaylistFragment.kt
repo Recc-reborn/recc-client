@@ -18,10 +18,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, FragmentPlaylistBinding>(R.layout.fragment_playlist) {
     override val viewModel: PlaylistViewModel by viewModel()
     private var adapter: DynamicAdapter<TrackPresenter, TrackListViewHolder>? = null
+    private var playlistId = 0
 
     override fun onResume() {
         super.onResume()
-        viewModel.getTracks()
+        if (playlistId == 0) {
+            arguments?.getInt("id")?.let {
+                playlistId = it
+            }
+        }
+        viewModel.getTracks(playlistId)
     }
 
     override fun subscribeToViewModel() {

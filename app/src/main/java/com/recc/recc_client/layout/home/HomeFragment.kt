@@ -35,9 +35,6 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
                         findNavController().navigate(R.id.action_pagerFragment_to_playlistSongsFragment, bundle)
                     }
                 }
-                HomeScreenEvent.PlaylistFetched -> {
-                    viewModel.getTracks()
-                }
                 is HomeScreenEvent.TracksFetched -> {
                     adapter?.submitList(screenEvent.presenters)
                 }

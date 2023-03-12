@@ -1,37 +1,33 @@
 package com.recc.recc_client.layout.playlist
 
-import android.content.Intent
 import android.widget.PopupMenu
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.R
-import com.recc.recc_client.http.impl.MockApi
+import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
-    private val mockApi: MockApi,
+    private val http: Control,
     private val spotifyApi: Spotify,
     private val sharedPreferences: SharedPreferences): BaseEventViewModel<PlaylistScreenEvent>() {
-
     private val _tracks = MutableLiveData<List<TrackPresenter>>()
     val tracks: LiveData<List<TrackPresenter>>
         get() = _tracks
 
-    fun getTracks() {
+    fun getTracks(playlistId: Int) {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                mockApi.getTracks()
-                    .onSuccess { songList ->
+                    http.fetchPlaylistTracks(sharedPreferences.getToken().orEmpty(), playlistId) .onSuccess { songList ->
                         _tracks.postValue(songList.map { TrackPresenter(it) })
                     }.onFailure {
                         postEvent(PlaylistScreenEvent.ErrorFetchingTracks(it.message))
@@ -42,15 +38,25 @@ class PlaylistViewModel(
 
     private fun getSpotifyTrackUri(presenter: TrackPresenter) {
         viewModelScope.launch {
-            val token = sharedPreferences.getSpotifyToken()
-            Alert("token: $token")
-            val query = "${presenter.artist} ${presenter.title} ${presenter.album}"
-            spotifyApi.getTrack(token, query)
-                .onSuccess {
-                    postEvent(PlaylistScreenEvent.GoToSpotifyTrack(it))
-                } .onFailure {
-                    postEvent(PlaylistScreenEvent.ErrorSearchingTrack(it.message))
+            CoroutineScope(Dispatchers.IO).launch {
+                val token = sharedPreferences.getSpotifyToken()
+                var query = ""
+                if (presenter.artist.isNotEmpty()) {
+                    query += presenter.artist + " "
                 }
+                if (presenter.title.isNotEmpty()) {
+                    query += presenter.title + " "
+                }
+                if (presenter.album.isNotEmpty()) {
+                    query += presenter.album
+                }
+                spotifyApi.getTrack(token, query)
+                    .onSuccess {
+                        postEvent(PlaylistScreenEvent.GoToSpotifyTrack(it))
+                    }.onFailure {
+                        postEvent(PlaylistScreenEvent.ErrorSearchingTrack(it.message))
+                    }
+            }
         }
     }
 
