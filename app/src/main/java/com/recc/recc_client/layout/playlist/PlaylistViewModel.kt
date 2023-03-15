@@ -11,9 +11,9 @@ import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
+import com.recc.recc_client.models.spotify.Me
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
@@ -24,39 +24,45 @@ class PlaylistViewModel(
     val tracks: LiveData<List<TrackPresenter>>
         get() = _tracks
 
+    private val _title = MutableLiveData<String>()
+    fun setPlaylistTitle(title: String) {
+        _title.postValue(title)
+    }
+
     fun getTracks(playlistId: Int) {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                    http.fetchPlaylistTracks(sharedPreferences.getToken().orEmpty(), playlistId) .onSuccess { songList ->
-                        _tracks.postValue(songList.map { TrackPresenter(it) })
-                    }.onFailure {
-                        postEvent(PlaylistScreenEvent.ErrorFetchingTracks(it.message))
-                    }
+            http.fetchPlaylistTracks(sharedPreferences.getToken(), playlistId) .onSuccess { songList ->
+                _tracks.postValue(songList.map { TrackPresenter(it) })
+            }.onFailure {
+                postEvent(PlaylistScreenEvent.ErrorFetchingTracks(it.message))
             }
         }
     }
 
+    private fun formattedSpotifyQuery(presenter: TrackPresenter): String {
+        var query = ""
+        if (presenter.artist.isNotEmpty()) {
+            query += presenter.artist + " "
+        }
+        if (presenter.title.isNotEmpty()) {
+            query += presenter.title + " "
+        }
+        if (presenter.album.isNotEmpty()) {
+            query += presenter.album
+        }
+        return query
+    }
+
     private fun getSpotifyTrackUri(presenter: TrackPresenter) {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                val token = sharedPreferences.getSpotifyToken()
-                var query = ""
-                if (presenter.artist.isNotEmpty()) {
-                    query += presenter.artist + " "
+            val token = sharedPreferences.getSpotifyToken()
+            val query = formattedSpotifyQuery(presenter)
+            spotifyApi.getTrack(token, query)
+                .onSuccess {
+                    postEvent(PlaylistScreenEvent.GoToSpotifyTrack(it))
+                }.onFailure {
+                    postEvent(PlaylistScreenEvent.ErrorLoggingSpotify(it.message))
                 }
-                if (presenter.title.isNotEmpty()) {
-                    query += presenter.title + " "
-                }
-                if (presenter.album.isNotEmpty()) {
-                    query += presenter.album
-                }
-                spotifyApi.getTrack(token, query)
-                    .onSuccess {
-                        postEvent(PlaylistScreenEvent.GoToSpotifyTrack(it))
-                    }.onFailure {
-                        postEvent(PlaylistScreenEvent.ErrorSearchingTrack(it.message))
-                    }
-            }
         }
     }
 
@@ -73,6 +79,48 @@ class PlaylistViewModel(
                 }
             }
             menu.show()
+        }
+    }
+
+    private fun addTracksToSpotifyPlaylist(uris: List<String>, playlistId: String) {
+        viewModelScope.launch {
+            spotifyApi.addTracksToPlaylist(sharedPreferences.getSpotifyToken(), playlistId, uris)
+                .onFailure { Alert("Error adding tracks to playlist") }
+        }
+    }
+
+    fun exportSpotifyPlaylist() {
+        viewModelScope.launch {
+            _tracks.value?.let { tracks ->
+                var errorLoggingIn = false
+                val uris: MutableList<String> = mutableListOf()
+                for (track in tracks) {
+                    if (errorLoggingIn) {
+                        break
+                    }
+                    spotifyApi.getTrack(
+                        sharedPreferences.getSpotifyToken(),
+                        formattedSpotifyQuery(track)
+                    ).onSuccess {
+                        uris.add(it.uri)
+                    }.onFailure {
+                        postEvent(PlaylistScreenEvent.ErrorLoggingSpotify(it.message))
+                        errorLoggingIn = true
+                    }
+                }
+                if (uris.isNotEmpty()) {
+                    spotifyApi.createPlaylist(
+                        sharedPreferences.getSpotifyToken(),
+                        sharedPreferences.getSpotifyUserId(),
+                        _title.value.orEmpty(),
+                        "" // TODO: make description
+                    )
+                        .onFailure { Alert("Error creating playlist") }
+                        .onSuccess {
+                            addTracksToSpotifyPlaylist(uris, it.id)
+                        }
+                }
+            }
         }
     }
 }

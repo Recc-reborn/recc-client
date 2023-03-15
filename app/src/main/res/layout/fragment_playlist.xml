@@ -3,6 +3,12 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.recc.recc_client.layout.playlist.PlaylistViewModel" />
+    </data>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +27,17 @@
             tools:layout_editor_absoluteX="136dp"
             tools:text="@string/hello_blank_fragment"
             tools:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/btn_export_playlist_to_spotify"
+            android:background="@drawable/bg_button"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/cta_export_playlist_to_spotify"
+            android:onClick="@{(view) -> viewModel.exportSpotifyPlaylist()}"
+            tools:text="@string/cta_export_playlist_to_spotify" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_songs"

@@ -69,7 +69,7 @@ class ScrobblerService: Service() {
                     if (firstTrack.title.lowercase().filter { !it.isWhitespace() } == track.lowercase().filter { !it.isWhitespace() }
                         && firstTrack.artist.filter { !it.isWhitespace() } == artist.filter { !it.isWhitespace() }) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            control.createPlayback(sharedPreferences.getToken().orEmpty(), firstTrack.id)
+                            control.createPlayback(sharedPreferences.getToken(), firstTrack.id)
                                 .onSuccess {
                                     Alert("Playback created: $it")
                                 }.onFailure {

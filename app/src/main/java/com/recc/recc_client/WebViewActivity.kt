@@ -58,9 +58,6 @@ class WebViewActivity: AppCompatActivity() {
         }
 
         binding.wvWeb.webViewClient = client
-//        binding.wvWeb.loadUrl("https://www.last.fm/api/auth?api_key=${sharedPreferences.getToken()}")
-
-        Alert("url: $spotifyUrl")
         binding.wvWeb.loadUrl(spotifyUrl)
     }
 }

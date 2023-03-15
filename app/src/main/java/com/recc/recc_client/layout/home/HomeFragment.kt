@@ -1,9 +1,11 @@
 package com.recc.recc_client.layout.home
 
+import android.content.Intent
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
+import com.recc.recc_client.WebViewActivity
 import com.recc.recc_client.databinding.FragmentHomeBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
@@ -37,6 +39,10 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
                 }
                 is HomeScreenEvent.TracksFetched -> {
                     adapter?.submitList(screenEvent.presenters)
+                }
+                HomeScreenEvent.GetSpotifyToken -> {
+                    val intent = Intent(requireContext(), WebViewActivity::class.java)
+                    startActivity(intent)
                 }
             }
         })

@@ -59,7 +59,7 @@ val screenViewModels = module {
         SelectPreferredArtistsViewModel(get(), get())
     }
     viewModel {
-        HomeViewModel(get(), get())
+        HomeViewModel(get(), get(), get())
     }
     viewModel {
         SettingsViewModel(get(), get())
@@ -89,7 +89,7 @@ val spotify = module {
 
 val sharedPreferences = module {
     single {
-        SharedPreferences(androidApplication())
+        SharedPreferences(androidApplication(), get())
     }
 }
 

@@ -1,7 +1,6 @@
 package com.recc.recc_client.layout.playlist
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import com.recc.recc_client.R
 import com.recc.recc_client.WebViewActivity
@@ -43,7 +42,7 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.callSpotifyUri(requireContext(), screenEvent.presenter.uri)
                 }
-                is PlaylistScreenEvent.ErrorSearchingTrack -> {
+                is PlaylistScreenEvent.ErrorLoggingSpotify -> {
                     val intent = Intent(requireContext(), WebViewActivity::class.java)
                     startActivity(intent)
                 }
@@ -53,6 +52,7 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
         // Sets playlist image
         arguments?.getString("title")?.let {
             binding.tvTitle.text = it
+            viewModel.setPlaylistTitle(it)
         }
         adapter = DynamicAdapter(AdapterType.LIST_TRACKS, viewModel, requireContext())
         binding.rvSongs.adapter = adapter

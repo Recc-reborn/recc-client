@@ -55,4 +55,6 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_open_with_spotify">Open with Spotify</string>
     <string name="menu_three_dots">⋮</string>
+    <string name="cta_create_new_playlist">+</string>
+    <string name="cta_export_playlist_to_spotify">Export playlist to Spotify</string>
 </resources>

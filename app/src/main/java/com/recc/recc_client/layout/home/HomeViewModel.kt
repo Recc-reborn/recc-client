@@ -4,23 +4,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.impl.Control
+import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.models.control.Playlist
 import com.recc.recc_client.models.control.Track
+import com.recc.recc_client.models.spotify.Me
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val http: Control, private val sharedPreferences: SharedPreferences): BaseEventViewModel<HomeScreenEvent>() {
-
-    private val _tracks = MutableLiveData<List<Track>>()
-    val tracks: LiveData<List<Track>>
-        get() = _tracks
+class HomeViewModel(
+    private val http: Control,
+    private val spotify: Spotify,
+    private val sharedPreferences: SharedPreferences): BaseEventViewModel<HomeScreenEvent>() {
+    private val _playlists = MutableLiveData<List<Track>>()
+    val playlists: LiveData<List<Track>>
+        get() = _playlists
 
     private val _selectedPlaylist = MutableLiveData<PlaylistPresenter>()
     val selectedPlaylist: LiveData<PlaylistPresenter>
@@ -33,38 +37,53 @@ class HomeViewModel(private val http: Control, private val sharedPreferences: Sh
 
     private fun getPlaylistTracks(fetchedPlaylists: List<Playlist>) {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                val newPlaylists: MutableList<PlaylistPresenter> = mutableListOf()
-                for (playlist in fetchedPlaylists) {
-                    http.fetchPlaylistTracks(sharedPreferences.getToken().orEmpty(), playlist.id)
-                        .onFailure { Alert("failed fetching tracks for playlist ${playlist.id}: ${playlist.title}") }
-                        .onSuccess { tracks ->
-                            Alert("tracks: $tracks")
-                            newPlaylists.add(
-                                PlaylistPresenter(Playlist(
-                                    id = playlist.id,
-                                    title = playlist.title,
-                                    createdAt = playlist.createdAt,
-                                    updatedAt = playlist.updatedAt,
-                                    tracks = tracks
-                                ))
-                            )
-                        }
-                }
-                postEvent(HomeScreenEvent.TracksFetched(newPlaylists))
+            val newPlaylists: MutableList<PlaylistPresenter> = mutableListOf()
+            for (playlist in fetchedPlaylists) {
+                http.fetchPlaylistTracks(sharedPreferences.getToken(), playlist.id)
+                    .onFailure { Alert("failed fetching tracks for playlist ${playlist.id}: ${playlist.title}") }
+                    .onSuccess { tracks ->
+                        newPlaylists.add(
+                            PlaylistPresenter(Playlist(
+                                id = playlist.id,
+                                title = playlist.title,
+                                createdAt = playlist.createdAt,
+                                updatedAt = playlist.updatedAt,
+                                tracks = tracks
+                            ))
+                        )
+                    }
             }
+            postEvent(HomeScreenEvent.TracksFetched(newPlaylists))
         }
     }
 
     fun getPlaylists() {
         viewModelScope.launch {
             CoroutineScope(Dispatchers.IO).launch {
-                http.fetchPlaylists(sharedPreferences.getToken().orEmpty())
+                http.fetchPlaylists(sharedPreferences.getToken())
                     .onFailure {}
                     .onSuccess {
                         getPlaylistTracks(it)
                     }
             }
+        }
+    }
+
+    private fun createPlaylist(me: Me) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    fun getMeData() {
+        viewModelScope.launch {
+            spotify.me(sharedPreferences.getToken())
+                .onFailure {
+                    postEvent(HomeScreenEvent.GetSpotifyToken)
+                }
+                .onSuccess {
+                    createPlaylist(it)
+                }
         }
     }
 }
