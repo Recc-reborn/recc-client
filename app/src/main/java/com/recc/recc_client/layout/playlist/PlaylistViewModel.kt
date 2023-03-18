@@ -91,6 +91,7 @@ class PlaylistViewModel(
 
     fun exportSpotifyPlaylist() {
         viewModelScope.launch {
+            postEvent(PlaylistScreenEvent.HandleExportButton(false))
             _tracks.value?.let { tracks ->
                 var errorLoggingIn = false
                 val uris: MutableList<String> = mutableListOf()
@@ -121,6 +122,7 @@ class PlaylistViewModel(
                         }
                 }
             }
+            postEvent(PlaylistScreenEvent.HandleExportButton(true))
         }
     }
 }

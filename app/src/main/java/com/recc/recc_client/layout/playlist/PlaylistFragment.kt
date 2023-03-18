@@ -2,6 +2,7 @@ package com.recc.recc_client.layout.playlist
 
 import android.content.Intent
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import com.recc.recc_client.R
 import com.recc.recc_client.WebViewActivity
 import com.recc.recc_client.databinding.FragmentPlaylistBinding
@@ -45,6 +46,15 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
                 is PlaylistScreenEvent.ErrorLoggingSpotify -> {
                     val intent = Intent(requireContext(), WebViewActivity::class.java)
                     startActivity(intent)
+                }
+                is PlaylistScreenEvent.HandleExportButton -> {
+                    binding.btnExportPlaylistToSpotify.apply {
+                        isEnabled = screenEvent.state
+                        background = if (screenEvent.state)
+                            AppCompatResources.getDrawable(requireContext(), R.drawable.bg_button)
+                        else
+                            AppCompatResources.getDrawable(requireContext(), R.drawable.bg_disabled_button)
+                    }
                 }
             }
         })

@@ -6,4 +6,6 @@ sealed class PlaylistScreenEvent {
     data class ErrorFetchingTracks(val error: String): PlaylistScreenEvent()
     data class GoToSpotifyTrack(val presenter: SpotifyTrackPresenter): PlaylistScreenEvent()
     data class ErrorLoggingSpotify(val error: String): PlaylistScreenEvent()
+
+    data class HandleExportButton(val state: Boolean): PlaylistScreenEvent()
 }
