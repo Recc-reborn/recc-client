@@ -11,7 +11,7 @@ import com.recc.recc_client.R
 import com.recc.recc_client.utils.RegexType
 import com.recc.recc_client.utils.toPx
 
-interface BaseEditText {
+interface IBaseEditText {
     var verticalOffset: Float
     val horizontalOffset: Int
 

@@ -49,6 +49,10 @@ interface ServerRouteDefinitions {
     suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<Int>): Response<Void>
 
     @Headers("Accept: application/json")
+    @POST("api/playlists")
+    suspend fun createCustomPlaylist(@Header("Authorization") token: String, @Body data: CustomPlaylist): Response<Playlist>
+
+    @Headers("Accept: application/json")
     @PATCH("api/user/preferred-tracks")
     suspend fun addPreferredTracks(@Header("Authorization") token: String, @Body preferredTracks: List<Int>): Response<Void>
 
@@ -67,7 +71,7 @@ interface ServerRouteDefinitions {
         @Query("search") search: String? = null): Response<BaseRequest<Track>>
 
     @Headers("Accept: application/json")
-    @GET("api/playlists")
+    @GET("api/playlists/me")
     suspend fun fetchPlaylists(
         @Header("Authorization") token: String): Response<List<Playlist>>
 

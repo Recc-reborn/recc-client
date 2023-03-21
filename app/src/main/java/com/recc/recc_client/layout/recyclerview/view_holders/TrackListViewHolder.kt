@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.ViewTrackListItemBinding
+import com.recc.recc_client.layout.common.InteractiveTracksViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
-import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
 import com.recc.recc_client.utils.millisecondsToMinutes
 
 class TrackListViewHolder(
@@ -19,7 +19,7 @@ class TrackListViewHolder(
 ): BaseViewHolder(binding.root) {
 
     fun bindPreferredTrack(presenter: TrackPresenter, isInteractive: Boolean = false) {
-        val vm = viewModel as SelectPreferredTracksViewModel
+        val vm = viewModel as InteractiveTracksViewModel<*>
         if (isInteractive)
             handleSelection(presenter, vm)
         bind(presenter)
@@ -33,7 +33,7 @@ class TrackListViewHolder(
         bind(presenter)
     }
 
-    private fun handleSelection(presenter: TrackPresenter, vm: SelectPreferredTracksViewModel) {
+    private fun handleSelection(presenter: TrackPresenter, vm: InteractiveTracksViewModel<*>) {
         // select if not previously selected
         binding.clContainer.setOnClickListener {
             val hasBeenSelected = vm.selectedItems.value?.contains(presenter.id)

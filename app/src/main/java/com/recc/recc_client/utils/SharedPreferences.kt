@@ -65,7 +65,7 @@ class SharedPreferences(
         }
     }
 
-    fun saveSpotifyUserId(id: String) {
+    private fun saveSpotifyUserId(id: String) {
         with (getSharedPref().edit()) {
             this?.putString(SPOTIFY_USER_ID, id)
             this?.apply()
@@ -77,6 +77,14 @@ class SharedPreferences(
     fun removeSpotifyStatus() {
         with(getSharedPref().edit()) {
             this?.remove(SPOTIFY_STATUS_KEY)
+            this?.apply()
+        }
+    }
+
+    fun removeSpotifyToken() {
+        with(getSharedPref().edit()) {
+            this?.remove(SPOTIFY_ACCESS_TOKEN)
+            this?.remove(SPOTIFY_USER_ID)
             this?.apply()
         }
     }

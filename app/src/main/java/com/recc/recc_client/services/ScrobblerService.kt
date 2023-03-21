@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Binder
 import android.os.IBinder
+import android.widget.Toast
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
@@ -108,14 +109,13 @@ class ScrobblerService: Service() {
                         positionFirst = position
                         playback = false
                         playing = "$track-$artist-$album"
+                        Toast.makeText(context, "Now playing: $track by $artist", Toast.LENGTH_SHORT).show()
                     } else if (position - positionFirst > playbackTime && !playback && !isPaused) {
                         playback = true
-                        Alert("calling makePlayback")
                         makePlayback(track.orEmpty(), album.orEmpty(), artist.orEmpty())
                     } else if (position < positionFirst) {
                         positionFirst = position
                     }
-                    Alert("player: $track - $artist - $album - $position - $isPaused - ${position - positionFirst} - $playback - $position - $positionFirst")
                 }
             }
         }

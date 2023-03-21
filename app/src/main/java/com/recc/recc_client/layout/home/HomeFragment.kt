@@ -3,6 +3,7 @@ package com.recc.recc_client.layout.home
 import android.content.Intent
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
 import com.recc.recc_client.WebViewActivity
@@ -14,6 +15,7 @@ import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.PlaylistSwimlaneViewHolder
 import com.recc.recc_client.utils.SharedPreferences
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,6 +26,10 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
     private var adapter: DynamicAdapter<PlaylistPresenter, PlaylistSwimlaneViewHolder>? = null
 
     override fun subscribeToViewModel() {
+        binding.swlPlaylists.setOnRefreshListener {
+            viewModel.getPlaylists()
+            swl_playlists.isRefreshing = false
+        }
         if (sharedPreferences.getSpotifyStatus()) {
             (requireActivity() as MainActivity).loginToSpotify()
         }
@@ -43,6 +49,9 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
                 HomeScreenEvent.GetSpotifyToken -> {
                     val intent = Intent(requireContext(), WebViewActivity::class.java)
                     startActivity(intent)
+                }
+                HomeScreenEvent.CreateCustomPlaylistButtonPressed -> {
+                    findNavController().navigate(R.id.action_pagerFragment_to_selectCustomPlaylistTracks)
                 }
             }
         })

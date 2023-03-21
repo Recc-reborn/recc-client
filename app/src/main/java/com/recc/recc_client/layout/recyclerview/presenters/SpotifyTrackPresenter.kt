@@ -2,7 +2,7 @@ package com.recc.recc_client.layout.recyclerview.presenters
 
 import com.recc.recc_client.models.spotify.Tracks
 
-class SpotifyTrackPresenter(tracks: Tracks): BasePresenter() {
+class SpotifyTrackPresenter(tracks: Tracks): BasePresenter {
     val id = tracks.items.first().id
     val album = tracks.items.first().album.name
     val albumArtUrl = tracks.items.first().album.images.first().url

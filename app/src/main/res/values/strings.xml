@@ -29,6 +29,7 @@
     <string name="one_artist_left_cta"><b>SELECT %d MORE ARTIST</b></string>
     <string name="one_track_left_cta"><b>SELECT %d MORE TRACK</b></string>
     <string name="continue_cta">CONTINUE</string>
+    <string name="create_custom_playlist_cta">CREATE</string>
 
     <!--SETTINGS-->
     <string name="logout_cta">Log out</string>

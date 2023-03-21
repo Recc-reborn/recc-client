@@ -16,11 +16,11 @@ enum class IconType(val type: String) {
     SEARCH("search")
 }
 
-open class ValidatedEditTextView @JvmOverloads constructor(
+class ValidatedEditTextViewI @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null,
     override var verticalOffset: Float = 0.toFloat(),
     override val horizontalOffset: Int = 10,
-) : LinearLayoutCompat(context, attrs), BaseEditText {
+) : LinearLayoutCompat(context, attrs), IBaseEditText {
     private val binding: ViewValidatedEditTextBinding
     private val type: String?
     private val text: String?
@@ -28,6 +28,8 @@ open class ValidatedEditTextView @JvmOverloads constructor(
     private val popupErrorMsg: String?
     private val textError: String?
     private var hasBeenSet = false
+
+    var callback: (() -> Unit)? = null
 
     init {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_validated_edit_text, this, true)
@@ -59,6 +61,12 @@ open class ValidatedEditTextView @JvmOverloads constructor(
         setPopupError(binding.llFieldContainer, binding.tvError, msg, textError, context)
     }
 
+    fun getFieldLength(): Int = binding.etField.text?.length ?: 0
+
+    fun getFieldEmpty(): Boolean = getFieldLength() == 0
+
+    fun getFieldText(): String = binding.etField.text.toString()
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
@@ -78,12 +86,13 @@ open class ValidatedEditTextView @JvmOverloads constructor(
                     regex?.let { ex ->
                         if (charSequence.toString().matches(ex) || charSequence.toString().isEmpty()) {
                             binding.llFieldContainer.background = context.getDrawable(R.drawable.bg_edit_text)
-                            binding.tvError.visibility = View.INVISIBLE
+                            binding.tvError.visibility = View.GONE
                         } else {
                             binding.llFieldContainer.background = context.getDrawable(R.drawable.bg_edit_text_error)
                             binding.tvError.visibility = View.VISIBLE
                         }
                     }
+                    callback?.let { it() }
                 }
             }
             override fun afterTextChanged(p0: Editable?) {}

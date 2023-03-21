@@ -2,7 +2,7 @@ package com.recc.recc_client.layout.recyclerview.presenters
 
 import com.recc.recc_client.models.control.Track
 
-class TrackPresenter(track: Track): BasePresenter() {
+class TrackPresenter(track: Track): BasePresenter {
     val id = track.id
     val album = track.album.orEmpty()
     val albumArtUrl = track.albumArtUrl.orEmpty()

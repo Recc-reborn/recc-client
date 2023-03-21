@@ -11,7 +11,6 @@ import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
-import com.recc.recc_client.models.spotify.Me
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.launch
@@ -31,7 +30,8 @@ class PlaylistViewModel(
 
     fun getTracks(playlistId: Int) {
         viewModelScope.launch {
-            http.fetchPlaylistTracks(sharedPreferences.getToken(), playlistId) .onSuccess { songList ->
+            http.fetchPlaylistTracks(sharedPreferences.getToken(), playlistId)
+            .onSuccess { songList ->
                 _tracks.postValue(songList.map { TrackPresenter(it) })
             }.onFailure {
                 postEvent(PlaylistScreenEvent.ErrorFetchingTracks(it.message))

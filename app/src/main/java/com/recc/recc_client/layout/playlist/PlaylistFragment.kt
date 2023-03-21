@@ -12,6 +12,7 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.TrackListViewHolder
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.callSpotifyUri
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,6 +45,7 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
                     intent.callSpotifyUri(requireContext(), screenEvent.presenter.uri)
                 }
                 is PlaylistScreenEvent.ErrorLoggingSpotify -> {
+                    Alert("spotify error: ${screenEvent.error}")
                     val intent = Intent(requireContext(), WebViewActivity::class.java)
                     startActivity(intent)
                 }

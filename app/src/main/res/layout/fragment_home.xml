@@ -28,13 +28,20 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:background="@drawable/bg_button"
-                android:onClick="@{(view) -> viewModel.getMeData()}"
+                android:onClick="@{(view) -> viewModel.createCustomPlaylist()}"
                 tools:text="@string/cta_create_new_playlist" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_home_playlist"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swl_playlists"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_playlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </RelativeLayout>
 </layout>

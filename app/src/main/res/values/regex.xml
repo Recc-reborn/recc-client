@@ -4,4 +4,5 @@
     <string name="regex_name">[a-zA-ZñÑ]{4,30}</string>
     <string name="regex_username">[\\w|-|_]{4,30}</string>
     <string name="regex_email">^\\w[^@|\\s]+@\\w+(\\.\\w+)$</string>
+    <string name="regex_raw">.+</string>
 </resources>

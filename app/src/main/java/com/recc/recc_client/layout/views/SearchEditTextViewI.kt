@@ -8,14 +8,13 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
 import com.recc.recc_client.databinding.ViewSearchEditTextBinding
 import com.recc.recc_client.utils.toPx
 
-class SearchEditTextView(context: Context, attrs: AttributeSet? = null) :
-    LinearLayoutCompat(context, attrs), BaseEditText {
+class SearchEditTextViewI(context: Context, attrs: AttributeSet? = null) :
+    LinearLayoutCompat(context, attrs), IBaseEditText {
 
     override var verticalOffset: Float = 0.toFloat()
     override val horizontalOffset: Int = 10

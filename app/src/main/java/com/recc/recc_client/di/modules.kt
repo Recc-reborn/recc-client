@@ -17,11 +17,12 @@ import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.home.PagerViewModel
+import com.recc.recc_client.layout.home.SelectCustomPlaylistTracksViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
-import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredArtistsTracksViewModel
 import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
 import com.recc.recc_client.utils.SharedPreferences
 import com.spotify.android.appremote.api.ConnectionParams
@@ -56,7 +57,7 @@ val screenViewModels = module {
         PagerViewModel(get())
     }
     viewModel {
-        SelectPreferredArtistsViewModel(get(), get())
+        SelectPreferredArtistsTracksViewModel(get(), get())
     }
     viewModel {
         HomeViewModel(get(), get(), get())
@@ -66,6 +67,9 @@ val screenViewModels = module {
     }
     viewModel{
         PlaylistViewModel(get(), get(), get())
+    }
+    viewModel {
+        SelectCustomPlaylistTracksViewModel(get(), get())
     }
     single {
         NoConnectionViewModel(get(), get(), get())

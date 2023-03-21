@@ -29,6 +29,10 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
             viewModel.handleSpotifyBtn(requireActivity() as MainActivity)
         }
 
+        binding.btnLogout.setOnClickListener {
+            viewModel.onBtnLogout(requireActivity() as MainActivity)
+        }
+
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 SettingsScreenEvent.OnLoggedOut -> {

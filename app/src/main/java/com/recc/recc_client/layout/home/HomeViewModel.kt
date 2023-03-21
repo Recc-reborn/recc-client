@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.common.BaseEventViewModel
+import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
@@ -20,11 +21,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val http: Control,
-    private val spotify: Spotify,
-    private val sharedPreferences: SharedPreferences): BaseEventViewModel<HomeScreenEvent>() {
-    private val _playlists = MutableLiveData<List<Track>>()
-    val playlists: LiveData<List<Track>>
-        get() = _playlists
+    private val sharedPreferences: SharedPreferences,
+    private val me: MeDataViewModel): BaseEventViewModel<HomeScreenEvent>() {
 
     private val _selectedPlaylist = MutableLiveData<PlaylistPresenter>()
     val selectedPlaylist: LiveData<PlaylistPresenter>
@@ -42,15 +40,17 @@ class HomeViewModel(
                 http.fetchPlaylistTracks(sharedPreferences.getToken(), playlist.id)
                     .onFailure { Alert("failed fetching tracks for playlist ${playlist.id}: ${playlist.title}") }
                     .onSuccess { tracks ->
-                        newPlaylists.add(
-                            PlaylistPresenter(Playlist(
-                                id = playlist.id,
-                                title = playlist.title,
-                                createdAt = playlist.createdAt,
-                                updatedAt = playlist.updatedAt,
-                                tracks = tracks
-                            ))
-                        )
+                        if (tracks.isNotEmpty()) {
+                            newPlaylists.add(
+                                PlaylistPresenter(Playlist(
+                                    id = playlist.id,
+                                    title = playlist.title,
+                                    createdAt = playlist.createdAt,
+                                    updatedAt = playlist.updatedAt,
+                                    tracks = tracks
+                                ))
+                            )
+                        }
                     }
             }
             postEvent(HomeScreenEvent.TracksFetched(newPlaylists))
@@ -59,31 +59,17 @@ class HomeViewModel(
 
     fun getPlaylists() {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                http.fetchPlaylists(sharedPreferences.getToken())
-                    .onFailure {}
-                    .onSuccess {
-                        getPlaylistTracks(it)
-                    }
-            }
-        }
-    }
-
-    private fun createPlaylist(me: Me) {
-        viewModelScope.launch {
-
-        }
-    }
-
-    fun getMeData() {
-        viewModelScope.launch {
-            spotify.me(sharedPreferences.getToken())
-                .onFailure {
-                    postEvent(HomeScreenEvent.GetSpotifyToken)
-                }
+            http.fetchPlaylists(sharedPreferences.getToken())
+                .onFailure {}
                 .onSuccess {
-                    createPlaylist(it)
+                    getPlaylistTracks(it)
                 }
+        }
+    }
+
+    fun createCustomPlaylist() {
+        viewModelScope.launch {
+            postEvent(HomeScreenEvent.CreateCustomPlaylistButtonPressed)
         }
     }
 }

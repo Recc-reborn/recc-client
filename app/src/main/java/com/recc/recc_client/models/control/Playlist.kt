@@ -9,3 +9,8 @@ data class Playlist(
     @SerializedName("updated_at") val updatedAt: String = "",
     val tracks: List<Track> = listOf()
 )
+
+data class CustomPlaylist(
+    @SerializedName("title") val title: String = "",
+    @SerializedName("tracks") val tracks: List<Int> = listOf()
+)
