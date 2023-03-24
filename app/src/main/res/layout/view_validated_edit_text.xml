@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_field_container"
             android:maxLines="2"
-            android:visibility="invisible"
+            android:visibility="gone"
             tools:text="@string/hello_blank_fragment" />
 
     </RelativeLayout>

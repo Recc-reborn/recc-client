@@ -1,18 +1,15 @@
 package com.recc.recc_client.layout.recyclerview.view_holders
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.view.View
 import android.widget.PopupMenu
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.recc.recc_client.R
-import com.recc.recc_client.ReccApplication
 import com.recc.recc_client.databinding.ViewTrackListItemBinding
+import com.recc.recc_client.layout.common.InteractiveTracksViewModel
+import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
-import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
-import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.millisecondsToMinutes
 
 class TrackListViewHolder(
@@ -21,19 +18,22 @@ class TrackListViewHolder(
     private val isMenuShown: Boolean
 ): BaseViewHolder(binding.root) {
 
-    fun bindPreferredList(presenter: TrackPresenter, isInteractive: Boolean = false) {
-        val vm = viewModel as SelectPreferredTracksViewModel
+    fun bindPreferredTrack(presenter: TrackPresenter, isInteractive: Boolean = false) {
+        val vm = viewModel as InteractiveTracksViewModel<*>
         if (isInteractive)
             handleSelection(presenter, vm)
         bind(presenter)
     }
 
-    fun bindPlaylist(presenter: TrackPresenter, context: Context) {
-        if (isMenuShown) showMenu(context) else binding.tvMenu.visibility = View.GONE
+    fun bindPlaylistTrack(presenter: TrackPresenter, context: Context) {
+        if (isMenuShown)
+            showMenu(context, presenter)
+        else
+            binding.tvMenu.visibility = View.GONE
         bind(presenter)
     }
 
-    private fun handleSelection(presenter: TrackPresenter, vm: SelectPreferredTracksViewModel) {
+    private fun handleSelection(presenter: TrackPresenter, vm: InteractiveTracksViewModel<*>) {
         // select if not previously selected
         binding.clContainer.setOnClickListener {
             val hasBeenSelected = vm.selectedItems.value?.contains(presenter.id)
@@ -53,26 +53,11 @@ class TrackListViewHolder(
         }
     }
 
-    private fun showMenu(context: Context) {
+    private fun showMenu(context: Context, presenter: TrackPresenter) {
         binding.tvMenu.visibility = View.VISIBLE
         binding.tvMenu.setOnClickListener {
             val menu = PopupMenu(context, binding.tvMenu)
-            menu.inflate(R.menu.track_popup_menu)
-            menu.setOnMenuItemClickListener { menuItem ->
-                when(menuItem.itemId) {
-                    R.id.action_open_with_spotify -> {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        // TODO: store uris on server and use them here
-                        intent.data = Uri.parse("spotify:track:7svpAkwc6xaSxlbZ7V7JiS")
-                        intent.putExtra(Intent.EXTRA_REFERRER,
-                            Uri.parse("android-app://" + context.packageName))
-                        context.startActivity(intent)
-                        true
-                    }
-                    else -> { false }
-                }
-            }
-            menu.show()
+            (viewModel as PlaylistViewModel).handleMenuPressed(menu, presenter)
         }
     }
 

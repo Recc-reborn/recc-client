@@ -29,6 +29,7 @@
     <string name="one_artist_left_cta"><b>SELECT %d MORE ARTIST</b></string>
     <string name="one_track_left_cta"><b>SELECT %d MORE TRACK</b></string>
     <string name="continue_cta">CONTINUE</string>
+    <string name="create_custom_playlist_cta">CREATE</string>
 
     <!--SETTINGS-->
     <string name="logout_cta">Log out</string>
@@ -55,4 +56,6 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_open_with_spotify">Open with Spotify</string>
     <string name="menu_three_dots">⋮</string>
+    <string name="cta_create_new_playlist">+</string>
+    <string name="cta_export_playlist_to_spotify">Export playlist to Spotify</string>
 </resources>

@@ -3,28 +3,26 @@ package com.recc.recc_client.layout.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.recc.recc_client.http.impl.MockApi
+import com.recc.recc_client.http.impl.Control
+import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.common.BaseEventViewModel
+import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
-import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
 import com.recc.recc_client.models.control.Playlist
 import com.recc.recc_client.models.control.Track
+import com.recc.recc_client.models.spotify.Me
 import com.recc.recc_client.utils.Alert
+import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val mockApi: MockApi): BaseEventViewModel<HomeScreenEvent>() {
-
-    private val _playlists = MutableLiveData<List<PlaylistPresenter>>()
-    val playlists: LiveData<List<PlaylistPresenter>>
-        get() = _playlists
-
-    private val _tracks = MutableLiveData<List<Track>>()
-    val tracks: LiveData<List<Track>>
-        get() = _tracks
+class HomeViewModel(
+    private val http: Control,
+    private val sharedPreferences: SharedPreferences,
+    private val me: MeDataViewModel): BaseEventViewModel<HomeScreenEvent>() {
 
     private val _selectedPlaylist = MutableLiveData<PlaylistPresenter>()
     val selectedPlaylist: LiveData<PlaylistPresenter>
@@ -35,32 +33,43 @@ class HomeViewModel(private val mockApi: MockApi): BaseEventViewModel<HomeScreen
         postEvent(HomeScreenEvent.PlaylistSelected)
     }
 
-    fun getTracks() {
+    private fun getPlaylistTracks(fetchedPlaylists: List<Playlist>) {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                mockApi.getTracks()
-                    .onFailure {}
+            val newPlaylists: MutableList<PlaylistPresenter> = mutableListOf()
+            for (playlist in fetchedPlaylists) {
+                http.fetchPlaylistTracks(sharedPreferences.getToken(), playlist.id)
+                    .onFailure { Alert("failed fetching tracks for playlist ${playlist.id}: ${playlist.title}") }
                     .onSuccess { tracks ->
-                        // TODO: Change by recc data
-                        playlists.value?.let { playlists ->
-                            val newPlaylist = playlists.map { PlaylistPresenter(Playlist(it.id, it.title, tracks)) }
-                            postEvent(HomeScreenEvent.TracksFetched(newPlaylist))
+                        if (tracks.isNotEmpty()) {
+                            newPlaylists.add(
+                                PlaylistPresenter(Playlist(
+                                    id = playlist.id,
+                                    title = playlist.title,
+                                    createdAt = playlist.createdAt,
+                                    updatedAt = playlist.updatedAt,
+                                    tracks = tracks
+                                ))
+                            )
                         }
                     }
             }
+            postEvent(HomeScreenEvent.TracksFetched(newPlaylists))
         }
     }
 
     fun getPlaylists() {
         viewModelScope.launch {
-            CoroutineScope(Dispatchers.IO).launch {
-                mockApi.getPlaylists()
-                    .onFailure {}
-                    .onSuccess { res ->
-                        _playlists.postValue(res.map { PlaylistPresenter(it) })
-                        postEvent(HomeScreenEvent.PlaylistFetched)
-                    }
-            }
+            http.fetchPlaylists(sharedPreferences.getToken())
+                .onFailure {}
+                .onSuccess {
+                    getPlaylistTracks(it)
+                }
+        }
+    }
+
+    fun createCustomPlaylist() {
+        viewModelScope.launch {
+            postEvent(HomeScreenEvent.CreateCustomPlaylistButtonPressed)
         }
     }
 }

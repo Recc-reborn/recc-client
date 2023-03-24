@@ -6,7 +6,7 @@
             type="com.recc.recc_client.layout.home.HomeViewModel" />
     </data>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/sv_home"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,10 +16,32 @@
             android:orientation="vertical"
             tools:context=".layout.home.HomeFragment">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_home_playlist"
+            <Button
+                android:id="@+id/btn_create_playlist"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="@string/cta_create_new_playlist"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:background="@drawable/bg_button"
+                android:onClick="@{(view) -> viewModel.createCustomPlaylist()}"
+                tools:text="@string/cta_create_new_playlist" />
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swl_playlists"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        </LinearLayout>
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_home_playlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </RelativeLayout>
 </layout>

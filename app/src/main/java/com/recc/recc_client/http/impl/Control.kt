@@ -2,9 +2,7 @@ package com.recc.recc_client.http.impl
 
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
-import com.recc.recc_client.models.control.Artist
-import com.recc.recc_client.models.control.Playback
-import com.recc.recc_client.models.control.Track
+import com.recc.recc_client.models.control.*
 
 const val DEFAULT_CURRENT_PAGE = 1
 const val DEFAULT_ARTISTS_PER_PAGE = 50
@@ -40,6 +38,24 @@ class Control(
 
     suspend fun createPlayback(token: String, trackId: Int): Result<Playback> {
         val query = http.postPlaybacks(formatToken(token), trackId)
+        return handleQuery(query) { it }
+    }
+
+    suspend fun fetchPlaylists(token: String): Result<List<Playlist>> {
+        val query = http.fetchPlaylists(formatToken(token))
+        return handleQuery(query) { it }
+    }
+
+    suspend fun fetchPlaylistTracks(token: String, playlistId: Int): Result<List<Track>> {
+        val query = http.fetchPlaylistTracks(formatToken(token), playlistId)
+        return handleQuery(query) { it }
+    }
+
+    suspend fun createPlaylist(token: String, title: String, tracks: List<Int> = listOf()): Result<Playlist> {
+        val query = http.createCustomPlaylist(formatToken(token), CustomPlaylist(
+            title = title,
+            tracks = tracks
+        ))
         return handleQuery(query) { it }
     }
 }

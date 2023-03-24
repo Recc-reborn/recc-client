@@ -3,10 +3,7 @@ package com.recc.recc_client.http.def
 import com.recc.recc_client.http.impl.DEFAULT_ARTISTS_PER_PAGE
 import com.recc.recc_client.http.impl.DEFAULT_CURRENT_PAGE
 import com.recc.recc_client.models.auth.*
-import com.recc.recc_client.models.control.BaseRequest
-import com.recc.recc_client.models.control.Playback
-import com.recc.recc_client.models.control.Artist
-import com.recc.recc_client.models.control.Track
+import com.recc.recc_client.models.control.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -52,6 +49,10 @@ interface ServerRouteDefinitions {
     suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<Int>): Response<Void>
 
     @Headers("Accept: application/json")
+    @POST("api/playlists")
+    suspend fun createCustomPlaylist(@Header("Authorization") token: String, @Body data: CustomPlaylist): Response<Playlist>
+
+    @Headers("Accept: application/json")
     @PATCH("api/user/preferred-tracks")
     suspend fun addPreferredTracks(@Header("Authorization") token: String, @Body preferredTracks: List<Int>): Response<Void>
 
@@ -68,4 +69,15 @@ interface ServerRouteDefinitions {
         @Query("per_page") perPage: Int = DEFAULT_ARTISTS_PER_PAGE,
         @Query("page") page: Int = DEFAULT_CURRENT_PAGE,
         @Query("search") search: String? = null): Response<BaseRequest<Track>>
+
+    @Headers("Accept: application/json")
+    @GET("api/playlists/me")
+    suspend fun fetchPlaylists(
+        @Header("Authorization") token: String): Response<List<Playlist>>
+
+    @Headers("Accept: application/json")
+    @GET("api/playlists/{playlist}")
+    suspend fun fetchPlaylistTracks(
+        @Header("Authorization") token: String,
+        @Path("playlist") playlist: Int): Response<List<Track>>
 }

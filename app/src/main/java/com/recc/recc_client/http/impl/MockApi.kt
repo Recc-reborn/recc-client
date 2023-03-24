@@ -7,7 +7,6 @@ import com.recc.recc_client.models.control.Playlist
 import com.recc.recc_client.models.control.Track
 
 class MockApi(
-    private val context: Context,
     private val mockApi: MockApiRouteDefinitions
 ): BaseImpl() {
 

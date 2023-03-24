@@ -1,6 +1,5 @@
 package com.recc.recc_client.di
 
-import androidx.work.PeriodicWorkRequestBuilder
 import com.google.gson.GsonBuilder
 import com.recc.recc_client.BuildConfig
 import com.recc.recc_client.R
@@ -9,23 +8,24 @@ import com.recc.recc_client.http.InterceptorViewModel
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.http.def.MockApiRouteDefinitions
 import com.recc.recc_client.http.def.ServerRouteDefinitions
+import com.recc.recc_client.http.def.SpotifyApiRouteDefinitions
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.http.impl.MockApi
+import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.auth.LoginViewModel
 import com.recc.recc_client.layout.auth.RegisterViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.home.HomeViewModel
 import com.recc.recc_client.layout.home.PagerViewModel
+import com.recc.recc_client.layout.home.SelectCustomPlaylistTracksViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.layout.user_msg.UserMsgViewModel
 import com.recc.recc_client.layout.views.NoConnectionViewModel
-import com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel
+import com.recc.recc_client.layout.welcome.SelectPreferredArtistsTracksViewModel
 import com.recc.recc_client.layout.welcome.SelectPreferredTracksViewModel
-import com.recc.recc_client.services.ScrobblerService
 import com.recc.recc_client.utils.SharedPreferences
 import com.spotify.android.appremote.api.ConnectionParams
-import com.spotify.android.appremote.api.SpotifyAppRemote
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
@@ -57,16 +57,19 @@ val screenViewModels = module {
         PagerViewModel(get())
     }
     viewModel {
-        SelectPreferredArtistsViewModel(get(), get())
+        SelectPreferredArtistsTracksViewModel(get(), get())
     }
     viewModel {
-        HomeViewModel(get())
+        HomeViewModel(get(), get(), get())
     }
     viewModel {
         SettingsViewModel(get(), get())
     }
     viewModel{
-        PlaylistViewModel(get())
+        PlaylistViewModel(get(), get(), get())
+    }
+    viewModel {
+        SelectCustomPlaylistTracksViewModel(get(), get())
     }
     single {
         NoConnectionViewModel(get(), get(), get())
@@ -90,7 +93,7 @@ val spotify = module {
 
 val sharedPreferences = module {
     single {
-        SharedPreferences(androidApplication())
+        SharedPreferences(androidApplication(), get())
     }
 }
 
@@ -134,13 +137,28 @@ val httpModule = module {
             .build()
         retrofit.create(MockApiRouteDefinitions::class.java)
     }
+    // Spotify API
     single {
-        Auth(androidContext(), get())
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .client(get())
+            .baseUrl(androidContext().getString(R.string.spotify_base_endpoint))
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        retrofit.create(SpotifyApiRouteDefinitions::class.java)
+    }
+    single {
+        Auth(get())
     }
     single {
         Control(get())
     }
     single {
-        MockApi(androidContext(), get())
+        MockApi(get())
+    }
+    single {
+        Spotify(get())
     }
 }

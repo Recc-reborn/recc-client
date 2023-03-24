@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.recc.recc_client.layout.welcome.SelectPreferredArtistsViewModel" />
+            type="com.recc.recc_client.layout.welcome.SelectPreferredArtistsTracksViewModel" />
     </data>
     <RelativeLayout
         android:id="@+id/rl_select_preferred_tracks"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         tools:context=".layout.welcome.SelectPreferredArtistsFragment">
 
-        <com.recc.recc_client.layout.views.SearchEditTextView
+        <com.recc.recc_client.layout.views.SearchEditTextViewI
             android:id="@+id/set_search_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

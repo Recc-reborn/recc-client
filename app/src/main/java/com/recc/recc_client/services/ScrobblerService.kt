@@ -7,11 +7,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Binder
 import android.os.IBinder
+import android.widget.Toast
 import com.recc.recc_client.http.impl.Control
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
+import com.recc.recc_client.utils.Status
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,7 +53,7 @@ class ScrobblerService: Service() {
         intentFilter.addAction("com.samsung.sec.android.MusicPlayer.metachanged")
         intentFilter.addAction("com.andrew.apollo.metachanged")
 
-        Alert("creating receiver")
+        Status("Creating receiver...")
         applicationContext.registerReceiver(receiver, intentFilter)
     }
 
@@ -62,14 +64,13 @@ class ScrobblerService: Service() {
     private fun makePlayback(track: String, album: String, artist: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val search = "$track $artist $album"
-            Alert("search: $search")
             control.fetchTracks(search = search)
                 .onSuccess { tracks ->
                     val firstTrack = tracks.first()
                     if (firstTrack.title.lowercase().filter { !it.isWhitespace() } == track.lowercase().filter { !it.isWhitespace() }
                         && firstTrack.artist.filter { !it.isWhitespace() } == artist.filter { !it.isWhitespace() }) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            control.createPlayback(sharedPreferences.getToken().orEmpty(), firstTrack.id)
+                            control.createPlayback(sharedPreferences.getToken(), firstTrack.id)
                                 .onSuccess {
                                     Alert("Playback created: $it")
                                 }.onFailure {
@@ -108,14 +109,13 @@ class ScrobblerService: Service() {
                         positionFirst = position
                         playback = false
                         playing = "$track-$artist-$album"
+                        Toast.makeText(context, "Now playing: $track by $artist", Toast.LENGTH_SHORT).show()
                     } else if (position - positionFirst > playbackTime && !playback && !isPaused) {
                         playback = true
-                        Alert("calling makePlayback")
                         makePlayback(track.orEmpty(), album.orEmpty(), artist.orEmpty())
                     } else if (position < positionFirst) {
                         positionFirst = position
                     }
-                    Alert("player: $track - $artist - $album - $position - $isPaused - ${position - positionFirst} - $playback - $position - $positionFirst")
                 }
             }
         }

@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_pagerFragment_to_playlistSongsFragment"
             app:destination="@id/playlistSongsFragment" />
+        <action
+            android:id="@+id/action_pagerFragment_to_selectCustomPlaylistTracks"
+            app:destination="@id/selectCustomPlaylistTracks" />
     </fragment>
     <fragment
         android:id="@+id/selectPreferredArtistsFragment"
@@ -83,4 +86,8 @@
             app:popUpTo="@id/selectPreferredTracksFragment2"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/selectCustomPlaylistTracks"
+        android:name="com.recc.recc_client.layout.home.SelectCustomPlaylistTracks"
+        android:label="SelectCustomPlaylistTracks" />
 </navigation>

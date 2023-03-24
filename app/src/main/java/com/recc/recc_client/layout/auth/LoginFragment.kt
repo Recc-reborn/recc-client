@@ -1,6 +1,5 @@
 package com.recc.recc_client.layout.auth
 
-import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
@@ -38,7 +37,7 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
 
     override fun onResume() {
         super.onResume()
-        sharedPreferences.getToken()?.let {
+        sharedPreferences.getToken().let {
             viewModel.getMeData(it)
         }
     }
@@ -59,12 +58,8 @@ class LoginFragment : BaseFragment<LoginScreenEvent, LoginViewModel, FragmentLog
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
                 is LoginScreenEvent.BtnLoginPressed -> {
-//                    Alert("pressing btn...")
-//                    val web = Intent(activity, WebViewActivity::class.java)
-//                    web.putExtra("token", null as String?)
-//                    startActivity(web)
-                    val email = binding.vedfEmail.findViewById<EditText>(R.id.et_field).text.toString()
-                    val pass = binding.vedfPassword.findViewById<EditText>(R.id.et_field).text.toString()
+                    val email = binding.vedfEmail.getFieldText()
+                    val pass = binding.vedfPassword.getFieldText()
                     viewModel.login(email, pass)
                 }
                 is LoginScreenEvent.TvRegisterInsteadPressed -> {

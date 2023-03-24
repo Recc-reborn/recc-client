@@ -7,21 +7,18 @@ import com.recc.recc_client.R
 import com.recc.recc_client.databinding.FragmentSelectPreferredArtistsBinding
 import com.recc.recc_client.layout.common.BaseFragment
 import com.recc.recc_client.layout.common.Event
+import com.recc.recc_client.layout.common.InteractiveItemsScreenEvent
 import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.ArtistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.ArtistGridViewHolder
-import com.recc.recc_client.utils.SharedPreferences
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SelectPreferredArtistsFragment : BaseFragment<
-        SelectPreferredArtistsScreenEvent,
-        SelectPreferredArtistsViewModel,
-        FragmentSelectPreferredArtistsBinding>
+class SelectPreferredArtistsFragment
+    : BaseFragment<InteractiveItemsScreenEvent, SelectPreferredArtistsTracksViewModel, FragmentSelectPreferredArtistsBinding>
     (R.layout.fragment_select_preferred_artists) {
     private lateinit var adapter: DynamicAdapter<ArtistPresenter, ArtistGridViewHolder>
-    override val viewModel: SelectPreferredArtistsViewModel by viewModel()
+    override val viewModel: SelectPreferredArtistsTracksViewModel by viewModel()
 
     override fun subscribeToViewModel() {
         adapter = DynamicAdapter(AdapterType.GRID_ARTISTS, viewModel)
@@ -64,14 +61,15 @@ class SelectPreferredArtistsFragment : BaseFragment<
 
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
-                is SelectPreferredArtistsScreenEvent.ArtistsFetched -> {
+                is InteractiveItemsScreenEvent.ArtistsFetched -> {
                 }
-                SelectPreferredArtistsScreenEvent.ArtistsNotFetched -> {
+                is InteractiveItemsScreenEvent.ArtistsNotFetched -> {
                     Toast.makeText(requireContext(), "Artists couldn't get fetched", Toast.LENGTH_SHORT).show()
                 }
-                SelectPreferredArtistsScreenEvent.GotoHomeBtnClicked -> {
+                InteractiveItemsScreenEvent.GotoHomeBtnClicked -> {
                     findNavController().navigate(R.id.action_selectPreferredArtistsFragment_to_selectPreferredTracksFragment2)
                 }
+                else -> {}
             }
         })
         viewModel.fetchArtists()

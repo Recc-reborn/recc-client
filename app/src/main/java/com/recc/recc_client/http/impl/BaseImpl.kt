@@ -12,10 +12,9 @@ import retrofit2.Response
 open class BaseImpl {
 
     protected fun formatToken(token: String) = "Bearer $token"
-    fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
+    private fun getJsonErrorResponse(body: ResponseBody): ErrorResponse {
         val json = JSONObject(body.string())
         val message = json.getString(MESSAGE_FIELD)
-        Alert("message: $message")
         var emailList = listOf<String>()
         var passwordList = listOf<String>()
         if (json.has(ERRORS_FIELD)) {
@@ -30,6 +29,22 @@ open class BaseImpl {
         return ErrorResponse(message, Errors(emailList, passwordList))
     }
 
+    private fun getSpotifyErrorResponse(body: ResponseBody): ErrorResponse {
+        val json = JSONObject(body.string())
+        var message = ""
+        var status = 0
+        if (json.has(ERROR_FIELD)) {
+            val error = json.getJSONObject(ERROR_FIELD)
+            if (error.has(STATUS_FIELD)) {
+                status = error.getInt(STATUS_FIELD)
+            }
+            if (error.has(MESSAGE_FIELD)) {
+                message = error.getString(MESSAGE_FIELD)
+            }
+        }
+        return ErrorResponse("$status: $message")
+    }
+
     protected fun <S, T>handleQuery(query: Response<T>, success: (T) -> S): Result<S> {
         if (query.isSuccessful) {
             query.body()?.let {
@@ -38,6 +53,18 @@ open class BaseImpl {
         }
         query.errorBody()?.apply {
             return Result.Failure(failure = getJsonErrorResponse(this))
+        }
+        return Result.Failure(failure = ErrorResponse("Error connecting to server"))
+    }
+
+    protected fun <S, T>handleSpotifyQuery(query: Response<T>, success: (T) -> S): Result<S> {
+        if (query.isSuccessful) {
+            query.body()?.let {
+                return Result.Success(success = success(it))
+            }
+        }
+        query.errorBody()?.apply {
+            return Result.Failure(failure = getSpotifyErrorResponse(this))
         }
         return Result.Failure(failure = ErrorResponse("Error connecting to server"))
     }

@@ -6,6 +6,7 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
+import com.recc.recc_client.utils.Alert
 
 private const val MAX_TRACK_PER_SWIMLANE = 10
 
@@ -21,8 +22,11 @@ class PlaylistSwimlaneViewHolder(
     fun bind(presenter: PlaylistPresenter) {
         binding.tvTitle.text = presenter.title
         binding.rvContent.adapter = adapter
+        Alert("tracks: ${presenter.tracks}")
         if (presenter.tracks.size > MAX_TRACK_PER_SWIMLANE) {
             adapter.submitList(presenter.tracks.subList(0, MAX_TRACK_PER_SWIMLANE))
+        } else if (presenter.tracks.isNotEmpty()) {
+            adapter.submitList(presenter.tracks)
         }
 
         // listeners
