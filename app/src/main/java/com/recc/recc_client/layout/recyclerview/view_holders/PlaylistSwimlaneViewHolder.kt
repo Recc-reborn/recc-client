@@ -22,7 +22,6 @@ class PlaylistSwimlaneViewHolder(
     fun bind(presenter: PlaylistPresenter) {
         binding.tvTitle.text = presenter.title
         binding.rvContent.adapter = adapter
-        Alert("tracks: ${presenter.tracks}")
         if (presenter.tracks.size > MAX_TRACK_PER_SWIMLANE) {
             adapter.submitList(presenter.tracks.subList(0, MAX_TRACK_PER_SWIMLANE))
         } else if (presenter.tracks.isNotEmpty()) {

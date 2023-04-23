@@ -4,4 +4,6 @@ sealed class SettingsScreenEvent {
     object OnLoggedOut: SettingsScreenEvent()
     object SetLoginSpotifyBtn: SettingsScreenEvent()
     object SetLogoutSpotifyBtn: SettingsScreenEvent()
+
+    object SpotifyNotInstalled: SettingsScreenEvent()
 }

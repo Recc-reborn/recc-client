@@ -34,7 +34,7 @@ class PlaylistViewModel(
             .onSuccess { songList ->
                 _tracks.postValue(songList.map { TrackPresenter(it) })
             }.onFailure {
-                postEvent(PlaylistScreenEvent.ErrorFetchingTracks(it.message))
+                postEvent(PlaylistScreenEvent.Error(it.message))
             }
         }
     }
@@ -85,15 +85,15 @@ class PlaylistViewModel(
     private fun addTracksToSpotifyPlaylist(uris: List<String>, playlistId: String) {
         viewModelScope.launch {
             spotifyApi.addTracksToPlaylist(sharedPreferences.getSpotifyToken(), playlistId, uris)
-                .onFailure { Alert("Error adding tracks to playlist") }
+                .onFailure { postEvent(PlaylistScreenEvent.Error("Error adding tracks to playlist")) }
         }
     }
 
     fun exportSpotifyPlaylist() {
+        postEvent(PlaylistScreenEvent.HandleExportButton(false))
         viewModelScope.launch {
-            postEvent(PlaylistScreenEvent.HandleExportButton(false))
+            var errorLoggingIn = false
             _tracks.value?.let { tracks ->
-                var errorLoggingIn = false
                 val uris: MutableList<String> = mutableListOf()
                 for (track in tracks) {
                     if (errorLoggingIn) {
@@ -105,7 +105,6 @@ class PlaylistViewModel(
                     ).onSuccess {
                         uris.add(it.uri)
                     }.onFailure {
-                        postEvent(PlaylistScreenEvent.ErrorLoggingSpotify(it.message))
                         errorLoggingIn = true
                     }
                 }
@@ -116,13 +115,18 @@ class PlaylistViewModel(
                         _title.value.orEmpty(),
                         "" // TODO: make description
                     )
-                        .onFailure { Alert("Error creating playlist") }
-                        .onSuccess {
-                            addTracksToSpotifyPlaylist(uris, it.id)
+                        .onFailure {
+                            postEvent(PlaylistScreenEvent.Error("Error creating playlist"))
+                        }.onSuccess { playlist ->
+                            addTracksToSpotifyPlaylist(uris, playlist.id)
                         }
                 }
             }
-            postEvent(PlaylistScreenEvent.HandleExportButton(true))
+            if (errorLoggingIn) {
+                postEvent(PlaylistScreenEvent.ErrorLoggingSpotify("Not authenticated"))
+            } else {
+                postEvent(PlaylistScreenEvent.HandleExportButton(true))
+            }
         }
     }
 }

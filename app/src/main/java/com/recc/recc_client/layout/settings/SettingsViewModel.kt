@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.http.impl.Auth
 import com.recc.recc_client.layout.common.BaseEventViewModel
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.coroutines.launch
 
@@ -25,11 +26,15 @@ class SettingsViewModel(
     fun handleSpotifyBtn(activity: MainActivity) {
         viewModelScope.launch {
             if (sharedPreferences.getSpotifyStatus()) {
-                postEvent(SettingsScreenEvent.SetLogoutSpotifyBtn)
                 activity.logoutFromSpotify()
+                postEvent(SettingsScreenEvent.SetLogoutSpotifyBtn)
             } else {
-                postEvent(SettingsScreenEvent.SetLoginSpotifyBtn)
                 activity.loginToSpotify()
+                if (sharedPreferences.getSpotifyStatus()) {
+                    postEvent(SettingsScreenEvent.SetLoginSpotifyBtn)
+                } else {
+                    postEvent(SettingsScreenEvent.SpotifyNotInstalled)
+                }
             }
         }
     }
