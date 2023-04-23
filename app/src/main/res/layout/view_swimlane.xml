@@ -26,19 +26,24 @@
                 android:id="@+id/tv_title"
                 style="@style/InfoBox.Title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:maxLines="1"
+                android:maxWidth="350dp"
+                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="@string/hello_blank_fragment"
                 tools:textColor="@color/black"/>
             <ImageView
                 android:id="@+id/iv_arrow_right"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:src="@drawable/ic_baseline_keyboard_arrow_right"
+                android:layout_gravity="center"
                 app:layout_constraintStart_toEndOf="@id/tv_title"
-                app:layout_constraintBottom_toBottomOf="@id/tv_title"
-                app:layout_constraintTop_toTopOf="@id/tv_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_baseline_keyboard_arrow_right"
                 tools:tint="@color/black"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

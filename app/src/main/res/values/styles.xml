@@ -105,7 +105,6 @@
 
     <style name="InfoBox.Subtext" parent="InfoBox">
         <item name="android:textSize">14sp</item>
-        <item name="android:maxHeight">19dp</item>
     </style>
 
 </resources>

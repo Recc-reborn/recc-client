@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.recc.recc_client.databinding.ActivityMainBinding
 import com.recc.recc_client.services.ScrobblerService
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import com.recc.recc_client.utils.Status
 import com.spotify.android.appremote.api.ConnectionParams
@@ -23,13 +24,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        logoutFromSpotify()
         Status( "Launching Main Activity...")
     }
 
     fun loginToSpotify() {
-        SpotifyAppRemote.connect(applicationContext, spotifyConnectionParams, object: Connector.ConnectionListener {
+        SpotifyAppRemote.connect(this, spotifyConnectionParams, object: Connector.ConnectionListener {
             override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
-                Status("connected to spotify")
                 sharedPreferences.saveSpotifyStatus(true)
                 (applicationContext as ReccApplication).apply {
                     spotifyApi = spotifyAppRemote

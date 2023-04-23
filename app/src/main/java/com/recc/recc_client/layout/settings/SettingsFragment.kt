@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.settings
 
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.R
@@ -18,7 +19,6 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
     private val sharedPreferences: SharedPreferences by inject()
 
     override fun subscribeToViewModel() {
-        Alert("spotify satatus fragment: ${sharedPreferences.getSpotifyStatus()}")
         if (sharedPreferences.getSpotifyStatus()) {
             binding.btnConnectSpotify.text = getString(R.string.cta_log_out_from_spotify)
         } else {
@@ -43,6 +43,9 @@ class SettingsFragment : BaseFragment<SettingsScreenEvent, SettingsViewModel, Fr
                     binding.btnConnectSpotify.text = getString(R.string.cta_log_out_from_spotify)
                 } SettingsScreenEvent.SetLogoutSpotifyBtn -> {
                     binding.btnConnectSpotify.text = getString(R.string.cta_connect_to_spotify)
+                }
+                SettingsScreenEvent.SpotifyNotInstalled -> {
+                    Toast.makeText(requireContext(), "Spotify App not found, please install it from the Play Store", Toast.LENGTH_SHORT).show()
                 }
             }
         })

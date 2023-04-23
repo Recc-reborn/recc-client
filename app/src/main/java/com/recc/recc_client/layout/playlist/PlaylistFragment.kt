@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.playlist
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
@@ -37,12 +38,16 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
         }
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
-                is PlaylistScreenEvent.ErrorFetchingTracks -> {
+                is PlaylistScreenEvent.Error -> {
                     Toast.makeText(context, screenEvent.error, Toast.LENGTH_SHORT).show()
                 }
                 is PlaylistScreenEvent.GoToSpotifyTrack -> {
                     val intent = Intent(Intent.ACTION_VIEW)
-                    intent.callSpotifyUri(requireContext(), screenEvent.presenter.uri)
+                    try {
+                        intent.callSpotifyUri(requireContext(), screenEvent.presenter.uri)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(requireContext(), "Spotify App not found, please install it from the Play Store", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 is PlaylistScreenEvent.ErrorLoggingSpotify -> {
                     Alert("spotify error: ${screenEvent.error}")
@@ -50,6 +55,7 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
                     startActivity(intent)
                 }
                 is PlaylistScreenEvent.HandleExportButton -> {
+                    Alert("handling button: ${screenEvent.state}")
                     binding.btnExportPlaylistToSpotify.apply {
                         isEnabled = screenEvent.state
                         background = if (screenEvent.state)
