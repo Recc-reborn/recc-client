@@ -4,19 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.http.impl.Control
-import com.recc.recc_client.http.impl.Spotify
 import com.recc.recc_client.layout.common.BaseEventViewModel
 import com.recc.recc_client.layout.common.MeDataViewModel
 import com.recc.recc_client.layout.common.onFailure
 import com.recc.recc_client.layout.common.onSuccess
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.models.control.Playlist
-import com.recc.recc_client.models.control.Track
-import com.recc.recc_client.models.spotify.Me
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -59,11 +54,23 @@ class HomeViewModel(
 
     fun getPlaylists() {
         viewModelScope.launch {
-            http.fetchPlaylists(sharedPreferences.getToken())
-                .onFailure {}
-                .onSuccess {
-                    getPlaylistTracks(it)
+            var noColdPlaylist = false
+            http.getAutoPlaylist(sharedPreferences.getToken())
+                .onFailure {
+                    noColdPlaylist = true
                 }
+                http.fetchPlaylists(sharedPreferences.getToken())
+                    .onFailure {
+                        if (noColdPlaylist) {
+                            postEvent(HomeScreenEvent.NoColdPlaylistAvailable)
+                        }
+                    }.onSuccess {
+                        if (it.isEmpty() && noColdPlaylist) {
+                            postEvent(HomeScreenEvent.NoColdPlaylistAvailable)
+                        } else {
+                            getPlaylistTracks(it)
+                        }
+                    }
         }
     }
 

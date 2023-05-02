@@ -3,6 +3,7 @@ package com.recc.recc_client.http.impl
 import com.recc.recc_client.http.def.ServerRouteDefinitions
 import com.recc.recc_client.layout.common.Result
 import com.recc.recc_client.models.control.*
+import com.recc.recc_client.utils.Alert
 
 const val DEFAULT_CURRENT_PAGE = 1
 const val DEFAULT_ARTISTS_PER_PAGE = 50
@@ -51,11 +52,13 @@ class Control(
         return handleQuery(query) { it }
     }
 
-    suspend fun createPlaylist(token: String, title: String, tracks: List<Int> = listOf()): Result<Playlist> {
-        val query = http.createCustomPlaylist(formatToken(token), CustomPlaylist(
-            title = title,
-            tracks = tracks
-        ))
+    suspend fun createPlaylist(token: String, title: String, tracks: List<Int>): Result<Playlist> {
+        val query = http.createCustomPlaylist(formatToken(token), CustomPlaylist(title, tracks))
+        return handleQuery(query) { it }
+    }
+
+    suspend fun getAutoPlaylist(token: String): Result<Void> {
+        val query = http.getAutoPlaylist(formatToken(token))
         return handleQuery(query) { it }
     }
 }

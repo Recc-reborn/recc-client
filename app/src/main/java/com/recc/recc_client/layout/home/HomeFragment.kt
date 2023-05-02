@@ -1,6 +1,7 @@
 package com.recc.recc_client.layout.home
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,6 +15,8 @@ import com.recc.recc_client.layout.recyclerview.AdapterType
 import com.recc.recc_client.layout.recyclerview.DynamicAdapter
 import com.recc.recc_client.layout.recyclerview.presenters.PlaylistPresenter
 import com.recc.recc_client.layout.recyclerview.view_holders.PlaylistSwimlaneViewHolder
+import com.recc.recc_client.layout.settings.SettingsViewModel
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -22,6 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBinding>(R.layout.fragment_home) {
     override val viewModel: HomeViewModel by viewModel()
+    private val settingsViewModel: SettingsViewModel by viewModel()
     private val sharedPreferences: SharedPreferences by inject()
     private var adapter: DynamicAdapter<PlaylistPresenter, PlaylistSwimlaneViewHolder>? = null
 
@@ -31,7 +35,7 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
             swl_playlists.isRefreshing = false
         }
         if (sharedPreferences.getSpotifyStatus()) {
-            (requireActivity() as MainActivity).loginToSpotify()
+            (requireActivity() as MainActivity).loginToSpotify(settingsViewModel)
         }
         viewModel.screenEvent.observe(viewLifecycleOwner, Event.EventObserver { screenEvent ->
             when (screenEvent) {
@@ -52,6 +56,9 @@ class HomeFragment : BaseFragment<HomeScreenEvent, HomeViewModel, FragmentHomeBi
                 }
                 HomeScreenEvent.CreateCustomPlaylistButtonPressed -> {
                     findNavController().navigate(R.id.action_pagerFragment_to_selectCustomPlaylistTracks)
+                }
+                HomeScreenEvent.NoColdPlaylistAvailable -> {
+                    Toast.makeText(requireContext(), "Try creating a new playlists using the \"+\" button", Toast.LENGTH_SHORT).show()
                 }
             }
         })

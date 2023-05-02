@@ -15,6 +15,8 @@
             android:id="@+id/iv_album_image"
             android:layout_width="110dp"
             android:layout_height="110dp"
+            android:background="@drawable/bg_track_item_swimlane"
+            tools:background="@drawable/bg_track_item_swimlane"
             tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView

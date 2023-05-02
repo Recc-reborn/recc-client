@@ -50,12 +50,10 @@ class PlaylistFragment: BaseFragment<PlaylistScreenEvent, PlaylistViewModel, Fra
                     }
                 }
                 is PlaylistScreenEvent.ErrorLoggingSpotify -> {
-                    Alert("spotify error: ${screenEvent.error}")
                     val intent = Intent(requireContext(), WebViewActivity::class.java)
                     startActivity(intent)
                 }
                 is PlaylistScreenEvent.HandleExportButton -> {
-                    Alert("handling button: ${screenEvent.state}")
                     binding.btnExportPlaylistToSpotify.apply {
                         isEnabled = screenEvent.state
                         background = if (screenEvent.state)

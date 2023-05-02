@@ -12,5 +12,5 @@ data class Playlist(
 
 data class CustomPlaylist(
     @SerializedName("title") val title: String = "",
-    @SerializedName("tracks") val tracks: List<Int> = listOf()
+    @SerializedName("track_ids") val tracks: List<Int> = listOf()
 )

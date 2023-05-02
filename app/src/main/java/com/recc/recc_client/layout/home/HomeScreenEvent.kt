@@ -7,4 +7,5 @@ sealed class HomeScreenEvent {
     data class TracksFetched(val presenters: List<PlaylistPresenter>): HomeScreenEvent()
     object GetSpotifyToken: HomeScreenEvent()
     object CreateCustomPlaylistButtonPressed: HomeScreenEvent()
+    object NoColdPlaylistAvailable: HomeScreenEvent()
 }

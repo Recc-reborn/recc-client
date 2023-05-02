@@ -54,6 +54,29 @@ class ScrobblerService: Service() {
         intentFilter.addAction("com.andrew.apollo.metachanged")
 
         Status("Creating receiver...")
+        receiver.callback = { track: String, album: String, artist: String ->
+            CoroutineScope(Dispatchers.IO).launch {
+                val search = "$track $artist $album"
+                control.fetchTracks(search = search)
+                    .onSuccess { tracks ->
+                        val firstTrack = tracks.first()
+                        if (firstTrack.title.lowercase().filter { !it.isWhitespace() } == track.lowercase().filter { !it.isWhitespace() }
+                            && firstTrack.artist.filter { !it.isWhitespace() } == artist.filter { !it.isWhitespace() }) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                control.createPlayback(sharedPreferences.getToken(), firstTrack.id)
+                                    .onSuccess {
+                                        Alert("Playback created: $it")
+                                    }.onFailure {
+                                        Alert("Playback not created: $it")
+                                    }
+                            }
+                        } else {
+                            Alert("track not found: $firstTrack / $search")
+                        }
+                    }
+            }
+        }
+
         applicationContext.registerReceiver(receiver, intentFilter)
     }
 
@@ -61,39 +84,17 @@ class ScrobblerService: Service() {
         return binder
     }
 
-    private fun makePlayback(track: String, album: String, artist: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val search = "$track $artist $album"
-            control.fetchTracks(search = search)
-                .onSuccess { tracks ->
-                    val firstTrack = tracks.first()
-                    if (firstTrack.title.lowercase().filter { !it.isWhitespace() } == track.lowercase().filter { !it.isWhitespace() }
-                        && firstTrack.artist.filter { !it.isWhitespace() } == artist.filter { !it.isWhitespace() }) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            control.createPlayback(sharedPreferences.getToken(), firstTrack.id)
-                                .onSuccess {
-                                    Alert("Playback created: $it")
-                                }.onFailure {
-                                    Alert("Playback not craeted: $it")
-                                }
-                        }
-                    } else {
-                        Alert("track not found: $firstTrack / $search")
-                    }
-                }
-        }
-    }
-
     inner class LocalBinder: Binder() {
         val service: ScrobblerService
             get() = this@ScrobblerService
     }
 
-    inner class ScrobblerReceiver: BroadcastReceiver() {
+    class ScrobblerReceiver: BroadcastReceiver() {
         private var positionFirst: Long = 0
         private var playing = ""
         private var playback = false
         private val playbackTime: Long = 30000
+        var callback: ((track: String, album: String, artist: String) -> Unit)? = null
 
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent == null)
@@ -112,7 +113,10 @@ class ScrobblerService: Service() {
                         Toast.makeText(context, "Now playing: $track by $artist", Toast.LENGTH_SHORT).show()
                     } else if (position - positionFirst > playbackTime && !playback && !isPaused) {
                         playback = true
-                        makePlayback(track.orEmpty(), album.orEmpty(), artist.orEmpty())
+                        Alert("callback: $callback")
+                        callback?.let {
+                            it(track.orEmpty(), album.orEmpty(), artist.orEmpty())
+                        }
                     } else if (position < positionFirst) {
                         positionFirst = position
                     }

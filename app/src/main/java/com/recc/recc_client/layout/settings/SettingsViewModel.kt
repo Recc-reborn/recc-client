@@ -1,5 +1,6 @@
 package com.recc.recc_client.layout.settings
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.recc.recc_client.MainActivity
 import com.recc.recc_client.http.impl.Auth
@@ -23,18 +24,22 @@ class SettingsViewModel(
         }
     }
 
+    fun setLogin() {
+        postEvent(SettingsScreenEvent.SetLoginSpotifyBtn)
+    }
+
+    fun spotifyNotInstalled() {
+        postEvent(SettingsScreenEvent.SpotifyNotInstalled)
+    }
+
     fun handleSpotifyBtn(activity: MainActivity) {
         viewModelScope.launch {
             if (sharedPreferences.getSpotifyStatus()) {
                 activity.logoutFromSpotify()
                 postEvent(SettingsScreenEvent.SetLogoutSpotifyBtn)
             } else {
-                activity.loginToSpotify()
-                if (sharedPreferences.getSpotifyStatus()) {
-                    postEvent(SettingsScreenEvent.SetLoginSpotifyBtn)
-                } else {
-                    postEvent(SettingsScreenEvent.SpotifyNotInstalled)
-                }
+                val connected = MutableLiveData(false)
+                activity.loginToSpotify(this@SettingsViewModel)
             }
         }
     }

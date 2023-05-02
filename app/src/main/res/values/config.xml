@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="recc_base_endpoint">http://ec2-3-141-98-170.us-east-2.compute.amazonaws.com:8000</string>
+    <string name="recc_base_endpoint">http://10.0.2.2:8000</string>
     <string name="token_path">token.tmp</string>
     <string name="user_info_path">user_info.json</string>
 

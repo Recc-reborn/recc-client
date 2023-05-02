@@ -17,12 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReccClient"
+        android:largeHeap="true"
         android:usesCleartextTraffic="true">
 
         <service android:name=".services.ScrobblerService" />
 
         <receiver
-            android:name=".services.ScrobblerReceiver"
+            android:name=".services.ScrobblerService$ScrobblerReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

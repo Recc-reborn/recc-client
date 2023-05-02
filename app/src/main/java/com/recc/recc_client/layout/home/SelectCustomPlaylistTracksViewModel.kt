@@ -34,12 +34,15 @@ class SelectCustomPlaylistTracksViewModel(
                 Alert("no entra")
                 return@viewModelScope
             }
-            control.createPlaylist (token, title.value.orEmpty(), selectedItems.value!!.toMutableList())
-                .onSuccess {
-                    postEvent(InteractiveItemsScreenEvent.ItemsAdded)
-                }.onFailure {
-                    postEvent(InteractiveItemsScreenEvent.FailedAddingItems(it.message))
-                }
+            val tracks = selectedItems.value?.toList()
+            if (!tracks.isNullOrEmpty()) {
+                control.createPlaylist(token, title.value.orEmpty(), tracks)
+                    .onSuccess {
+                        postEvent(InteractiveItemsScreenEvent.ItemsAdded)
+                    }.onFailure {
+                        postEvent(InteractiveItemsScreenEvent.FailedAddingItems(it.message))
+                    }
+            }
         }
     }
 }
