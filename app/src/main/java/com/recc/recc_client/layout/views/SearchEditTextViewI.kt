@@ -51,12 +51,12 @@ class SearchEditTextViewI(context: Context, attrs: AttributeSet? = null) :
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let { charSequence ->
-                    if (charSequence.toString().isEmpty()) {
+                    isEmpty = if (charSequence.toString().isEmpty()) {
                         setIcon(R.drawable.ic_baseline_search_24)
-                        isEmpty = true
+                        true
                     } else {
                         setIcon(R.drawable.ic_baseline_cancel_24)
-                        isEmpty = false
+                        false
                     }
                 }
             }

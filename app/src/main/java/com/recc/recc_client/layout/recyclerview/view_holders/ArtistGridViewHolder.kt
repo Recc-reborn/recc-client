@@ -42,10 +42,12 @@ class ArtistGridViewHolder(
         binding.llArtistContainer.setOnClickListener {
             if (isSelected) unselectItem() else selectItem()
         }
-        Glide.with(binding.root)
-            .load(this.presenter.imageUrl)
-            .fitCenter()
-            .circleCrop()
-            .into(binding.ivArtist)
+        if (presenter.imageUrl.isNotEmpty()) {
+            Glide.with(binding.root)
+                .load(presenter.imageUrl)
+                .fitCenter()
+                .circleCrop()
+                .into(binding.ivArtist)
+        }
     }
 }

@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import com.recc.recc_client.databinding.ActivityMainBinding
+import com.recc.recc_client.layout.settings.SettingsScreenEvent
+import com.recc.recc_client.layout.settings.SettingsViewModel
 import com.recc.recc_client.services.ScrobblerService
 import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.SharedPreferences
@@ -28,10 +31,11 @@ class MainActivity : AppCompatActivity() {
         Status( "Launching Main Activity...")
     }
 
-    fun loginToSpotify() {
+    fun loginToSpotify(vm: SettingsViewModel) {
         SpotifyAppRemote.connect(this, spotifyConnectionParams, object: Connector.ConnectionListener {
             override fun onConnected(spotifyAppRemote: SpotifyAppRemote?) {
                 sharedPreferences.saveSpotifyStatus(true)
+                vm.setLogin()
                 (applicationContext as ReccApplication).apply {
                     spotifyApi = spotifyAppRemote
                     spotifyApi?.playerApi?.subscribeToPlayerState()?.setEventCallback { playerState ->
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(error: Throwable?) {
                 Status("not connected to spotify: $error")
+                vm.spotifyNotInstalled()
             }
         })
     }

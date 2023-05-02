@@ -10,6 +10,7 @@ import com.recc.recc_client.databinding.ViewTrackListItemBinding
 import com.recc.recc_client.layout.common.InteractiveTracksViewModel
 import com.recc.recc_client.layout.playlist.PlaylistViewModel
 import com.recc.recc_client.layout.recyclerview.presenters.TrackPresenter
+import com.recc.recc_client.utils.Alert
 import com.recc.recc_client.utils.millisecondsToMinutes
 
 class TrackListViewHolder(
@@ -62,10 +63,12 @@ class TrackListViewHolder(
     }
 
     private fun bind(presenter: TrackPresenter) {
-        Glide.with(binding.ivAlbumImage)
-            .load(presenter.albumArtUrl)
-            .fitCenter()
-            .into(binding.ivAlbumImage)
+        if (presenter.albumArtUrl.isNotEmpty()) {
+            Glide.with(binding.ivAlbumImage)
+                .load(presenter.albumArtUrl)
+                .fitCenter()
+                .into(binding.ivAlbumImage)
+        }
         binding.tvTrackTitle.text = presenter.title
         binding.tvAlbum.text = presenter.album
         binding.tvArtist.text = presenter.artist

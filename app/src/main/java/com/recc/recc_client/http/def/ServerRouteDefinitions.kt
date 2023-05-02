@@ -41,16 +41,18 @@ interface ServerRouteDefinitions {
     suspend fun postPlaybacks(@Header("Authorization") token: String, @Query("track_id") trackId: Int): Response<Playback>
 
     @Headers("Accept: application/json")
-    @DELETE("api/tracks/{track}")
-    suspend fun deleteTrack(@Path("track") track: Int): Response<String>
-
-    @Headers("Accept: application/json")
     @PATCH("api/user/preferred-artists")
     suspend fun addPreferredArtists(@Header("Authorization") token: String, @Body preferredArtists: List<Int>): Response<Void>
 
     @Headers("Accept: application/json")
-    @POST("api/playlists")
-    suspend fun createCustomPlaylist(@Header("Authorization") token: String, @Body data: CustomPlaylist): Response<Playlist>
+    @POST("api/playlists/custom")
+    suspend fun createCustomPlaylist(
+        @Header("Authorization") token: String,
+        @Body customPlaylist: CustomPlaylist): Response<Playlist>
+
+    @Headers("Accept: application/json")
+    @GET("api/playlists/auto")
+    suspend fun getAutoPlaylist(@Header("Authorization") token: String): Response<Void>
 
     @Headers("Accept: application/json")
     @PATCH("api/user/preferred-tracks")
